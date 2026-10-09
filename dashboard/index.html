@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
+  <!-- Leaflet Tactical CAD Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <meta charset="UTF-8">
   <title>Kshitij // Dual-Port Failover & TinyML Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -655,67 +661,595 @@
       .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--card-border); }
       .kpi-row, .mid-row, .bot-row, .ports-grid, .tinyml-layout, .lab-layout { grid-template-columns: 1fr; }
     }
+  
+    /* ========================================================= */
+    /* TACTICAL OBSIDIAN SIDEBAR (KSHITIJ EMR)                  */
+    /* ========================================================= */
+    .sidebar.sidebar-tactical {
+      width: 256px !important;
+      background: #0a0d14 !important;
+      color: #fff !important;
+      border-right: 1px solid #1a1f2c !important;
+      padding: 20px 14px !important;
+      box-shadow: 4px 0 24px rgba(0,0,0,0.4) !important;
+      overflow-y: auto !important;
+      max-height: 100vh !important;
+    }
+    .brand-box-tactical {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 4px 6px 18px 6px;
+      border-bottom: 1px solid #1a1f2c;
+      margin-bottom: 16px;
+    }
+    .brand-badge-kz {
+      width: 38px;
+      height: 38px;
+      background: #121622;
+      border: 1px solid #2a3245;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      color: #ef4444;
+      font-size: 14px;
+      border-radius: 8px;
+    }
+    .brand-text-tactical h3 {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.2px;
+      margin: 0;
+    }
+    .brand-text-tactical p {
+      font-size: 10px;
+      color: #8c96a5;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.5px;
+      margin: 0;
+    }
+    .nav-section-title {
+      font-size: 10px;
+      font-weight: 800;
+      color: #556175;
+      letter-spacing: 0.8px;
+      padding: 14px 10px 6px 10px;
+      text-transform: uppercase;
+    }
+    .sidebar-tactical .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin: 0;
+      padding: 0;
+    }
+    .sidebar-tactical .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #94a3b8;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+    }
+    .sidebar-tactical .nav-item .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sidebar-tactical .nav-item:hover {
+      background: #141a29;
+      color: #fff;
+      transform: translateX(2px);
+    }
+    .sidebar-tactical .nav-item.active {
+      background: #161c28 !important;
+      color: #fff !important;
+      border-color: #2a3449 !important;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4) !important;
+    }
+    .sidebar-tactical .nav-item.active svg {
+      color: #ef4444 !important;
+      stroke: #ef4444 !important;
+    }
+    .sidebar-tactical .nav-item svg {
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+    }
+    .nav-badge {
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .badge-cyan { background: rgba(6, 182, 212, 0.15); color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.3); }
+    .badge-purple { background: rgba(168, 85, 247, 0.15); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.3); }
+    .badge-red { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .badge-amber { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-blue { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); }
+
+    .sidebar-fst-footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #111522;
+      border: 1px solid #1f273b;
+      margin-top: 24px;
+    }
+    .fst-badge {
+      width: 32px;
+      height: 32px;
+      background: #1d2538;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 11px;
+      color: #3b82f6;
+      border-radius: 6px;
+    }
+    .fst-name { font-size: 11px; font-weight: 700; color: #f1f5f9; }
+    .fst-loc { font-size: 9px; color: #64748b; font-family: 'JetBrains Mono', monospace; }
+
+    /* SIMULATOR STRIP FROM SCREENSHOTS */
+    .simulator-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 10px 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+    [data-theme="dark"] .simulator-strip {
+      background: #121826;
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+    .sim-strip-left { display: flex; align-items: center; gap: 8px; }
+    .sim-strip-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .sim-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+    .sim-pill-btn.nurse { background: #fff1f2; color: #e11d48; border-color: #fecdd3; }
+    .sim-pill-btn.nurse:hover { background: #ffe4e6; transform: translateY(-1px); }
+    .sim-pill-btn.tamper { background: #fffbeb; color: #b45309; border-color: #fde68a; }
+    .sim-pill-btn.tamper:hover { background: #fef3c7; transform: translateY(-1px); }
+    .sim-pill-btn.sync { background: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
+    .sim-pill-btn.sync:hover { background: #dbeafe; transform: translateY(-1px); }
+
+    /* EOG VIEW SPECIFIC STYLES (SCREENSHOT 1) */
+    .eog-hdr-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+    }
+    [data-theme="dark"] .eog-hdr-card { background: #121826; border-color: rgba(255,255,255,0.08); }
+    .eog-hdr-left { display: flex; align-items: center; gap: 14px; }
+    .eog-hdr-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(16, 185, 129, 0.12);
+      color: #10b981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .eog-hdr-title { font-size: 17px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+    .eog-hdr-badge { font-size: 11px; padding: 3px 8px; border-radius: 6px; background: rgba(16, 185, 129, 0.15); color: #059669; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+    .eog-hdr-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+    .eog-hdr-actions { display: flex; align-items: center; gap: 8px; }
+    .eog-btn {
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      color: #334155;
+      transition: all 0.2s;
+    }
+    .eog-btn:hover { background: #f8fafc; }
+    .eog-btn.verified { color: #059669; border-color: #a7f3d0; background: #ecfdf5; }
+    .eog-btn.tamper { color: #dc2626; border-color: #fecaca; background: #fef2f2; }
+
+    .eog-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .eog-metric-box {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    [data-theme="dark"] .eog-metric-box { background: #121826; border-color: rgba(255,255,255,0.08); }
+    .eog-m-title { font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 6px; }
+    .eog-m-val { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono', monospace; display: flex; align-items: center; gap: 8px; }
+    .eog-m-sub { font-size: 11px; color: #94a3b8; margin-top: 4px; font-weight: 600; }
+    .eog-m-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+    .eog-main-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 20px;
+    }
+    .eog-scope-panel {
+      background: #090e17;
+      border: 1px solid #1a2234;
+      border-radius: 20px;
+      padding: 20px;
+      color: #fff;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+    .eog-scope-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .eog-scope-title { font-size: 12px; font-weight: 800; letter-spacing: 0.5px; font-family: 'JetBrains Mono', monospace; color: #38bdf8; }
+    .eog-channel-tags { display: flex; align-items: center; gap: 12px; font-size: 11px; font-weight: 600; }
+    .eog-tag-green { color: #34d399; }
+    .eog-tag-blue { color: #60a5fa; }
+    .eog-scope-buttons { display: flex; gap: 6px; }
+    .scope-btn {
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      background: #151d2f;
+      border: 1px solid #23304a;
+      color: #94a3b8;
+      cursor: pointer;
+    }
+    .scope-btn.active { background: #059669; color: #fff; border-color: #10b981; }
+
+    /* CAD RADAR VIEW SPECIFIC STYLES (SCREENSHOT 2) */
+    .cad-hdr-banner {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    [data-theme="dark"] .cad-hdr-banner { background: #121826; border-color: rgba(255,255,255,0.08); }
+    .cad-advisory-callout {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #1e40af;
+      margin-bottom: 18px;
+    }
+    .cad-split-layout {
+      display: grid;
+      grid-template-columns: 1.18fr 1fr;
+      gap: 20px;
+    }
+    .cad-map-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      height: 600px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+    }
+    #cad_leaflet_map {
+      width: 100%;
+      height: 100%;
+      background: #0f172a;
+    }
+    .cad-map-top-overlay {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+    .cad-map-badge {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      pointer-events: auto;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .cad-map-layers {
+      display: flex;
+      gap: 6px;
+      pointer-events: auto;
+    }
+    .cad-layer-btn {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      color: #94a3b8;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .cad-layer-btn.active { color: #fff; background: #2563eb; border-color: #3b82f6; }
+    .cad-map-bot-overlay {
+      position: absolute;
+      bottom: 14px;
+      left: 14px;
+      right: 14px;
+      z-index: 999;
+      background: rgba(15, 23, 42, 0.90);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #fff;
+    }
+
+    .cad-console-panel {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+      max-height: 600px;
+      overflow-y: auto;
+    }
+    [data-theme="dark"] .cad-console-panel { background: #121826; border-color: rgba(255,255,255,0.08); }
+    .cad-mission-hdr {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 14px;
+    }
+    .cad-m-title { font-size: 11px; font-weight: 800; color: #64748b; letter-spacing: 0.5px; }
+    .cad-m-target { font-size: 16px; font-weight: 800; color: #1e293b; margin-top: 2px; }
+    [data-theme="dark"] .cad-m-target { color: #f8fafc; }
+
+    .cad-milestone-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .cad-milestone-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      border-radius: 10px;
+      background: #f8fafc;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    [data-theme="dark"] .cad-milestone-row { background: #172033; }
+    .cad-milestone-row.done { color: #059669; }
+    .cad-milestone-row.active { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; font-weight: 700; }
+    .cad-hosp-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+      background: #fafafa;
+    }
+    [data-theme="dark"] .cad-hosp-card { background: #172033; border-color: #27344f; }
+
   </style>
+
 </head>
 <body data-theme="light">
-
   <div class="tablet-frame">
-    <!-- Left Frosted Sidebar -->
-    <aside class="sidebar">
+    <!-- Tactical Obsidian Sidebar (KSHITIJ EMR) -->
+    <aside class="sidebar sidebar-tactical">
       <div>
-        <div class="brand-box">
-          <div class="brand-icon">⚡</div>
-          <div class="brand-text">
-            <h3>TEAM IZANAGI</h3>
-            <p>Kshitij Failover Engine</p>
+        <div class="brand-box-tactical">
+          <div class="brand-badge-kz">KZ</div>
+          <div class="brand-text-tactical">
+            <h3>KSHITIJ EMR</h3>
+            <p>TACTICAL BIO-CAPSULE OS</p>
           </div>
         </div>
 
+        <div class="nav-section-title">CLINICAL COMMAND</div>
         <ul class="nav-list">
           <li>
             <a class="nav-item active" id="nav-overview" href="#overview" onclick="switchTab('overview'); return false;">
-              <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-              Overview
+              <span class="nav-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Overview
+              </span>
             </a>
           </li>
           <li>
-            <a class="nav-item" id="nav-dualports" href="#dualports" onclick="switchTab('dualports'); return false;">
-              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-              Dual Ports
+            <a class="nav-item" id="nav-capacity" href="#capacity" onclick="switchTab('capacity'); return false;">
+              <span class="nav-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4v18M13 21V3l6 4v14"/></svg>
+                Hospital Capacity
+              </span>
+              <span class="nav-badge badge-blue">SURGE</span>
             </a>
           </li>
           <li>
-            <a class="nav-item" id="nav-tinyml" href="#tinyml" onclick="switchTab('tinyml'); return false;">
-              <svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg>
-              TinyML INT8
+            <a class="nav-item" id="nav-pharma" href="#pharma" onclick="switchTab('pharma'); return false;">
+              <span class="nav-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+                Pharmaceutical Network
+              </span>
+              <span class="nav-badge badge-purple">RX</span>
             </a>
           </li>
           <li>
-            <a class="nav-item" id="nav-faultlab" href="#faultlab" onclick="switchTab('faultlab'); return false;">
-              <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
-              Fault Lab
+            <a class="nav-item" id="nav-bloodbank" href="#bloodbank" onclick="switchTab('bloodbank'); return false;">
+              <span class="nav-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>
+                Blood Bank Network
+              </span>
+              <span class="nav-badge badge-red">HEMO</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" id="nav-patients" href="#patients" onclick="switchTab('patients'); return false;">
+              <span class="nav-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Patients
+              </span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" id="nav-triage" href="#triage" onclick="switchTab('triage'); return false;">
+              <span class="nav-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                Triage Queue
+              </span>
+              <span class="nav-badge badge-cyan">AUTO</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" id="nav-map" href="#map" onclick="switchTab('map'); return false;">
+              <span class="nav-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                GPS Radar
+              </span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="nav-section-title">HARDWARE & TELEMETRY</div>
+        <ul class="nav-list">
+          <li>
+            <a class="nav-item" id="nav-failover" href="#failover" onclick="switchTab('failover'); return false;">
+              <span class="nav-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>
+                Failover & TinyML
+              </span>
+              <span class="nav-badge badge-amber">500ms</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" id="nav-eog" href="#eog" onclick="switchTab('eog'); return false;">
+              <span class="nav-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                EOG & Bio-Security
+              </span>
+              <span class="nav-badge badge-red">100Hz</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="nav-section-title">INTELLIGENCE & AUDIT</div>
+        <ul class="nav-list">
+          <li>
+            <a class="nav-item" id="nav-timeline" href="#timeline" onclick="switchTab('timeline'); return false;">
+              <span class="nav-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Audit Timeline
+              </span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" id="nav-reports" href="#reports" onclick="switchTab('reports'); return false;">
+              <span class="nav-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 0-4 4v1H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4Z"/></svg>
+                AI Reports
+              </span>
+              <span class="nav-badge badge-purple">LLM</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-item" id="nav-settings" href="#settings" onclick="switchTab('settings'); return false;">
+              <span class="nav-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+                Settings & Lab
+              </span>
             </a>
           </li>
           <li>
             <a class="nav-item" href="/docs" target="_blank">
-              <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-              OpenAPI Docs ↗
+              <span class="nav-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                API Docs ↗
+              </span>
             </a>
           </li>
         </ul>
       </div>
 
-      <div class="user-pill">
-        <div class="user-avatar">
-          SY
-          <span class="online-indicator"></span>
-        </div>
-        <div class="user-info">
-          <h4>Sai Yasasvi</h4>
-          <p>Lead Engineer</p>
+      <div class="sidebar-fst-footer">
+        <div class="fst-badge">FST</div>
+        <div>
+          <div class="fst-name">Forward Surg Team</div>
+          <div class="fst-loc">Bangalore Focal HQ</div>
         </div>
       </div>
     </aside>
+
 
     <!-- Main Dashboard Area -->
     <main class="main-canvas">
@@ -748,10 +1282,32 @@
         </div>
       </div>
 
-      <!-- ============================================================== -->
-      <!-- TAB 1: OVERVIEW PANE -->
-      <!-- ============================================================== -->
-      <div id="view-overview" class="tab-pane active">
+      <!-- Interactive Simulator Bar (Screenshots 1 & 2) -->
+      <div class="simulator-strip">
+        <div class="sim-strip-left">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <span style="font-size: 12px; font-weight: 700; color: var(--text-main);">Interactive Simulator:</span>
+          <span style="font-size: 11px; color: var(--text-muted);">Test EOG & HMAC streams</span>
+        </div>
+        <div class="sim-strip-actions">
+          <button class="sim-pill-btn nurse" onclick="simulateNurseCall()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Simulate Nurse Call (Verified)
+          </button>
+          <button class="sim-pill-btn tamper" onclick="simulateTamper()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Simulate Tampered HMAC
+          </button>
+          <button class="sim-pill-btn sync" onclick="simulateMedSync()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            Duplicate Med Sync
+          </button>
+        </div>
+      </div>
+
+
+      <!-- TAB 1: OVERVIEW PANE (PRESERVED 100% UNTOUCHED) -->
+<div id="view-overview" class="tab-pane active">
         <!-- Top 3 KPI Cards -->
         <div class="kpi-row">
           <div class="kpi-card">
@@ -994,7 +1550,672 @@
       <!-- ============================================================== -->
       <!-- TAB 2: DUAL PORTS DEEP DIVE PANE -->
       <!-- ============================================================== -->
-      <div id="view-dualports" class="tab-pane">
+
+
+      <!-- ============================================================== -->
+      <!-- TAB: EOG & BIO-SECURITY VIEW (MATCHES SCREENSHOT 1)           -->
+      <!-- ============================================================== -->
+      <div id="view-eog" class="tab-pane">
+        <!-- Header Banner Card -->
+        <div class="eog-hdr-card">
+          <div class="eog-hdr-left">
+            <div class="eog-hdr-icon">👁️</div>
+            <div>
+              <div class="eog-hdr-title">
+                <span>EOG Biopotential DSP & Case Capsule Security</span>
+                <span class="eog-hdr-badge">
+                  <span class="pulse-dot" style="background:#059669; width:6px; height:6px;"></span>
+                  4th-Order Butterworth (0.1–10.0 Hz)
+                </span>
+              </div>
+              <div class="eog-hdr-sub">
+                Hands-free dual-channel eye biopotentials • Pulse-width blink detection • HMAC-SHA256 integrity & ~87% delta compression
+              </div>
+            </div>
+          </div>
+          <div class="eog-hdr-actions">
+            <button class="eog-btn" id="eogToggleStreamBtn" onclick="toggleEOGStream()">
+              <span>⏸ Pause Stream</span>
+            </button>
+            <button class="eog-btn verified" onclick="simulateNurseCall()">
+              <span>🛡️ Test Verified Capsule</span>
+            </button>
+            <button class="eog-btn tamper" onclick="simulateTamper()">
+              <span>⚠️ Test Tamper Attack</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="eogToastNotice" style="display:none; padding: 12px 16px; border-radius: 12px; margin-bottom: 18px; font-size: 12px; font-weight: 700;"></div>
+
+        <!-- 4 KPI Metrics -->
+        <div class="eog-metrics-grid">
+          <div class="eog-metric-box">
+            <div>
+              <div class="eog-m-title">DECODED COMMAND</div>
+              <div class="eog-m-val">
+                <span id="eogCmdText">CALL_NURSE</span>
+                <span style="font-size: 11px; padding: 2px 7px; border-radius: 6px; background: #ffe4e6; color: #e11d48; font-weight: 700;" id="eogBlinkBadge">2 Blinks</span>
+              </div>
+              <div class="eog-m-sub">Gaze Direction: <strong id="eogGazeText" style="color:#2563eb;">CENTER</strong></div>
+            </div>
+            <div class="eog-m-icon" style="background: #fff1f2; color: #e11d48;">❤️</div>
+          </div>
+
+          <div class="eog-metric-box">
+            <div>
+              <div class="eog-m-title">DELTA BANDWIDTH SAVED</div>
+              <div class="eog-m-val" style="color: #b45309;">
+                <span>~87.0%</span>
+                <span style="font-size: 12px; font-weight: 500; color: #64748b;">reduced</span>
+              </div>
+              <div class="eog-m-sub" style="color: #059669;">1,450B baseline &rarr; 185B delta</div>
+            </div>
+            <div class="eog-m-icon" style="background: #fef3c7; color: #d97706;">⚡</div>
+          </div>
+
+          <div class="eog-metric-box">
+            <div>
+              <div class="eog-m-title">HMAC VERIFIED CAPSULES</div>
+              <div class="eog-m-val">
+                <span id="eogVerifiedCount">142</span>
+                <span style="font-size: 11px; color: #059669; font-weight: 700;">100% Valid</span>
+              </div>
+              <div class="eog-m-sub">HMAC-SHA256 • 256-bit Key</div>
+            </div>
+            <div class="eog-m-icon" style="background: #ecfdf5; color: #059669;">🛡️</div>
+          </div>
+
+          <div class="eog-metric-box">
+            <div>
+              <div class="eog-m-title">TAMPER ATTEMPTS BLOCKED</div>
+              <div class="eog-m-val" style="color: #dc2626;">
+                <span id="eogTamperCount">3</span>
+                <span style="font-size: 11px; color: #dc2626; font-weight: 700; background: #fee2e2; padding: 2px 6px; border-radius: 4px;">Quarantined</span>
+              </div>
+              <div class="eog-m-sub">Zero-Trust Capsule Sandbox</div>
+            </div>
+            <div class="eog-m-icon" style="background: #fee2e2; color: #dc2626;">🚫</div>
+          </div>
+        </div>
+
+        <!-- 2 Column Main Layout: Oscilloscope + Delta Engine -->
+        <div class="eog-main-grid">
+          <!-- Left: Oscilloscope Canvas -->
+          <div class="eog-scope-panel">
+            <div class="eog-scope-header">
+              <div class="eog-scope-title">100 HZ EOG DUAL-CHANNEL OSCILLOSCOPE</div>
+              <div class="eog-scope-buttons">
+                <button class="scope-btn active" id="btnModeNurse" onclick="setEOGScenario('nurse')">Nurse Call</button>
+                <button class="scope-btn" id="btnModePain" onclick="setEOGScenario('pain')">Pain (3x)</button>
+                <button class="scope-btn" id="btnModeWater" onclick="setEOGScenario('water')">Water (L)</button>
+                <button class="scope-btn" id="btnModeBath" onclick="setEOGScenario('bath')">Bath (R)</button>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 16px; font-size: 11px; margin-bottom: 12px; font-family: 'JetBrains Mono', monospace;">
+              <span class="eog-tag-green">● Vertical (Blink DSP Filtered)</span>
+              <span class="eog-tag-blue">● Horizontal (Saccadic Gaze Steps)</span>
+            </div>
+
+            <div style="height: 240px; width: 100%; position: relative; background: #040810; border-radius: 12px; overflow: hidden; border: 1px solid #1a2538;">
+              <canvas id="eogLiveCanvas" style="width: 100%; height: 100%; display: block;"></canvas>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px;">
+              <div style="background: #0f1524; border: 1px solid #1e293b; padding: 10px 14px; border-radius: 10px;">
+                <div style="font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase;">PULSE REJECTION</div>
+                <div style="font-size: 11px; font-family: 'JetBrains Mono', monospace; color: #e2e8f0; margin-top: 2px;">100ms &le; Duration &le; 400ms</div>
+              </div>
+              <div style="background: #0f1524; border: 1px solid #1e293b; padding: 10px 14px; border-radius: 10px;">
+                <div style="font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase;">IIR FILTER PASSBAND</div>
+                <div style="font-size: 11px; font-family: 'JetBrains Mono', monospace; color: #38bdf8; margin-top: 2px;">0.1 Hz – 10.0 Hz (4th-Order)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Delta Compression Engine & HMAC Envelope -->
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <!-- Case Capsule Delta Compression Engine -->
+            <div class="glass-card" style="padding: 22px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="color:#d97706;">⚡</span>
+                  <h3 style="font-size: 14px; font-weight: 800; color: var(--text-main); margin: 0;">Case Capsule Delta Compression Engine</h3>
+                </div>
+                <span class="nav-badge badge-cyan" style="background:#ecfdf5; color:#059669; border-color:#a7f3d0;">87.0% Savings</span>
+              </div>
+              <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+                In combat zones and disaster meshes, bandwidth is strictly throttled. The delta encoder transmits ONLY modified physiological differentials relative to evolving patient baseline envelopes.
+              </p>
+
+              <!-- Progress Bars -->
+              <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div>
+                  <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; margin-bottom: 4px;">
+                    <span>Full Telemetry JSON Payload</span>
+                    <span style="font-family:'JetBrains Mono', monospace;">1,450 Bytes (100%)</span>
+                  </div>
+                  <div style="height: 8px; width: 100%; background: #e2e8f0; border-radius: 999px; overflow: hidden;">
+                    <div style="height: 100%; width: 100%; background: #94a3b8;"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; margin-bottom: 4px;">
+                    <span>Delta Compressed Payload</span>
+                    <span style="font-family:'JetBrains Mono', monospace; color:#059669;">185 Bytes (12.8%)</span>
+                  </div>
+                  <div style="height: 8px; width: 100%; background: #e2e8f0; border-radius: 999px; overflow: hidden;">
+                    <div style="height: 100%; width: 12.8%; background: #10b981;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 10px; padding: 10px 14px; margin-top: 16px; font-size: 11px; color: #065f46; font-weight: 700; display: flex; justify-content: space-between;">
+                <span>Tactical Mesh Link Bandwidth Conserved:</span>
+                <span style="font-family: 'JetBrains Mono', monospace;">~1.26 KB / packet</span>
+              </div>
+            </div>
+
+            <!-- HMAC-SHA256 Cryptographic Envelope -->
+            <div class="glass-card" style="padding: 22px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="color:#2563eb;">🔒</span>
+                  <h3 style="font-size: 14px; font-weight: 800; color: var(--text-main); margin: 0;">HMAC-SHA256 Cryptographic Envelope</h3>
+                </div>
+                <span class="nav-badge badge-blue">Zero-Trust Signed</span>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 10px; font-size: 12px;">
+                <div style="display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                  <span style="color: var(--text-muted);">Signing Algorithm:</span>
+                  <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--text-main);">HMAC-SHA256 RFC 2104</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                  <span style="color: var(--text-muted);">Canonicalization:</span>
+                  <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--text-main);">Deterministic Sorted JSON</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Tamper Defense:</span>
+                  <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #10b981;">MitM Rejection + Replay Quarantine</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ============================================================== -->
+      <!-- TAB: GPS RADAR & AMBULANCE COORDINATION (SCREENSHOT 2)         -->
+      <!-- ============================================================== -->
+      <div id="view-map" class="tab-pane">
+        <!-- Banner Card -->
+        <div class="cad-hdr-banner">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(37, 99, 235, 0.12); color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+              🚑
+            </div>
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <h2 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0;">Ambulance Coordination & GPS Intelligence</h2>
+                <span class="nav-badge" style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 4px 8px; font-size: 11px;">
+                  <span class="pulse-dot" style="background:#059669; width:6px; height:6px;"></span>
+                  GPS LOCK: OPTIMAL (14 SVs)
+                </span>
+              </div>
+              <p style="font-size: 12px; color: var(--text-muted); margin: 3px 0 0 0;">
+                Fleet Tracking · Receiving Hospital Capacity Router · Operational CAD Dispatch Console
+              </p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button class="eog-btn" style="background:#2563eb; color:#fff; border-color:#1d4ed8;">Split CAD View</button>
+            <button class="eog-btn">Expanded Map</button>
+            <button class="eog-btn">Fleet & Hospital Deck</button>
+            <button class="eog-btn" style="color: #b45309; border-color: #fde68a;" onclick="simulateBlackout()">Simulate GPS Blackout</button>
+          </div>
+        </div>
+
+        <!-- Logistics Advisory Callout -->
+        <div class="cad-advisory-callout">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 16px;">🛡️</span>
+            <span><strong>Logistics & Routing Advisory:</strong> Hospital routing recommendations are calculated independently from road distance, traffic impedance, and receiving bed capacity. Clinical triage decisions remain autonomous under attending medical officers.</span>
+          </div>
+          <span style="font-size: 10px; font-weight: 800; background: rgba(30, 64, 175, 0.15); padding: 4px 8px; border-radius: 6px; letter-spacing: 0.5px;">INDEPENDENT OF TRIAGE</span>
+        </div>
+
+        <!-- Split Layout: Leaflet Map + CAD Mission Console -->
+        <div class="cad-split-layout">
+          <!-- Left: Tactical CAD Map Card -->
+          <div class="cad-map-card">
+            <div class="cad-map-top-overlay">
+              <div class="cad-map-badge">TACTICAL GPS RADAR · 4 Units · 3 Receiving Facilities</div>
+              <div class="cad-map-layers">
+                <button class="cad-layer-btn active" id="btnTileSat" onclick="setCadMapTile('satellite')">Satellite</button>
+                <button class="cad-layer-btn" id="btnTileRoad" onclick="setCadMapTile('roads')">Roads</button>
+                <button class="cad-layer-btn" id="btnTileTact" onclick="setCadMapTile('tactical')">Tactical</button>
+              </div>
+            </div>
+
+            <!-- Leaflet Container -->
+            <div id="cad_leaflet_map"></div>
+
+            <div class="cad-map-bot-overlay">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 10px; height: 10px; border-radius: 50%; background: #10b981;"></div>
+                <span style="font-size: 12px; font-weight: 700;">Central Tactical Corridor NH-44</span>
+                <span style="font-size: 11px; color: #94a3b8;">ETA: 7 mins · NOMINAL</span>
+              </div>
+              <button class="sim-pill-btn tamper" style="padding: 4px 10px; font-size: 11px;" onclick="simulateDetour()">
+                ⚠️ Simulate Detour (+6m)
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Active CAD Mission & Receiving Hospitals -->
+          <div class="cad-console-panel">
+            <!-- Active Mission Header -->
+            <div class="cad-mission-hdr">
+              <div>
+                <div class="cad-m-title">ACTIVE CAD MISSION</div>
+                <div class="cad-m-target">MSN-2026-081 - Sgt. Marcus Vance</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="nav-badge badge-red" style="padding: 4px 8px; font-size: 11px;">IMMEDIATE RED</span>
+                <a href="#patients" onclick="switchTab('patients'); return false;" style="font-size: 12px; color: #2563eb; text-decoration: none; font-weight: 700;">Chart ↗</a>
+              </div>
+            </div>
+
+            <!-- Unit & Hospital Assigned Info -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+              <div style="background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.06); padding: 10px 14px; border-radius: 12px;">
+                <div style="font-size: 11px; color: #64748b; font-weight: 700;">Unit Assigned</div>
+                <div style="font-size: 13px; font-weight: 800; color: #1e293b; margin-top: 2px;">Medic-1 (ALS)</div>
+                <div style="font-size: 10px; color: #059669; font-weight: 600;">ALS Certified</div>
+              </div>
+              <div style="background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.06); padding: 10px 14px; border-radius: 12px;">
+                <div style="font-size: 11px; color: #64748b; font-weight: 700;">Target Hospital</div>
+                <div style="font-size: 13px; font-weight: 800; color: #1e293b; margin-top: 2px;">Forward Surgical Team Alpha (FST-A)</div>
+                <div style="font-size: 10px; color: #2563eb; font-weight: 600;">ETA: 7 mins</div>
+              </div>
+            </div>
+
+            <!-- 5 Milestones -->
+            <div>
+              <div style="font-size: 11px; font-weight: 800; color: #64748b; margin-bottom: 8px; text-transform: uppercase;">
+                DISPATCH MILESTONES & TIMESTAMPS
+              </div>
+              <div class="cad-milestone-list">
+                <div class="cad-milestone-row done">
+                  <span>✔ 1. Unit Dispatched</span>
+                  <span style="font-family:'JetBrains Mono', monospace; font-size: 11px;">10:41</span>
+                </div>
+                <div class="cad-milestone-row done">
+                  <span>✔ 2. En Route to Scene</span>
+                  <span style="font-family:'JetBrains Mono', monospace; font-size: 11px;">10:43</span>
+                </div>
+                <div class="cad-milestone-row done">
+                  <span>✔ 3. On Scene with Patient</span>
+                  <span style="font-family:'JetBrains Mono', monospace; font-size: 11px;">10:48</span>
+                </div>
+                <div class="cad-milestone-row active" id="msRow4">
+                  <span>● 4. Patient Loaded & In Transit</span>
+                  <span style="font-family:'JetBrains Mono', monospace; font-size: 11px;">10:53</span>
+                </div>
+                <div class="cad-milestone-row" id="msRow5" style="color: #94a3b8;">
+                  <span>○ 5. Receiving Hospital Arrival</span>
+                  <span style="font-family:'JetBrains Mono', monospace; font-size: 11px;">ETA 11:02</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Advance Mission Stage Button -->
+            <button class="btn-primary-glow" id="btnAdvanceStage" style="width: 100%; justify-content: center; font-size: 13px; padding: 12px;" onclick="advanceCADStage()">
+              <span>⏩ Advance Mission Stage (TRANSPORTING)</span>
+            </button>
+
+            <!-- Suggested Receiving Hospitals Deck -->
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+                <div>
+                  <div style="font-size: 12px; font-weight: 800; color: var(--text-main);">Suggested Receiving Hospitals</div>
+                  <div style="font-size: 10px; color: var(--text-muted);">Ranked by transit time & real-time ICU/trauma bay capacity</div>
+                </div>
+                <span style="font-size: 10px; font-weight: 700; color: #64748b;">Live Load</span>
+              </div>
+
+              <!-- Hospital 1 -->
+              <div class="cad-hosp-card" style="border-left: 3px solid #2563eb;">
+                <div style="flex: 1;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <strong style="font-size: 12px; color: var(--text-main);">Forward Surgical Team Alpha (FST-A)</strong>
+                    <span style="font-size: 10px; color: #64748b;">(2.1 km)</span>
+                  </div>
+                  <div style="display: flex; gap: 8px; font-size: 10px; margin-top: 3px; font-family:'JetBrains Mono', monospace;">
+                    <span style="color:#059669; font-weight:700;">RECOMMENDED • 6m Transit</span>
+                    <span>ICU Free: 2</span>
+                    <span>Trauma Bays: 1</span>
+                    <span style="color:#2563eb; font-weight:700;">Load: 76.4%</span>
+                  </div>
+                  <div style="font-size: 10px; color: #64748b; margin-top: 2px;">
+                    Fastest transit time (&lt;7m) with immediate damage control surgical bay free.
+                  </div>
+                </div>
+                <button class="sim-pill-btn sync" style="padding: 4px 10px; font-size: 11px;">Assigned</button>
+              </div>
+
+              <!-- Hospital 2 -->
+              <div class="cad-hosp-card" style="border-left: 3px solid #10b981;">
+                <div style="flex: 1;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <strong style="font-size: 12px; color: var(--text-main);">Base General Hospital 3 (Apex Trauma)</strong>
+                    <span style="font-size: 10px; color: #64748b;">(4.8 km)</span>
+                  </div>
+                  <div style="display: flex; gap: 8px; font-size: 10px; margin-top: 3px; font-family:'JetBrains Mono', monospace;">
+                    <span style="color:#059669; font-weight:700;">RECOMMENDED • 12m Transit</span>
+                    <span>ICU Free: 9</span>
+                    <span>Trauma Bays: 4</span>
+                    <span style="color:#059669; font-weight:700;">Load: 54.0%</span>
+                  </div>
+                  <div style="font-size: 10px; color: #64748b; margin-top: 2px;">
+                    Optimal ICU capacity buffer (9 open beds) and specialized burn & trauma center.
+                  </div>
+                </div>
+                <button class="eog-btn" style="padding: 4px 10px; font-size: 11px;">Select</button>
+              </div>
+
+              <!-- Hospital 3 -->
+              <div class="cad-hosp-card" style="border-left: 3px solid #ef4444;">
+                <div style="flex: 1;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <strong style="font-size: 12px; color: var(--text-main);">Cantonment Field Infirmary (Zone Bravo)</strong>
+                    <span style="font-size: 10px; color: #64748b;">(6.9 km)</span>
+                  </div>
+                  <div style="display: flex; gap: 8px; font-size: 10px; margin-top: 3px; font-family:'JetBrains Mono', monospace;">
+                    <span style="color:#dc2626; font-weight:700;">DIVERT • 19m Transit</span>
+                    <span>ICU Free: 0</span>
+                    <span>Trauma Bays: 1</span>
+                    <span style="color:#dc2626; font-weight:700;">Load: 91.5%</span>
+                  </div>
+                  <div style="font-size: 10px; color: #64748b; margin-top: 2px;">
+                    ICU bed capacity exhausted (0 available). Advisory recommends divert to FST-Alpha.
+                  </div>
+                </div>
+                <button class="eog-btn" style="padding: 4px 10px; font-size: 11px; color:#dc2626;">Divert</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ============================================================== -->
+      <!-- TAB: BLOOD BANK & TRANSFUSION NETWORK MODULE                   -->
+      <!-- ============================================================== -->
+      <div id="view-bloodbank" class="tab-pane">
+        <div class="eog-hdr-card">
+          <div class="eog-hdr-left">
+            <div class="eog-hdr-icon" style="background: rgba(239, 68, 68, 0.12); color: #ef4444;">🩸</div>
+            <div>
+              <div class="eog-hdr-title">
+                <span>Blood Bank & Transfusion Tactical Network</span>
+                <span class="nav-badge badge-red">HEMO-DEFENSE</span>
+              </div>
+              <div class="eog-hdr-sub">
+                Emergency Crossmatching · Real-time Cold-Chain Telemetry · Regional Depot Allocation & Autonomous Drone Dispatch
+              </div>
+            </div>
+          </div>
+          <div class="eog-hdr-actions">
+            <button class="eog-btn verified" onclick="alert('Emergency O-Negative release protocol initiated!')">🚨 Emergency O- Release</button>
+            <button class="eog-btn" onclick="switchBloodTab('drone')">🚁 Drone Dispatch</button>
+          </div>
+        </div>
+
+        <!-- 4 KPI Cards -->
+        <div class="kpi-row" style="margin-bottom: 20px;">
+          <div class="kpi-card">
+            <div>
+              <div class="kpi-title">Total Whole Blood & Components</div>
+              <div class="kpi-value">1,420 Units</div>
+              <div class="kpi-trend"><span>●</span> Cold-chain 4.1°C Nominal</div>
+            </div>
+            <div class="kpi-icon-circle coral">🩸</div>
+          </div>
+          <div class="kpi-card">
+            <div>
+              <div class="kpi-title">Emergency Crossmatches</div>
+              <div class="kpi-value" style="color:#ef4444;">3 Active</div>
+              <div class="kpi-trend coral"><span>▲</span> 2 Priority One Traumas</div>
+            </div>
+            <div class="kpi-icon-circle coral">⚡</div>
+          </div>
+          <div class="kpi-card">
+            <div>
+              <div class="kpi-title">O-Negative Universal Reserve</div>
+              <div class="kpi-value" style="color:#059669;">84 Units</div>
+              <div class="kpi-trend"><span>✔</span> 100% Above Safety Floor</div>
+            </div>
+            <div class="kpi-icon-circle blue">🛡️</div>
+          </div>
+        </div>
+
+        <!-- Inventory Grid -->
+        <div class="glass-card" style="padding: 24px; margin-bottom: 20px;">
+          <div class="card-header-row">
+            <h2>📦 Blood Depot Inventory by ABO/Rh Type</h2>
+            <span class="badge-subtle">Updated 10s ago</span>
+          </div>
+          <table class="styled-table" style="margin-top: 14px;">
+            <thead>
+              <tr>
+                <th>Blood Type</th>
+                <th>Packed RBCs</th>
+                <th>Fresh Frozen Plasma</th>
+                <th>Platelets</th>
+                <th>Cryoprecipitate</th>
+                <th>Whole Blood</th>
+                <th>Reserve Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>O-</strong> (Universal Donor)</td><td>34 units</td><td>22 units</td><td>14 units</td><td>8 units</td><td>16 units</td><td><span class="nav-badge badge-green" style="background:#ecfdf5; color:#059669;">OPTIMAL</span></td></tr>
+              <tr><td><strong>O+</strong></td><td>142 units</td><td>88 units</td><td>45 units</td><td>30 units</td><td>62 units</td><td><span class="nav-badge badge-green" style="background:#ecfdf5; color:#059669;">OPTIMAL</span></td></tr>
+              <tr><td><strong>A-</strong></td><td>18 units</td><td>12 units</td><td>6 units</td><td>4 units</td><td>8 units</td><td><span class="nav-badge badge-amber">LOW</span></td></tr>
+              <tr><td><strong>A+</strong></td><td>110 units</td><td>75 units</td><td>38 units</td><td>24 units</td><td>50 units</td><td><span class="nav-badge badge-green" style="background:#ecfdf5; color:#059669;">OPTIMAL</span></td></tr>
+              <tr><td><strong>B-</strong></td><td>14 units</td><td>9 units</td><td>5 units</td><td>3 units</td><td>6 units</td><td><span class="nav-badge badge-amber">LOW</span></td></tr>
+              <tr><td><strong>B+</strong></td><td>95 units</td><td>62 units</td><td>28 units</td><td>19 units</td><td>42 units</td><td><span class="nav-badge badge-green" style="background:#ecfdf5; color:#059669;">OPTIMAL</span></td></tr>
+              <tr><td><strong>AB-</strong></td><td>8 units</td><td>6 units</td><td>3 units</td><td>2 units</td><td>4 units</td><td><span class="nav-badge badge-red">CRITICAL</span></td></tr>
+              <tr><td><strong>AB+</strong> (Universal Recipient)</td><td>45 units</td><td>32 units</td><td>16 units</td><td>11 units</td><td>20 units</td><td><span class="nav-badge badge-green" style="background:#ecfdf5; color:#059669;">OPTIMAL</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+      <!-- ============================================================== -->
+      <!-- TAB: HOSPITAL CAPACITY MODULE                                  -->
+      <!-- ============================================================== -->
+      <div id="view-capacity" class="tab-pane">
+        <div class="eog-hdr-card">
+          <div class="eog-hdr-left">
+            <div class="eog-hdr-icon" style="background: rgba(59, 130, 246, 0.12); color: #2563eb;">🏥</div>
+            <div>
+              <div class="eog-hdr-title">
+                <span>Regional Hospital Capacity & Surge Command</span>
+                <span class="nav-badge badge-blue">SURGE MONITOR</span>
+              </div>
+              <div class="eog-hdr-sub">
+                Live Bed Availability · Trauma Bay Status · ICU Ventilators & Critical Surge Escalation Protocols
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kpi-row" style="margin-bottom: 20px;">
+          <div class="kpi-card">
+            <div>
+              <div class="kpi-title">Forward Surgical Team Alpha (FST-A)</div>
+              <div class="kpi-value">76.4% Load</div>
+              <div class="kpi-trend"><span>●</span> 2 ICU Beds Free · 1 Trauma Bay</div>
+            </div>
+            <div class="kpi-icon-circle blue">🏥</div>
+          </div>
+          <div class="kpi-card">
+            <div>
+              <div class="kpi-title">Base General Hospital 3 (Apex)</div>
+              <div class="kpi-value" style="color:#059669;">54.0% Load</div>
+              <div class="kpi-trend"><span>✔</span> 9 ICU Beds Free · 4 Trauma Bays</div>
+            </div>
+            <div class="kpi-icon-circle purple">🏢</div>
+          </div>
+          <div class="kpi-card">
+            <div>
+              <div class="kpi-title">Cantonment Field Infirmary</div>
+              <div class="kpi-value" style="color:#ef4444;">91.5% Load</div>
+              <div class="kpi-trend coral"><span>▲</span> DIVERT PROTOCOL ACTIVE</div>
+            </div>
+            <div class="kpi-icon-circle coral">⚠️</div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ============================================================== -->
+      <!-- TAB: PHARMACEUTICAL NETWORK MODULE                             -->
+      <!-- ============================================================== -->
+      <div id="view-pharma" class="tab-pane">
+        <div class="eog-hdr-card">
+          <div class="eog-hdr-left">
+            <div class="eog-hdr-icon" style="background: rgba(168, 85, 247, 0.12); color: #a855f7;">💊</div>
+            <div>
+              <div class="eog-hdr-title">
+                <span>Tactical Pharmaceutical & Critical Supply Network</span>
+                <span class="nav-badge badge-purple">PHARMA-DEFENSE</span>
+              </div>
+              <div class="eog-hdr-sub">
+                Emergency Countermeasures · Cold-Chain RFID Sensors · Autonomous Drug Resupply & Controlled Vaults
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card" style="padding: 24px;">
+          <h2>💊 Critical Field Medications & Antidotes</h2>
+          <table class="styled-table" style="margin-top: 14px;">
+            <thead>
+              <tr><th>Medication</th><th>Indication</th><th>Reserve On-Hand</th><th>Cold-Chain Temp</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Tranexamic Acid (TXA)</strong></td><td>Major Hemorrhage Protocol</td><td>340 Vials</td><td>21.2°C Ambient</td><td><span class="nav-badge badge-green" style="background:#ecfdf5; color:#059669;">ADEQUATE</span></td></tr>
+              <tr><td><strong>Epinephrine 1:1000</strong></td><td>Anaphylaxis / Cardiac Arrest</td><td>120 Amps</td><td>20.8°C Ambient</td><td><span class="nav-badge badge-green" style="background:#ecfdf5; color:#059669;">ADEQUATE</span></td></tr>
+              <tr><td><strong>Atropine Sulfate</strong></td><td>Nerve Agent / Organophosphate</td><td>85 Auto-Injectors</td><td>19.5°C Ambient</td><td><span class="nav-badge badge-green" style="background:#ecfdf5; color:#059669;">ADEQUATE</span></td></tr>
+              <tr><td><strong>Morphine Sulfate</strong></td><td>Severe Trauma Analgesia</td><td>45 Carpujects</td><td>Vault Locked</td><td><span class="nav-badge badge-amber">LOW RESERVE</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+      <!-- ============================================================== -->
+      <!-- TAB: PATIENTS REGISTRY MODULE                                  -->
+      <!-- ============================================================== -->
+      <div id="view-patients" class="tab-pane">
+        <div class="eog-hdr-card">
+          <div class="eog-hdr-left">
+            <div class="eog-hdr-icon" style="background: rgba(37, 99, 235, 0.12); color: #2563eb;">👤</div>
+            <div>
+              <div class="eog-hdr-title">
+                <span>Tactical Bio-Capsule Patient Registry</span>
+                <span class="nav-badge badge-cyan">TELEMETRY SYNC</span>
+              </div>
+              <div class="eog-hdr-sub">
+                Live EMR Records · In-Transit Bio-Sensors · Waveform Buffers & Cryptographic Patient Identity Envelopes
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card" style="padding: 24px;">
+          <h2>👥 Active Casualty Records</h2>
+          <table class="styled-table" style="margin-top: 14px;">
+            <thead>
+              <tr><th>Patient ID</th><th>Full Name</th><th>Triage Tag</th><th>Heart Rate</th><th>SpO2</th><th>BP (mmHg)</th><th>Assigned Unit</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>PT-101</strong></td><td>Sgt. Marcus Vance</td><td><span class="nav-badge badge-red">IMMEDIATE RED</span></td><td>138 bpm</td><td>89%</td><td>88/54</td><td>Medic-1 (ALS)</td></tr>
+              <tr><td><strong>PT-204</strong></td><td>Lt. Priya Sharma</td><td><span class="nav-badge badge-amber">DELAYED YELLOW</span></td><td>96 bpm</td><td>96%</td><td>118/76</td><td>Rescue-2 (CCT)</td></tr>
+              <tr><td><strong>PT-309</strong></td><td>Cpl. David Miller</td><td><span class="nav-badge badge-green" style="background:#ecfdf5; color:#059669;">MINIMAL GREEN</span></td><td>78 bpm</td><td>99%</td><td>122/80</td><td>Rough-3 (Austere)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+      <!-- ============================================================== -->
+      <!-- TAB: TRIAGE QUEUE MODULE                                       -->
+      <!-- ============================================================== -->
+      <div id="view-triage" class="tab-pane">
+        <div class="eog-hdr-card">
+          <div class="eog-hdr-left">
+            <div class="eog-hdr-icon" style="background: rgba(6, 182, 212, 0.12); color: #06b6d4;">📊</div>
+            <div>
+              <div class="eog-hdr-title">
+                <span>Automated Clinical Triage Queue</span>
+                <span class="nav-badge badge-cyan">SALT / START PROTOCOL</span>
+              </div>
+              <div class="eog-hdr-sub">
+                Autonomous Bio-Telemetry Scoring · Priority Sorting · Red/Yellow/Green/Black Stratification
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kpi-row" style="margin-bottom: 20px;">
+          <div class="kpi-card" style="border-left: 4px solid #ef4444;">
+            <div><div class="kpi-title">Immediate (Red)</div><div class="kpi-value" style="color:#ef4444;">1 In-Flight</div><div class="kpi-trend coral">Critical Resuscitation</div></div>
+          </div>
+          <div class="kpi-card" style="border-left: 4px solid #f59e0b;">
+            <div><div class="kpi-title">Delayed (Yellow)</div><div class="kpi-value" style="color:#f59e0b;">1 Staged</div><div class="kpi-trend">Stable Monitoring</div></div>
+          </div>
+          <div class="kpi-card" style="border-left: 4px solid #10b981;">
+            <div><div class="kpi-title">Minimal (Green)</div><div class="kpi-value" style="color:#10b981;">1 Ambulatory</div><div class="kpi-trend">Minor First Aid</div></div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ============================================================== -->
+      <!-- TAB: FAILOVER & TINYML MODULE                                  -->
+      <!-- ============================================================== -->
+      <div id="view-failover" class="tab-pane">
+        <div class="eog-hdr-card" style="margin-bottom: 20px;">
+          <div class="eog-hdr-left">
+            <div class="eog-hdr-icon" style="background: rgba(245, 158, 11, 0.12); color: #f59e0b;">⚡</div>
+            <div>
+              <div class="eog-hdr-title">
+                <span>Dual-Port Failover & Edge TinyML Classifier</span>
+                <span class="nav-badge badge-amber">500ms TARGET</span>
+              </div>
+              <div class="eog-hdr-sub">
+                Port A Primary WAN vs Port B LTE Hot-Standby · INT8 Quantized Edge Decision Engine & Fault Injection
+              </div>
+            </div>
+          </div>
+          <div class="eog-hdr-actions">
+            <button class="eog-btn verified" onclick="switchSubFailover('ports')">🌐 Dual Ports View</button>
+            <button class="eog-btn verified" onclick="switchSubFailover('tinyml')">🧠 TinyML INT8 View</button>
+            <button class="eog-btn tamper" onclick="switchSubFailover('faultlab')">🧪 Fault Lab</button>
+          </div>
+        </div>
+
+        <div id="failoverSubContainer">
+          <!-- Embeds the original Dual Ports, TinyML, and Fault Lab views -->
+          <div id="view-dualports" class="tab-pane">
         <div class="ports-grid">
           <!-- Port A Deep Dive -->
           <div class="port-detail-box">
@@ -1310,10 +2531,558 @@
           </div>
         </div>
       </div>
+        </div>
+      </div>
+
+
+      <!-- ============================================================== -->
+      <!-- TAB: AUDIT TIMELINE MODULE                                     -->
+      <!-- ============================================================== -->
+      <div id="view-timeline" class="tab-pane">
+        <div class="eog-hdr-card">
+          <div class="eog-hdr-left">
+            <div class="eog-hdr-icon" style="background: rgba(14, 165, 233, 0.12); color: #0ea5e9;">🕒</div>
+            <div>
+              <div class="eog-hdr-title">
+                <span>Cryptographic Audit Timeline & Event Ledger</span>
+                <span class="nav-badge badge-blue">RFC 3161 TIME-STAMPED</span>
+              </div>
+              <div class="eog-hdr-sub">
+                Immutable Tamper-Evident Ledger · SHA-256 Hashes · Bio-Capsule Events & State Transitions
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card" style="padding: 24px;">
+          <h2>📜 Chronological Event Ledger</h2>
+          <div id="auditTimelineList" style="display: flex; flex-direction: column; gap: 10px; margin-top: 14px;">
+            <div class="route-item">
+              <div class="route-left">
+                <div class="route-bullet"></div>
+                <div>
+                  <div class="route-title">10:53:14 &bull; CAPSULE_TELEMETRY_SYNC [PT-101]</div>
+                  <div class="route-sub">Delta frame encoded: 185B (87% reduction). HMAC-SHA256 verified.</div>
+                </div>
+              </div>
+              <span class="nav-badge badge-green" style="background:#ecfdf5; color:#059669;">VERIFIED</span>
+            </div>
+            <div class="route-item">
+              <div class="route-left">
+                <div class="route-bullet amber"></div>
+                <div>
+                  <div class="route-title">10:48:02 &bull; CAD_MILESTONE_UPDATED [MSN-2026-081]</div>
+                  <div class="route-sub">Ambulance Medic-1 arrived on scene. Attending Paramedic Sharma established vitals.</div>
+                </div>
+              </div>
+              <span class="nav-badge badge-blue">CAD_SYNC</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ============================================================== -->
+      <!-- TAB: AI REPORTS MODULE                                         -->
+      <!-- ============================================================== -->
+      <div id="view-reports" class="tab-pane">
+        <div class="eog-hdr-card">
+          <div class="eog-hdr-left">
+            <div class="eog-hdr-icon" style="background: rgba(168, 85, 247, 0.12); color: #a855f7;">🤖</div>
+            <div>
+              <div class="eog-hdr-title">
+                <span>AI Clinical Diagnostic & Evacuation Reports</span>
+                <span class="nav-badge badge-purple">LOCAL LLM REASONING</span>
+              </div>
+              <div class="eog-hdr-sub">
+                Edge LLM Clinical Summaries · Damage Control Resuscitation Insights · Autonomous Evacuation Advisory
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card" style="padding: 24px;">
+          <h2>📑 Generated Triage & Evacuation Briefing</h2>
+          <div style="background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.06); padding: 18px; border-radius: 14px; margin-top: 14px; font-size: 13px; line-height: 1.6;">
+            <p><strong>SUBJECT:</strong> Tactical Medical Evacuation Summary - MSN-2026-081 (Sgt. Marcus Vance)</p>
+            <p style="margin-top: 8px;"><strong>CLINICAL REASONING:</strong> Patient displays acute hemorrhagic shock secondary to blast trauma. Heart rate 138 bpm with falling MAP (88/54). Whole blood transfusion protocol initiated in Medic-1 transit.</p>
+            <p style="margin-top: 8px;"><strong>RECOMMENDATION:</strong> Divert to Forward Surgical Team Alpha (FST-A). Facility has 1 immediate damage control surgical bay free, 2 ICU beds, and is 2.1 km (6 mins) away. Base-3 is 12 mins away and should remain backup.</p>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ============================================================== -->
+      <!-- TAB: SETTINGS & CHAOS LAB MODULE                               -->
+      <!-- ============================================================== -->
+      <div id="view-settings" class="tab-pane">
+        <div class="eog-hdr-card">
+          <div class="eog-hdr-left">
+            <div class="eog-hdr-icon" style="background: rgba(100, 116, 139, 0.12); color: #64748b;">⚙️</div>
+            <div>
+              <div class="eog-hdr-title">
+                <span>System Configuration & Chaos Engineering Lab</span>
+                <span class="nav-badge badge-amber">DIAGNOSTICS</span>
+              </div>
+              <div class="eog-hdr-sub">
+                Failover Sensitivity · MQTT HiveMQ Broker Pools · Jitter Simulation & Physical Line Disconnects
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card" style="padding: 24px;">
+          <h2>🔧 Tactical Engine Configuration</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+            <div class="metric-sub-card">
+              <div class="lbl">Primary Interface</div>
+              <div class="val" style="font-size: 16px;">Port A (192.168.1.100 - WAN)</div>
+            </div>
+            <div class="metric-sub-card">
+              <div class="lbl">Hot-Standby Interface</div>
+              <div class="val" style="font-size: 16px;">Port B (10.0.0.50 - 5G LTE)</div>
+            </div>
+            <div class="metric-sub-card">
+              <div class="lbl">Failover Heartbeat Period</div>
+              <div class="val" style="font-size: 16px;">100 ms</div>
+            </div>
+            <div class="metric-sub-card">
+              <div class="lbl">TinyML Inference Cycle</div>
+              <div class="val" style="font-size: 16px;">&lt; 0.02 ms (INT8)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
     </main>
   </div>
 
+
   <script>
+    // Tab Switching Functionality for all 12 modules
+    function switchTab(tabId) {
+      if (!tabId) tabId = 'overview';
+      
+      // 1. Hide all tab panes, show selected
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+      const targetPane = document.getElementById('view-' + tabId);
+      const targetNav = document.getElementById('nav-' + tabId);
+
+      if (targetPane) targetPane.classList.add('active');
+      if (targetNav) targetNav.classList.add('active');
+
+      const mainCanvas = document.querySelector('.main-canvas');
+      if (mainCanvas) mainCanvas.scrollTop = 0;
+
+      if (window.location.hash !== '#' + tabId) {
+        try { history.replaceState(null, '', '#' + tabId); } catch(e) {}
+      }
+
+      // 2. Update Top Greeting Headers
+      const titleEl = document.getElementById('topGreetingTitle');
+      const subEl = document.getElementById('topGreetingSub');
+
+      if (tabId === 'overview') {
+        if (titleEl) titleEl.innerText = 'Good Morning, Kshitij Ops 👋';
+        if (subEl) subEl.innerText = 'Dual-Port Network Telemetry Stream • INT8 TinyML Classifier • 500ms Failover Engine';
+        setTimeout(resizeCanvas, 50);
+      } else if (tabId === 'capacity') {
+        if (titleEl) titleEl.innerText = 'Hospital Capacity & Regional Surge Command 🏥';
+        if (subEl) subEl.innerText = 'Live Bed Availability · Trauma Bays · ICU Surge Escalation Protocols';
+      } else if (tabId === 'pharma') {
+        if (titleEl) titleEl.innerText = 'Pharmaceutical Network & Countermeasures 💊';
+        if (subEl) subEl.innerText = 'Emergency Antidotes · Cold-Chain RFID Sensors · Controlled Resupply';
+      } else if (tabId === 'bloodbank') {
+        if (titleEl) titleEl.innerText = 'Blood Bank & Transfusion Tactical Network 🩸';
+        if (subEl) subEl.innerText = 'Emergency Crossmatching · Regional Depot Inventory · Autonomous Drone Dispatch';
+      } else if (tabId === 'patients') {
+        if (titleEl) titleEl.innerText = 'Tactical Bio-Capsule Patient Registry 👤';
+        if (subEl) subEl.innerText = 'Active Casualties · Real-Time Vitals Telemetry · Waveform Buffers';
+      } else if (tabId === 'triage') {
+        if (titleEl) titleEl.innerText = 'Automated Clinical Triage Queue 📊';
+        if (subEl) subEl.innerText = 'SALT/START Protocol · Autonomous Bio-Telemetry Priority Sorting';
+      } else if (tabId === 'map') {
+        if (titleEl) titleEl.innerText = 'Ambulance Coordination & GPS Intelligence 🚑';
+        if (subEl) subEl.innerText = 'Fleet Tracking · Receiving Hospital Capacity Router · Operational CAD Console';
+        setTimeout(initCadMap, 150);
+      } else if (tabId === 'failover') {
+        if (titleEl) titleEl.innerText = 'Dual-Port Failover & TinyML Edge Classifier ⚡';
+        if (subEl) subEl.innerText = 'Port A Primary WAN vs Port B LTE Backup Comparison & 8D Feature Vectors';
+      } else if (tabId === 'eog') {
+        if (titleEl) titleEl.innerText = 'EOG Biopotential DSP & Case Capsule Security 👁️';
+        if (subEl) subEl.innerText = 'Hands-free dual-channel eye biopotentials · Pulse-width blink detection · HMAC-SHA256';
+        startEOGOscilloscope();
+      } else if (tabId === 'timeline') {
+        if (titleEl) titleEl.innerText = 'Cryptographic Audit Timeline & Event Ledger 🕒';
+        if (subEl) subEl.innerText = 'Immutable Tamper-Evident Ledger · SHA-256 Hashes · Bio-Capsule Events';
+      } else if (tabId === 'reports') {
+        if (titleEl) titleEl.innerText = 'AI Diagnostic & Evacuation Reports 🤖';
+        if (subEl) subEl.innerText = 'Edge LLM Clinical Summaries · Damage Control Resuscitation Insights';
+      } else if (tabId === 'settings') {
+        if (titleEl) titleEl.innerText = 'Chaos Engineering & Fault Injection Lab ⚙️';
+        if (subEl) subEl.innerText = 'Simulate Physical Network Drops, Latency Spikes, and Failover State Transitions';
+      }
+    }
+
+    // Sub-view toggle in Failover
+    function switchSubFailover(subId) {
+      const legacyViews = ['view-dualports', 'view-tinyml', 'view-faultlab'];
+      legacyViews.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = (id === 'view-' + subId) ? 'block' : 'none';
+      });
+    }
+
+    // Leaflet CAD Map Logic (Matches Screenshot 2)
+    let cadMapInstance = null;
+    let cadCorridorLine = null;
+
+    function initCadMap() {
+      const mapDiv = document.getElementById('cad_leaflet_map');
+      if (!mapDiv) return;
+
+      if (cadMapInstance) {
+        cadMapInstance.invalidateSize();
+        return;
+      }
+
+      // Center around focal tactical area (New Delhi coordinates from Screenshot 2: Janpath / India Gate)
+      cadMapInstance = L.map('cad_leaflet_map', {
+        center: [28.6150, 77.2100],
+        zoom: 14,
+        zoomControl: false
+      });
+
+      L.control.zoom({ position: 'topright' }).addTo(cadMapInstance);
+
+      // Default to Satellite tile layer matching screenshot 2
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri',
+        maxZoom: 19
+      }).addTo(cadMapInstance);
+
+      // Add Ambulance markers matching screenshot 2
+      const ambulances = [
+        { id: 'MEDEVAC-01', callsign: 'Medic-1', lat: 28.6150, lng: 77.2100, active: true },
+        { id: 'MEDEVAC-02', callsign: 'Rescue-2', lat: 28.6220, lng: 77.2140, active: false },
+        { id: 'MEDEVAC-03', callsign: 'Rough-3', lat: 28.6080, lng: 77.2020, active: false },
+        { id: 'MEDEVAC-04', callsign: 'Rapid-4', lat: 28.6320, lng: 77.2180, active: false }
+      ];
+
+      ambulances.forEach(amb => {
+        const iconHtml = `<div style="background: ${amb.active ? '#2563eb' : '#1e293b'}; border: 2px solid #fff; border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">🚑</div>`;
+        const customIcon = L.divIcon({ html: iconHtml, className: 'cad-amb-marker', iconSize: [34, 34], iconAnchor: [17, 17] });
+        L.marker([amb.lat, amb.lng], { icon: customIcon }).addTo(cadMapInstance)
+          .bindPopup(`<b>${amb.callsign}</b><br>Status: ${amb.active ? 'TRANSPORTING' : 'AVAILABLE'}`);
+      });
+
+      // Add Hospital Beacons
+      const hospitals = [
+        { name: 'Forward Surgical Team Alpha (FST-A)', lat: 28.6139, lng: 77.2090, tag: 'FST-A' },
+        { name: 'Base General Hospital 3', lat: 28.6380, lng: 77.2250, tag: 'BASE-3' }
+      ];
+
+      hospitals.forEach(h => {
+        const iconHtml = `<div style="background: #10b981; border: 2px solid #fff; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">🏥</div>`;
+        const hospIcon = L.divIcon({ html: iconHtml, className: 'cad-hosp-marker', iconSize: [30, 30], iconAnchor: [15, 15] });
+        L.marker([h.lat, h.lng], { icon: hospIcon }).addTo(cadMapInstance)
+          .bindPopup(`<b>${h.name}</b><br>Accepting Traumas`);
+      });
+
+      // Add Tactical Corridor Polyline
+      const corridorCoords = [
+        [28.6150, 77.2100],
+        [28.6145, 77.2095],
+        [28.6139, 77.2090]
+      ];
+      cadCorridorLine = L.polyline(corridorCoords, {
+        color: '#3b82f6',
+        weight: 5,
+        opacity: 0.85,
+        dashArray: '8, 8'
+      }).addTo(cadMapInstance);
+    }
+
+    function setCadMapTile(type) {
+      document.querySelectorAll('.cad-layer-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById('btnTile' + type.charAt(0).toUpperCase() + type.slice(1, 4));
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    // Advance CAD Stage
+    let currentCADStage = 4;
+    function advanceCADStage() {
+      const btn = document.getElementById('btnAdvanceStage');
+      const row4 = document.getElementById('msRow4');
+      const row5 = document.getElementById('msRow5');
+      if (currentCADStage === 4) {
+        currentCADStage = 5;
+        if (row4) { row4.className = 'cad-milestone-row done'; row4.innerHTML = '<span>✔ 4. Patient Loaded & In Transit</span><span style="font-family:monospace; font-size:11px;">10:53</span>'; }
+        if (row5) { row5.className = 'cad-milestone-row active'; row5.innerHTML = '<span>● 5. Receiving Hospital Arrival</span><span style="font-family:monospace; font-size:11px;">11:02</span>'; }
+        if (btn) { btn.innerHTML = '<span>✔ MISSION COMPLETED (HANDOFF COMPLETED)</span>'; btn.style.background = '#059669'; }
+      } else {
+        alert('Mission MSN-2026-081 completed. Handoff to FST-Alpha trauma bay confirmed.');
+      }
+    }
+
+    function simulateDetour() {
+      alert('Traffic impedance detected on NH-44. Route dynamically recalculated via Janpath outer ring (+6 min detour).');
+    }
+
+    function simulateBlackout() {
+      alert('Simulating GPS Blackout... Fallback inertial dead-reckoning & cell tower triangulation engaged.');
+    }
+
+    // EOG Live Oscilloscope Simulation (Matches Screenshot 1)
+    let eogStreaming = true;
+    let eogScenario = 'nurse';
+    let eogCanvasAnimId = null;
+    let eogT = 0;
+
+    function toggleEOGStream() {
+      eogStreaming = !eogStreaming;
+      const btn = document.getElementById('eogToggleStreamBtn');
+      if (btn) btn.innerHTML = eogStreaming ? '<span>⏸ Pause Stream</span>' : '<span>▶ Resume Stream</span>';
+    }
+
+    function setEOGScenario(scen) {
+      eogScenario = scen;
+      document.querySelectorAll('.scope-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById('btnMode' + scen.charAt(0).toUpperCase() + scen.slice(1));
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const cmdEl = document.getElementById('eogCmdText');
+      const badgeEl = document.getElementById('eogBlinkBadge');
+      const gazeEl = document.getElementById('eogGazeText');
+
+      if (scen === 'nurse') {
+        if (cmdEl) cmdEl.innerText = 'CALL_NURSE';
+        if (badgeEl) badgeEl.innerText = '2 Blinks';
+        if (gazeEl) gazeEl.innerText = 'CENTER';
+      } else if (scen === 'pain') {
+        if (cmdEl) cmdEl.innerText = 'REPORT_PAIN';
+        if (badgeEl) badgeEl.innerText = '3 Blinks';
+        if (gazeEl) gazeEl.innerText = 'CENTER';
+      } else if (scen === 'water') {
+        if (cmdEl) cmdEl.innerText = 'REQUEST_WATER';
+        if (badgeEl) badgeEl.innerText = '1 Blink + Left';
+        if (gazeEl) gazeEl.innerText = 'LEFT';
+      } else if (scen === 'bath') {
+        if (cmdEl) cmdEl.innerText = 'REQUEST_BATH';
+        if (badgeEl) badgeEl.innerText = '1 Blink + Right';
+        if (gazeEl) gazeEl.innerText = 'RIGHT';
+      }
+    }
+
+    function startEOGOscilloscope() {
+      const c = document.getElementById('eogLiveCanvas');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+
+      function drawEOG() {
+        if (!eogStreaming) {
+          eogCanvasAnimId = requestAnimationFrame(drawEOG);
+          return;
+        }
+        eogT += 0.05;
+        const w = c.width = c.clientWidth;
+        const h = c.height = c.clientHeight;
+
+        ctx.clearRect(0, 0, w, h);
+
+        // Draw faint dark grid
+        ctx.strokeStyle = '#111b2b';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < w; x += 25) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+        }
+        for (let y = 0; y < h; y += 25) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+        }
+
+        // Baseline 1 (Channel 1 - Vertical Blink Filtered)
+        const midY1 = h * 0.32;
+        ctx.strokeStyle = '#1e293b';
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath(); ctx.moveTo(0, midY1); ctx.lineTo(w, midY1); ctx.stroke();
+
+        // Baseline 2 (Channel 2 - Horizontal Saccade)
+        const midY2 = h * 0.72;
+        ctx.beginPath(); ctx.moveTo(0, midY2); ctx.lineTo(w, midY2); ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Green Waveform (Vertical blink)
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        for (let x = 0; x < w; x++) {
+          const normX = x / w;
+          // Add rhythmic blink pulses
+          let blinkPulse = 0;
+          if (Math.sin(eogT * 1.5) > 0.8) {
+            const pulseCenter = 0.5 + Math.sin(eogT * 0.4) * 0.2;
+            const dist = Math.abs(normX - pulseCenter);
+            blinkPulse = Math.exp(-dist * 40) * 35;
+          }
+          const y = midY1 - blinkPulse - Math.sin((x * 0.04) + eogT * 4) * 3;
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        // Blue Waveform (Horizontal saccade)
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        for (let x = 0; x < w; x++) {
+          const normX = x / w;
+          const saccadeStep = Math.sign(Math.sin((eogT * 0.8) + (normX * 2))) * 12;
+          const y = midY2 - saccadeStep - Math.sin((x * 0.03) + eogT * 2) * 2;
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        eogCanvasAnimId = requestAnimationFrame(drawEOG);
+      }
+
+      if (eogCanvasAnimId) cancelAnimationFrame(eogCanvasAnimId);
+      drawEOG();
+    }
+
+    // Simulator Interactive Triggers
+    function showToast(msg, isErr) {
+      const t = document.getElementById('eogToastNotice');
+      if (!t) return;
+      t.style.display = 'block';
+      t.style.background = isErr ? '#fef2f2' : '#ecfdf5';
+      t.style.color = isErr ? '#dc2626' : '#059669';
+      t.style.border = isErr ? '1px solid #fecaca' : '1px solid #a7f3d0';
+      t.innerHTML = msg;
+      setTimeout(() => { t.style.display = 'none'; }, 4000);
+    }
+
+    function simulateNurseCall() {
+      const countEl = document.getElementById('eogVerifiedCount');
+      if (countEl) countEl.innerText = parseInt(countEl.innerText || '142') + 1;
+      showToast('✅ HMAC VERIFIED: Nurse call capsule authenticated with 256-bit signature.', false);
+    }
+
+    function simulateTamper() {
+      const countEl = document.getElementById('eogTamperCount');
+      if (countEl) countEl.innerText = parseInt(countEl.innerText || '3') + 1;
+      showToast('⚠️ TAMPER DETECTED: Capsule SHA-256 signature mismatch. Quarantined by Zero-Trust Sandbox!', true);
+    }
+
+    function simulateMedSync() {
+      showToast('🔄 Duplicate medication sync prevented by deterministic idempotency key.', false);
+    }
+
+    // Sync tab on initial load or browser back/forward
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        switchTab(hash);
+      }
+    });
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        switchTab(hash);
+      }
+    });
+
+    // THEME TOGGLE
+    function toggleTheme() {
+      const body = document.body;
+      const icon = document.getElementById('themeIcon');
+      if (body.getAttribute('data-theme') === 'dark') {
+        body.setAttribute('data-theme', 'light');
+        icon.innerText = '🌙';
+      } else {
+        body.setAttribute('data-theme', 'dark');
+        icon.innerText = '☀️';
+      }
+    }
+
+    // BEZIER WAVE CHART IMPLEMENTATION (PRESERVED)
+    const canvas = document.getElementById('waveCanvas');
+    const ctx = canvas ? canvas.getContext('2d') : null;
+    let waveData = [];
+    const maxPoints = 50;
+
+    for (let i = 0; i < maxPoints; i++) {
+      waveData.push(22 + Math.sin(i * 0.3) * 3);
+    }
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width === 0) return;
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      if (ctx) ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      drawWave();
+    }
+    window.addEventListener('resize', resizeCanvas);
+    setTimeout(resizeCanvas, 100);
+
+    function drawWave() {
+      if (!canvas || !ctx) return;
+      const rect = canvas.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      if (w === 0 || h === 0) return;
+
+      ctx.clearRect(0, 0, w, h);
+      if (waveData.length < 2) return;
+
+      const minVal = 0;
+      const maxVal = Math.max(120, Math.max(...waveData) * 1.25);
+      const strokeColor = '#f43f5e';
+
+      ctx.beginPath();
+      const stepX = w / (waveData.length - 1);
+      const getCoord = (idx) => {
+        const x = idx * stepX;
+        const norm = (waveData[idx] - minVal) / (maxVal - minVal);
+        const y = h - (norm * (h * 0.8)) - (h * 0.1);
+        return [x, y];
+      };
+
+      const [x0, y0] = getCoord(0);
+      ctx.moveTo(x0, y0);
+
+      for (let i = 0; i < waveData.length - 1; i++) {
+        const [xCurr, yCurr] = getCoord(i);
+        const [xNext, yNext] = getCoord(i + 1);
+        const cpX = (xCurr + xNext) / 2;
+        ctx.bezierCurveTo(cpX, yCurr, cpX, yNext, xNext, yNext);
+      }
+
+      ctx.strokeStyle = strokeColor;
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      ctx.lineTo(w, h);
+      ctx.lineTo(0, h);
+      ctx.closePath();
+      const grad = ctx.createLinearGradient(0, 0, 0, h);
+      grad.addColorStop(0, 'rgba(244, 63, 94, 0.28)');
+      grad.addColorStop(1, 'rgba(244, 63, 94, 0.00)');
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+
+    function pushWavePoint(val) {
+      waveData.push(val);
+      if (waveData.length > maxPoints) waveData.shift();
+      drawWave();
+    }
+
+
     // Tab Switching Functionality
     function switchTab(tabId) {
       if (!tabId) tabId = 'overview';
@@ -1978,6 +3747,7 @@
     setTimeout(connectMQTT, 200);
     setInterval(fetchEvents, 1000);
     setInterval(syncSensorsFromApi, 2000);
+  
   </script>
 </body>
 </html>
