@@ -80,6 +80,18 @@ security_audit_stats = {
     "bandwidth_savings_pct": 87.0
 }
 
+latest_mqtt_sensors: Dict[str, Any] = {
+    "pulse_bpm": 0,
+    "force_n": 0.0,
+    "gyro_z": 0.0,
+    "mpu_ok": True,
+    "rfid": "NONE",
+    "lat": 12.871773,
+    "lng": 77.576856,
+    "pressure_kpa": 101.3,
+    "temp_c": 36.8,
+}
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     seed_initial_mock_data()
@@ -1703,6 +1715,14 @@ def trigger_failover_preset(req: FailoverPresetRequest):
 def get_failover_events():
     return failover_engine.get_event_history()
 
+@app.get("/api/events")
+def get_events():
+    return failover_engine.get_event_history()
+
+@app.get("/api/sensors")
+def get_sensors():
+    return latest_mqtt_sensors
+
 @app.get("/api/tinyml/status")
 def get_tinyml_status():
     """TinyML INT8 deployment status on NXP FRDM-MCXN236 with OLED Bridge metrics."""
@@ -2354,3 +2374,19 @@ async def websocket_endpoint(websocket: WebSocket):
     except Exception:
         if websocket in active_websockets:
             active_websockets.remove(websocket)
+
+
+@app.websocket("/ws/telemetry")
+async def websocket_telemetry_stream(websocket: WebSocket):
+    """Real-time streaming websocket sending dual-port telemetry, state evaluation, and live MQTT sensor data every 200ms."""
+    await websocket.accept()
+    try:
+        while True:
+            status = failover_engine.get_system_status()
+            status["mqtt_sensors"] = latest_mqtt_sensors
+            await websocket.send_json(status)
+            await asyncio.sleep(0.20)
+    except WebSocketDisconnect:
+        pass
+    except Exception:
+        pass
