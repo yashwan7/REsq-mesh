@@ -1751,6 +1751,9 @@
       <!-- ============================================================== -->
       <!-- TAB: GPS RADAR & AMBULANCE COORDINATION (SCREENSHOT 2)         -->
       <!-- ============================================================== -->
+            <!-- ============================================================== -->
+      <!-- TAB: GPS RADAR & AMBULANCE COORDINATION (SCREENSHOT 2)         -->
+      <!-- ============================================================== -->
       <div id="view-map" class="tab-pane">
         <!-- Banner Card -->
         <div class="cad-hdr-banner">
@@ -1759,31 +1762,55 @@
               🚑
             </div>
             <div>
-              <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                 <h2 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0;">Ambulance Coordination & GPS Intelligence</h2>
                 <span class="nav-badge" style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 4px 8px; font-size: 11px;">
                   <span class="pulse-dot" style="background:#059669; width:6px; height:6px;"></span>
                   GPS LOCK: OPTIMAL (14 SVs)
                 </span>
+                <span class="nav-badge badge-blue" style="font-family:'JetBrains Mono', monospace;">
+                  BEACON: 12.871773, 77.576856 (Bengaluru South)
+                </span>
               </div>
               <p style="font-size: 12px; color: var(--text-muted); margin: 3px 0 0 0;">
-                Fleet Tracking · Receiving Hospital Capacity Router · Operational CAD Dispatch Console
+                Fleet Tracking · Autonomous Nearest Hospital Capacity Router · High-Criticality Triage Allotment Console
               </p>
             </div>
           </div>
-          <div style="display: flex; gap: 8px; align-items: center;">
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
             <button class="eog-btn" style="background:#2563eb; color:#fff; border-color:#1d4ed8;">Split CAD View</button>
-            <button class="eog-btn">Expanded Map</button>
-            <button class="eog-btn">Fleet & Hospital Deck</button>
+            <button class="eog-btn" onclick="centerOnFocal()">🎯 Center 12.871773, 77.576856</button>
             <button class="eog-btn" style="color: #b45309; border-color: #fde68a;" onclick="simulateBlackout()">Simulate GPS Blackout</button>
           </div>
+        </div>
+
+        <!-- HIGH CRITICAL PATIENT ALLOTMENT ALERT BANNER -->
+        <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(220, 38, 38, 0.04) 100%); border: 1px solid rgba(239, 68, 68, 0.28); border-radius: 16px; padding: 14px 20px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(239, 68, 68, 0.15); display: flex; align-items: center; justify-content: center; font-size: 18px; color: #ef4444;">
+              🚨
+            </div>
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <span style="font-size: 13px; font-weight: 800; color: #dc2626;">HIGH CRITICAL SCORE CASUALTY: 92 / 100</span>
+                <span class="nav-badge badge-red" style="font-size: 10px;">PT-101 (Sgt. Marcus Vance)</span>
+                <span class="nav-badge badge-amber" style="font-size: 10px;">HEMORRHAGIC TRAUMA</span>
+              </div>
+              <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
+                Incident Location: <strong style="font-family:'JetBrains Mono', monospace; color:#1e293b;">12.871773, 77.576856</strong> (Konanakunte / Kanakapura Rd). Prioritizing Level-1 Emergency Trauma Bays & Whole Blood Transfusion.
+              </div>
+            </div>
+          </div>
+          <button class="sim-pill-btn nurse" style="font-size: 12px; padding: 8px 16px; box-shadow: 0 4px 14px rgba(239, 68, 68, 0.25);" onclick="autoAllotHighCritical()">
+            ⚡ Auto-Allot Nearest Level-1 Hospital (Score &gt; 80)
+          </button>
         </div>
 
         <!-- Logistics Advisory Callout -->
         <div class="cad-advisory-callout">
           <div style="display: flex; align-items: center; gap: 10px;">
             <span style="font-size: 16px;">🛡️</span>
-            <span><strong>Logistics & Routing Advisory:</strong> Hospital routing recommendations are calculated independently from road distance, traffic impedance, and receiving bed capacity. Clinical triage decisions remain autonomous under attending medical officers.</span>
+            <span><strong>Logistics & Routing Advisory:</strong> Hospital routing recommendations are calculated from real-time road distance from <strong>12.871773, 77.576856</strong>, traffic impedance, and receiving ICU bed capacity. Clinical triage decisions remain autonomous under attending medical officers.</span>
           </div>
           <span style="font-size: 10px; font-weight: 800; background: rgba(30, 64, 175, 0.15); padding: 4px 8px; border-radius: 6px; letter-spacing: 0.5px;">INDEPENDENT OF TRIAGE</span>
         </div>
@@ -1793,7 +1820,7 @@
           <!-- Left: Tactical CAD Map Card -->
           <div class="cad-map-card">
             <div class="cad-map-top-overlay">
-              <div class="cad-map-badge">TACTICAL GPS RADAR · 4 Units · 3 Receiving Facilities</div>
+              <div class="cad-map-badge">TACTICAL RADAR · 12.871773, 77.576856 · 4 UNITS · 4 HOSPITALS</div>
               <div class="cad-map-layers">
                 <button class="cad-layer-btn active" id="btnTileSat" onclick="setCadMapTile('satellite')">Satellite</button>
                 <button class="cad-layer-btn" id="btnTileRoad" onclick="setCadMapTile('roads')">Roads</button>
@@ -1807,11 +1834,11 @@
             <div class="cad-map-bot-overlay">
               <div style="display: flex; align-items: center; gap: 10px;">
                 <div style="width: 10px; height: 10px; border-radius: 50%; background: #10b981;"></div>
-                <span style="font-size: 12px; font-weight: 700;">Central Tactical Corridor NH-44</span>
-                <span style="font-size: 11px; color: #94a3b8;">ETA: 7 mins · NOMINAL</span>
+                <span style="font-size: 12px; font-weight: 700;" id="cadCorridorName">Kanakapura Road Tactical Corridor (12.871773, 77.576856)</span>
+                <span style="font-size: 11px; color: #94a3b8;" id="cadCorridorEta">ETA: 2 mins &bull; OPTIMAL</span>
               </div>
               <button class="sim-pill-btn tamper" style="padding: 4px 10px; font-size: 11px;" onclick="simulateDetour()">
-                ⚠️ Simulate Detour (+6m)
+                ⚠️ Simulate Detour (+4m)
               </button>
             </div>
           </div>
@@ -1821,11 +1848,11 @@
             <!-- Active Mission Header -->
             <div class="cad-mission-hdr">
               <div>
-                <div class="cad-m-title">ACTIVE CAD MISSION</div>
+                <div class="cad-m-title">ACTIVE CAD MISSION &bull; ALLOTMENT STATUS</div>
                 <div class="cad-m-target">MSN-2026-081 - Sgt. Marcus Vance</div>
               </div>
               <div style="display: flex; align-items: center; gap: 8px;">
-                <span class="nav-badge badge-red" style="padding: 4px 8px; font-size: 11px;">IMMEDIATE RED</span>
+                <span class="nav-badge badge-red" style="padding: 4px 8px; font-size: 11px;">CRITICAL: 92/100</span>
                 <a href="#patients" onclick="switchTab('patients'); return false;" style="font-size: 12px; color: #2563eb; text-decoration: none; font-weight: 700;">Chart ↗</a>
               </div>
             </div>
@@ -1835,12 +1862,12 @@
               <div style="background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.06); padding: 10px 14px; border-radius: 12px;">
                 <div style="font-size: 11px; color: #64748b; font-weight: 700;">Unit Assigned</div>
                 <div style="font-size: 13px; font-weight: 800; color: #1e293b; margin-top: 2px;">Medic-1 (ALS)</div>
-                <div style="font-size: 10px; color: #059669; font-weight: 600;">ALS Certified</div>
+                <div style="font-size: 10px; color: #059669; font-weight: 600;">At 12.8718, 77.5769</div>
               </div>
               <div style="background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.06); padding: 10px 14px; border-radius: 12px;">
-                <div style="font-size: 11px; color: #64748b; font-weight: 700;">Target Hospital</div>
-                <div style="font-size: 13px; font-weight: 800; color: #1e293b; margin-top: 2px;">Forward Surgical Team Alpha (FST-A)</div>
-                <div style="font-size: 10px; color: #2563eb; font-weight: 600;">ETA: 7 mins</div>
+                <div style="font-size: 11px; color: #64748b; font-weight: 700;">Target Hospital (Allotted)</div>
+                <div style="font-size: 13px; font-weight: 800; color: #1e293b; margin-top: 2px;" id="cadActiveHospTitle">Astra Hospital (FST Trauma)</div>
+                <div style="font-size: 10px; color: #2563eb; font-weight: 600;" id="cadActiveHospEta">ETA: 2 mins (0.4 km)</div>
               </div>
             </div>
 
@@ -1855,7 +1882,7 @@
                   <span style="font-family:'JetBrains Mono', monospace; font-size: 11px;">10:41</span>
                 </div>
                 <div class="cad-milestone-row done">
-                  <span>✔ 2. En Route to Scene</span>
+                  <span>✔ 2. En Route to 12.871773, 77.576856</span>
                   <span style="font-family:'JetBrains Mono', monospace; font-size: 11px;">10:43</span>
                 </div>
                 <div class="cad-milestone-row done">
@@ -1868,7 +1895,7 @@
                 </div>
                 <div class="cad-milestone-row" id="msRow5" style="color: #94a3b8;">
                   <span>○ 5. Receiving Hospital Arrival</span>
-                  <span style="font-family:'JetBrains Mono', monospace; font-size: 11px;">ETA 11:02</span>
+                  <span style="font-family:'JetBrains Mono', monospace; font-size: 11px;" id="cadMilestone5Eta">ETA 10:55</span>
                 </div>
               </div>
             </div>
@@ -1882,81 +1909,97 @@
             <div>
               <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
                 <div>
-                  <div style="font-size: 12px; font-weight: 800; color: var(--text-main);">Suggested Receiving Hospitals</div>
-                  <div style="font-size: 10px; color: var(--text-muted);">Ranked by transit time & real-time ICU/trauma bay capacity</div>
+                  <div style="font-size: 12px; font-weight: 800; color: var(--text-main);">Nearest Receiving Hospitals (Ranked by Criticality Match)</div>
+                  <div style="font-size: 10px; color: var(--text-muted);">Calculated from 12.871773, 77.576856 &bull; Filtered for Level-1 Trauma</div>
                 </div>
                 <span style="font-size: 10px; font-weight: 700; color: #64748b;">Live Load</span>
               </div>
 
-              <!-- Hospital 1 -->
-              <div class="cad-hosp-card" style="border-left: 3px solid #2563eb;">
+              <!-- Hospital 1: Astra Hospital (FST Trauma Center) -->
+              <div class="cad-hosp-card" id="cardHospAstra" style="border-left: 3px solid #2563eb; background: #eff6ff;">
                 <div style="flex: 1;">
                   <div style="display: flex; align-items: center; gap: 8px;">
-                    <strong style="font-size: 12px; color: var(--text-main);">Forward Surgical Team Alpha (FST-A)</strong>
-                    <span style="font-size: 10px; color: #64748b;">(2.1 km)</span>
+                    <strong style="font-size: 12px; color: var(--text-main);">Astra Hospital / FST Bangalore Trauma Center</strong>
+                    <span style="font-size: 10px; color: #64748b;">(0.4 km)</span>
                   </div>
-                  <div style="display: flex; gap: 8px; font-size: 10px; margin-top: 3px; font-family:'JetBrains Mono', monospace;">
-                    <span style="color:#059669; font-weight:700;">RECOMMENDED • 6m Transit</span>
-                    <span>ICU Free: 2</span>
-                    <span>Trauma Bays: 1</span>
-                    <span style="color:#2563eb; font-weight:700;">Load: 76.4%</span>
+                  <div style="display: flex; gap: 8px; font-size: 10px; margin-top: 3px; font-family:'JetBrains Mono', monospace; flex-wrap: wrap;">
+                    <span style="color:#059669; font-weight:700;">BEST CRITICAL MATCH &bull; 2m Transit</span>
+                    <span>ICU Free: 3</span>
+                    <span>Trauma Bays: 2</span>
+                    <span style="color:#2563eb; font-weight:700;">Load: 68.0%</span>
                   </div>
                   <div style="font-size: 10px; color: #64748b; margin-top: 2px;">
-                    Fastest transit time (&lt;7m) with immediate damage control surgical bay free.
+                    Nearest Level-1 Trauma (&lt;2m) with dedicated damage control surgical bay & whole blood reserves.
                   </div>
                 </div>
-                <button class="sim-pill-btn sync" style="padding: 4px 10px; font-size: 11px;">Assigned</button>
+                <button class="sim-pill-btn sync" id="btnAllotAstra" style="padding: 5px 12px; font-size: 11px;" onclick="allotHospital('FST-ALPHA')">Assigned</button>
               </div>
 
-              <!-- Hospital 2 -->
-              <div class="cad-hosp-card" style="border-left: 3px solid #10b981;">
+              <!-- Hospital 2: Fortis Bannerghatta -->
+              <div class="cad-hosp-card" id="cardHospFortis" style="border-left: 3px solid #10b981;">
                 <div style="flex: 1;">
                   <div style="display: flex; align-items: center; gap: 8px;">
-                    <strong style="font-size: 12px; color: var(--text-main);">Base General Hospital 3 (Apex Trauma)</strong>
-                    <span style="font-size: 10px; color: #64748b;">(4.8 km)</span>
+                    <strong style="font-size: 12px; color: var(--text-main);">Fortis Hospital (Bannerghatta Road - Apex Trauma)</strong>
+                    <span style="font-size: 10px; color: #64748b;">(3.2 km)</span>
                   </div>
-                  <div style="display: flex; gap: 8px; font-size: 10px; margin-top: 3px; font-family:'JetBrains Mono', monospace;">
-                    <span style="color:#059669; font-weight:700;">RECOMMENDED • 12m Transit</span>
-                    <span>ICU Free: 9</span>
+                  <div style="display: flex; gap: 8px; font-size: 10px; margin-top: 3px; font-family:'JetBrains Mono', monospace; flex-wrap: wrap;">
+                    <span style="color:#059669; font-weight:700;">LEVEL-1 APEX &bull; 8m Transit</span>
+                    <span>ICU Free: 7</span>
                     <span>Trauma Bays: 4</span>
-                    <span style="color:#059669; font-weight:700;">Load: 54.0%</span>
+                    <span style="color:#059669; font-weight:700;">Load: 64.0%</span>
                   </div>
                   <div style="font-size: 10px; color: #64748b; margin-top: 2px;">
-                    Optimal ICU capacity buffer (9 open beds) and specialized burn & trauma center.
+                    High ICU capacity buffer (7 open beds) with cardiothoracic & burn ICU capabilities.
                   </div>
                 </div>
-                <button class="eog-btn" style="padding: 4px 10px; font-size: 11px;">Select</button>
+                <button class="eog-btn" id="btnAllotFortis" style="padding: 5px 12px; font-size: 11px;" onclick="allotHospital('BASE-HOSP-03')">Allot Hospital</button>
               </div>
 
-              <!-- Hospital 3 -->
-              <div class="cad-hosp-card" style="border-left: 3px solid #ef4444;">
+              <!-- Hospital 3: Aster RV Hospital -->
+              <div class="cad-hosp-card" id="cardHospAster" style="border-left: 3px solid #06b6d4;">
+                <div style="flex: 1;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <strong style="font-size: 12px; color: var(--text-main);">Aster RV Hospital (JP Nagar)</strong>
+                    <span style="font-size: 10px; color: #64748b;">(4.3 km)</span>
+                  </div>
+                  <div style="display: flex; gap: 8px; font-size: 10px; margin-top: 3px; font-family:'JetBrains Mono', monospace; flex-wrap: wrap;">
+                    <span style="color:#059669; font-weight:700;">LEVEL-1 TRAUMA &bull; 10m Transit</span>
+                    <span>ICU Free: 5</span>
+                    <span>Trauma Bays: 2</span>
+                    <span style="color:#06b6d4; font-weight:700;">Load: 72.0%</span>
+                  </div>
+                  <div style="font-size: 10px; color: #64748b; margin-top: 2px;">
+                    Comprehensive neurotrauma team ready. 10m transit via 15th Cross corridor.
+                  </div>
+                </div>
+                <button class="eog-btn" id="btnAllotAster" style="padding: 5px 12px; font-size: 11px;" onclick="allotHospital('ASTER-RV')">Allot Hospital</button>
+              </div>
+
+              <!-- Hospital 4: Cantonment Field Infirmary -->
+              <div class="cad-hosp-card" id="cardHospCivil" style="border-left: 3px solid #ef4444;">
                 <div style="flex: 1;">
                   <div style="display: flex; align-items: center; gap: 8px;">
                     <strong style="font-size: 12px; color: var(--text-main);">Cantonment Field Infirmary (Zone Bravo)</strong>
-                    <span style="font-size: 10px; color: #64748b;">(6.9 km)</span>
+                    <span style="font-size: 10px; color: #64748b;">(5.6 km)</span>
                   </div>
-                  <div style="display: flex; gap: 8px; font-size: 10px; margin-top: 3px; font-family:'JetBrains Mono', monospace;">
-                    <span style="color:#dc2626; font-weight:700;">DIVERT • 19m Transit</span>
+                  <div style="display: flex; gap: 8px; font-size: 10px; margin-top: 3px; font-family:'JetBrains Mono', monospace; flex-wrap: wrap;">
+                    <span style="color:#dc2626; font-weight:700;">DIVERT &bull; 16m Transit</span>
                     <span>ICU Free: 0</span>
                     <span>Trauma Bays: 1</span>
-                    <span style="color:#dc2626; font-weight:700;">Load: 91.5%</span>
+                    <span style="color:#dc2626; font-weight:700;">Load: 94.0%</span>
                   </div>
-                  <div style="font-size: 10px; color: #64748b; margin-top: 2px;">
-                    ICU bed capacity exhausted (0 available). Advisory recommends divert to FST-Alpha.
+                  <div style="font-size: 10px; color: #dc2626; margin-top: 2px;">
+                    INELIGIBLE FOR HIGH CRITICAL CASUALTIES (0 ICU beds available). Divert to Astra or Fortis.
                   </div>
                 </div>
-                <button class="eog-btn" style="padding: 4px 10px; font-size: 11px; color:#dc2626;">Divert</button>
+                <button class="eog-btn" style="padding: 5px 12px; font-size: 11px; color:#dc2626;" disabled>Divert (Full)</button>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-
-      <!-- ============================================================== -->
-      <!-- TAB: BLOOD BANK & TRANSFUSION NETWORK MODULE                   -->
-      <!-- ============================================================== -->
-      <div id="view-bloodbank" class="tab-pane">
+<div id="view-bloodbank" class="tab-pane">
         <div class="eog-hdr-card">
           <div class="eog-hdr-left">
             <div class="eog-hdr-icon" style="background: rgba(239, 68, 68, 0.12); color: #ef4444;">🩸</div>
@@ -2736,9 +2779,45 @@
       });
     }
 
-    // Leaflet CAD Map Logic (Matches Screenshot 2)
+    // Leaflet CAD Map Logic (Centered on 12.871773, 77.576856 Bengaluru South)
     let cadMapInstance = null;
     let cadCorridorLine = null;
+    const FOCAL_COORDS = [12.871773, 77.576856];
+
+    const HOSPITALS_DATA = {
+      'FST-ALPHA': {
+        name: 'Astra Hospital / FST Bangalore Trauma Center',
+        shortName: 'Astra Hospital (FST Trauma)',
+        coords: [12.8745, 77.5740],
+        distance: '0.4 km',
+        eta: '2 mins',
+        corridor: 'Kanakapura Road Tactical Corridor',
+        waypoints: [[12.871773, 77.576856], [12.8725, 77.5755], [12.8735, 77.5745], [12.8745, 77.5740]],
+        color: '#2563eb'
+      },
+      'BASE-HOSP-03': {
+        name: 'Fortis Hospital (Bannerghatta Road - Apex Trauma)',
+        shortName: 'Fortis Hospital (Bannerghatta)',
+        coords: [12.8940, 77.5980],
+        distance: '3.2 km',
+        eta: '8 mins',
+        corridor: 'Bannerghatta Main Corridor via Arekere',
+        waypoints: [[12.871773, 77.576856], [12.8780, 77.5850], [12.8870, 77.5920], [12.8940, 77.5980]],
+        color: '#10b981'
+      },
+      'ASTER-RV': {
+        name: 'Aster RV Hospital (JP Nagar)',
+        shortName: 'Aster RV Hospital (JP Nagar)',
+        coords: [12.9100, 77.5850],
+        distance: '4.3 km',
+        eta: '10 mins',
+        corridor: '15th Cross JP Nagar Tactical Arterial',
+        waypoints: [[12.871773, 77.576856], [12.8850, 77.5820], [12.8980, 77.5835], [12.9100, 77.5850]],
+        color: '#06b6d4'
+      }
+    };
+
+    let selectedHospId = 'FST-ALPHA';
 
     function initCadMap() {
       const mapDiv = document.getElementById('cad_leaflet_map');
@@ -2749,61 +2828,140 @@
         return;
       }
 
-      // Center around focal tactical area (New Delhi coordinates from Screenshot 2: Janpath / India Gate)
+      // Center on exact coordinates: 12.871773, 77.576856
       cadMapInstance = L.map('cad_leaflet_map', {
-        center: [28.6150, 77.2100],
+        center: FOCAL_COORDS,
         zoom: 14,
         zoomControl: false
       });
 
       L.control.zoom({ position: 'topright' }).addTo(cadMapInstance);
 
-      // Default to Satellite tile layer matching screenshot 2
+      // Default to Satellite tile layer
       L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles &copy; Esri',
         maxZoom: 19
       }).addTo(cadMapInstance);
 
-      // Add Ambulance markers matching screenshot 2
+      // 1. Add Incident Casualty Beacon at exact coordinates: 12.871773, 77.576856
+      const incidentHtml = `<div style="background: #ef4444; border: 3px solid #fff; border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; box-shadow: 0 0 20px rgba(239, 68, 68, 0.8); animation: pulse 1.5s infinite;">⚠️</div>`;
+      const incidentIcon = L.divIcon({ html: incidentHtml, className: 'cad-incident-marker', iconSize: [38, 38], iconAnchor: [19, 19] });
+      L.marker(FOCAL_COORDS, { icon: incidentIcon }).addTo(cadMapInstance)
+        .bindPopup(`<b>INCIDENT BEACON: 12.871773, 77.576856</b><br>Casualty: Sgt. Marcus Vance (PT-101)<br><span style="color:#ef4444; font-weight:700;">CRITICAL SCORE: 92/100 (Immediate Red)</span>`);
+
+      // 2. Add Ambulance units deployed around 12.871773, 77.576856
       const ambulances = [
-        { id: 'MEDEVAC-01', callsign: 'Medic-1', lat: 28.6150, lng: 77.2100, active: true },
-        { id: 'MEDEVAC-02', callsign: 'Rescue-2', lat: 28.6220, lng: 77.2140, active: false },
-        { id: 'MEDEVAC-03', callsign: 'Rough-3', lat: 28.6080, lng: 77.2020, active: false },
-        { id: 'MEDEVAC-04', callsign: 'Rapid-4', lat: 28.6320, lng: 77.2180, active: false }
+        { id: 'MEDEVAC-01', callsign: 'Medic-1 (ALS)', lat: 12.8718, lng: 77.5769, active: true },
+        { id: 'MEDEVAC-02', callsign: 'Rescue-2 (CCT)', lat: 12.8850, lng: 77.5840, active: false },
+        { id: 'MEDEVAC-03', callsign: 'Rough-3 (Austere)', lat: 12.8620, lng: 77.5680, active: false },
+        { id: 'MEDEVAC-04', callsign: 'Rapid-4 (BLS)', lat: 12.8940, lng: 77.5970, active: false }
       ];
 
       ambulances.forEach(amb => {
         const iconHtml = `<div style="background: ${amb.active ? '#2563eb' : '#1e293b'}; border: 2px solid #fff; border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">🚑</div>`;
         const customIcon = L.divIcon({ html: iconHtml, className: 'cad-amb-marker', iconSize: [34, 34], iconAnchor: [17, 17] });
         L.marker([amb.lat, amb.lng], { icon: customIcon }).addTo(cadMapInstance)
-          .bindPopup(`<b>${amb.callsign}</b><br>Status: ${amb.active ? 'TRANSPORTING' : 'AVAILABLE'}`);
+          .bindPopup(`<b>${amb.callsign}</b><br>Position: ${amb.lat}, ${amb.lng}<br>Status: ${amb.active ? 'ENGAGED WITH PT-101' : 'AVAILABLE'}`);
       });
 
-      // Add Hospital Beacons
+      // 3. Add Nearest Hospitals in South Bangalore
       const hospitals = [
-        { name: 'Forward Surgical Team Alpha (FST-A)', lat: 28.6139, lng: 77.2090, tag: 'FST-A' },
-        { name: 'Base General Hospital 3', lat: 28.6380, lng: 77.2250, tag: 'BASE-3' }
+        { id: 'FST-ALPHA', name: 'Astra Hospital / FST Bangalore Trauma Center', lat: 12.8745, lng: 77.5740, color: '#2563eb', beds: '3 ICU / 2 Trauma Bays' },
+        { id: 'BASE-HOSP-03', name: 'Fortis Hospital (Bannerghatta)', lat: 12.8940, lng: 77.5980, color: '#10b981', beds: '7 ICU / 4 Trauma Bays' },
+        { id: 'ASTER-RV', name: 'Aster RV Hospital (JP Nagar)', lat: 12.9100, lng: 77.5850, color: '#06b6d4', beds: '5 ICU / 2 Trauma Bays' },
+        { id: 'CIVIL-ZONE-B', name: 'Cantonment Field Infirmary', lat: 12.8350, lng: 77.5500, color: '#ef4444', beds: '0 ICU (DIVERT)' }
       ];
 
       hospitals.forEach(h => {
-        const iconHtml = `<div style="background: #10b981; border: 2px solid #fff; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">🏥</div>`;
-        const hospIcon = L.divIcon({ html: iconHtml, className: 'cad-hosp-marker', iconSize: [30, 30], iconAnchor: [15, 15] });
+        const iconHtml = `<div style="background: ${h.color}; border: 2px solid #fff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">🏥</div>`;
+        const hospIcon = L.divIcon({ html: iconHtml, className: 'cad-hosp-marker', iconSize: [32, 32], iconAnchor: [16, 16] });
         L.marker([h.lat, h.lng], { icon: hospIcon }).addTo(cadMapInstance)
-          .bindPopup(`<b>${h.name}</b><br>Accepting Traumas`);
+          .bindPopup(`<b>${h.name}</b><br>Capacity: ${h.beds}`);
       });
 
-      // Add Tactical Corridor Polyline
-      const corridorCoords = [
-        [28.6150, 77.2100],
-        [28.6145, 77.2095],
-        [28.6139, 77.2090]
-      ];
-      cadCorridorLine = L.polyline(corridorCoords, {
-        color: '#3b82f6',
-        weight: 5,
-        opacity: 0.85,
+      // 4. Draw Initial Route Corridor to default allotted hospital (Astra FST)
+      updateMapCorridor('FST-ALPHA');
+    }
+
+    function updateMapCorridor(hospId) {
+      if (!cadMapInstance) return;
+      const hosp = HOSPITALS_DATA[hospId];
+      if (!hosp) return;
+
+      if (cadCorridorLine) {
+        cadMapInstance.removeLayer(cadCorridorLine);
+      }
+
+      cadCorridorLine = L.polyline(hosp.waypoints, {
+        color: hosp.color || '#3b82f6',
+        weight: 6,
+        opacity: 0.88,
         dashArray: '8, 8'
       }).addTo(cadMapInstance);
+
+      cadMapInstance.fitBounds(cadCorridorLine.getBounds(), { padding: [40, 40] });
+    }
+
+    function centerOnFocal() {
+      if (cadMapInstance) {
+        cadMapInstance.setView(FOCAL_COORDS, 15);
+      }
+    }
+
+    // Dynamic Hospital Allotment Function
+    function allotHospital(hospId) {
+      const hosp = HOSPITALS_DATA[hospId];
+      if (!hosp) return;
+
+      selectedHospId = hospId;
+
+      // Update Header info in mission deck
+      const titleEl = document.getElementById('cadActiveHospTitle');
+      const etaEl = document.getElementById('cadActiveHospEta');
+      const corridorNameEl = document.getElementById('cadCorridorName');
+      const corridorEtaEl = document.getElementById('cadCorridorEta');
+      const m5EtaEl = document.getElementById('cadMilestone5Eta');
+
+      if (titleEl) titleEl.innerText = hosp.shortName;
+      if (etaEl) etaEl.innerText = `ETA: ${hosp.eta} (${hosp.distance})`;
+      if (corridorNameEl) corridorNameEl.innerText = `${hosp.corridor} (12.871773, 77.576856)`;
+      if (corridorEtaEl) corridorEtaEl.innerText = `ETA: ${hosp.eta} • OPTIMAL`;
+      if (m5EtaEl) m5EtaEl.innerText = `ETA ${hosp.eta}`;
+
+      // Update Card Visuals
+      const cardIds = ['cardHospAstra', 'cardHospFortis', 'cardHospAster'];
+      const btnIds = { 'FST-ALPHA': 'btnAllotAstra', 'BASE-HOSP-03': 'btnAllotFortis', 'ASTER-RV': 'btnAllotAster' };
+
+      cardIds.forEach(cId => {
+        const c = document.getElementById(cId);
+        if (c) c.style.background = '#fafafa';
+      });
+
+      Object.entries(btnIds).forEach(([hId, bId]) => {
+        const b = document.getElementById(bId);
+        if (b) {
+          if (hId === hospId) {
+            b.className = 'sim-pill-btn sync';
+            b.innerText = 'Assigned';
+            const parentCard = b.closest('.cad-hosp-card');
+            if (parentCard) parentCard.style.background = '#eff6ff';
+          } else {
+            b.className = 'eog-btn';
+            b.innerText = 'Allot Hospital';
+          }
+        }
+      });
+
+      // Update Route on Leaflet Map
+      updateMapCorridor(hospId);
+
+      alert(`✅ HOSPITAL ALLOTTED: Patient PT-101 (Criticality 92/100) routed to ${hosp.name}. Transit corridor updated (${hosp.eta} ETA).`);
+    }
+
+    // Auto-Allot for High Critical Casualty (Score > 80)
+    function autoAllotHighCritical() {
+      // Highest priority Level-1 Surgical Resus facility nearest to 12.871773, 77.576856
+      allotHospital('FST-ALPHA');
     }
 
     function setCadMapTile(type) {
