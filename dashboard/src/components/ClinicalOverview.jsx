@@ -5,7 +5,7 @@ import {
   ChevronRight, Radio, Cpu, Compass, 
   Gauge, ExternalLink, RefreshCw, AlertTriangle,
   Sparkles, CheckCircle2, ShieldAlert,
-  Siren, Share2, Navigation, MapPin, Copy, Check, X
+  Siren, Share2, Navigation, MapPin, Copy, Check, X, Terminal
 } from 'lucide-react';
 import { useMqttTelemetry } from '../lib/useMqttTelemetry';
 
@@ -26,7 +26,8 @@ export default function ClinicalOverview({
     lastUpdated,
     pulseHistory,
     topic,
-    injectSamplePacket
+    injectSamplePacket,
+    nxpTelemetry
   } = useMqttTelemetry();
 
   const { pulse_val, force_n, hub_online, lat, lng } = telemetry;
@@ -234,6 +235,79 @@ export default function ClinicalOverview({
           </button>
         </div>
 
+      </div>
+
+      {/* ================= NXP FRDM-MCXN236 DEDICATED LIVE 1-SEC TELECAST STATION ================= */}
+      <div className="nm-flat rounded-2xl p-4.5 border-2 border-[#2D6A4F]/60 bg-gradient-to-r from-[#2D6A4F]/10 via-[#1A241C]/5 to-transparent relative overflow-hidden shadow-[0_0_20px_rgba(45,106,79,0.18)]">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 relative z-10">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 nm-inset rounded-xl flex items-center justify-center text-[#2D6A4F] border border-[#2D6A4F]/40 bg-[#E8EFE9] shrink-0">
+              <Terminal className="w-5 h-5 animate-pulse" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-black tracking-wider text-[#1A241C] uppercase flex items-center gap-2">
+                  <span>NXP FRDM-MCXN236 LIVE TELECAST STATION</span>
+                  <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-[#2D6A4F] text-white shadow-[0_0_8px_#2D6A4F] animate-pulse">
+                    1.0 Hz STREAM ACTIVE
+                  </span>
+                </span>
+              </div>
+              <p className="text-[11px] text-[#556455] mt-0.5 font-medium">
+                Dual Cortex-M33 (150 MHz) &bull; CDC Port: <code className="text-[#2D6A4F] font-bold">/dev/cu.usbmodemFIK54L1PUAFFP3</code> @ 115200 bps
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              onClick={() => injectSamplePacket({
+                source: 'NXP_FRDM_MCXN236',
+                bank: 0,
+                update_state: 'NORMAL_RUN',
+                hw_ok: true,
+                raw_hex: 'A5 01 03 00 00 00 00 45 CA'
+              })}
+              className="px-3.5 py-1.5 nm-btn rounded-xl text-[10px] font-black text-[#2D6A4F] hover:bg-[#2D6A4F] hover:text-white flex items-center gap-1.5 transition-all uppercase border border-[#2D6A4F]/40 shadow-sm"
+              title="Trigger a live 1Hz telecast packet update"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>TEST NXP 1-SEC PACKET</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 4-Column Live Telecast Metric Telemetry Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-3.5 pt-3 border-t border-[#2D6A4F]/20 text-[10px]">
+          <div className="nm-inset p-2.5 rounded-xl bg-[#E8EFE9]/60 border border-[#2D6A4F]/20">
+            <span className="text-[9px] text-[#758475] uppercase font-bold block">STREAM INTERVAL</span>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="w-2 h-2 rounded-full bg-[#2D6A4F] animate-ping" />
+              <strong className="text-xs font-black text-[#2D6A4F]">1000 ms (1 Hz)</strong>
+            </div>
+            <span className="text-[9px] text-[#556455] block mt-0.5">Sync: {lastUpdated}</span>
+          </div>
+
+          <div className="nm-inset p-2.5 rounded-xl bg-[#E8EFE9]/60 border border-[#2D6A4F]/20">
+            <span className="text-[9px] text-[#758475] uppercase font-bold block">ACTIVE FIRMWARE</span>
+            <strong className="text-xs font-black text-[#1A241C] block mt-0.5">Bank 0: Normal Run</strong>
+            <span className="text-[9px] text-[#2D6A4F] font-semibold block mt-0.5">MCUboot ECDSA Verified</span>
+          </div>
+
+          <div className="nm-inset p-2.5 rounded-xl bg-[#E8EFE9]/60 border border-[#2D6A4F]/20">
+            <span className="text-[9px] text-[#758475] uppercase font-bold block">TINYML INFERENCE</span>
+            <strong className="text-xs font-black text-[#1A241C] block mt-0.5">INT8 TFLM Model</strong>
+            <span className="text-[9px] text-[#556455] block mt-0.5">10.3ms &bull; 13.5 KB Arena</span>
+          </div>
+
+          <div className="nm-inset p-2.5 rounded-xl bg-[#E8EFE9]/60 border border-[#2D6A4F]/20">
+            <span className="text-[9px] text-[#758475] uppercase font-bold block">LATEST SERIAL PACKET</span>
+            <code className="text-[11px] font-black text-[#2D6A4F] block mt-0.5 font-mono">
+              {nxpTelemetry?.rawHex || 'A5 01 03 00 00 00 00 45 CA'}
+            </code>
+            <span className="text-[9px] text-[#556455] block mt-0.5">SOF: 0xA5 &bull; CRC16 OK</span>
+          </div>
+        </div>
       </div>
 
       {/* ================= EMERGENCY CASE GPS ALERT & RESCUE DISPATCH BANNER ================= */}

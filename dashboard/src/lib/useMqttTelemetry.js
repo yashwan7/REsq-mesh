@@ -138,6 +138,21 @@ export function useMqttTelemetry(options = {}) {
   const [packetCount, setPacketCount] = useState(0);
   const [lastUpdated, setLastUpdated] = useState(() => new Date().toLocaleTimeString());
 
+  // NXP FRDM-MCXN236 Dedicated Telecast State (1-Sec Heartbeat)
+  const [nxpTelemetry, setNxpTelemetry] = useState({
+    source: 'NXP_FRDM_MCXN236',
+    bank: 0,
+    updateState: 'NORMAL_RUN',
+    hwOk: true,
+    rawHex: 'A5 01 03 00 00 00 00 45 CA',
+    baudRate: 115200,
+    frequency: '1.0 Hz (1000ms loop)',
+    mcu: 'Dual ARM Cortex-M33 @ 150 MHz',
+    tflmModel: 'INT8 Network Anomaly Predictor (10.3ms latency)',
+    isHardwareLive: false,
+    lastPktTime: new Date().toLocaleTimeString()
+  });
+
   // Dual-Port Network Latency Jitter State (500ms loop)
   const [networkLatency, setNetworkLatency] = useState({
     portA_rtt: 24.5,
@@ -211,6 +226,20 @@ export function useMqttTelemetry(options = {}) {
 
       if (rawHub !== undefined) {
         setHubOnline(typeof rawHub === 'boolean' ? rawHub : String(rawHub).toLowerCase() === 'true');
+      }
+
+      // Capture NXP FRDM-MCXN236 specific telemetry fields
+      if (data.source === 'NXP_FRDM_MCXN236' || data.bank !== undefined || data.update_state !== undefined) {
+        setNxpTelemetry(prev => ({
+          ...prev,
+          source: data.source || 'NXP_FRDM_MCXN236',
+          bank: data.bank ?? prev.bank,
+          updateState: data.update_state || prev.updateState,
+          hwOk: data.hw_ok !== undefined ? data.hw_ok : prev.hwOk,
+          rawHex: data.raw_hex || 'A5 01 03 00 00 00 00 45 CA',
+          isHardwareLive: true,
+          lastPktTime: new Date().toLocaleTimeString()
+        }));
       }
 
       setPacketCount(prev => prev + 1);
@@ -371,6 +400,7 @@ export function useMqttTelemetry(options = {}) {
     telemetry,
     pulseVal,
     forceVal,
+    nxpTelemetry,
     connectionStatus,
     packetCount,
     lastUpdated,
