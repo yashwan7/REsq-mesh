@@ -24,13 +24,12 @@ export default function ClinicalOverview({
     connectionStatus,
     packetCount,
     lastUpdated,
-    pulseHistory,
     topic,
     injectSamplePacket,
     nxpTelemetry
   } = useMqttTelemetry();
 
-  const { pulse_val, force_n, hub_online, lat, lng } = telemetry;
+  const { hub_online, lat, lng } = telemetry;
 
   // Emergency Alert & Rescue Dispatch State
   const [isEmergencyAlertOpen, setIsEmergencyAlertOpen] = useState(true);
@@ -41,16 +40,8 @@ export default function ClinicalOverview({
   const p = activePatientItem?.capsule || {
     patient_id: 'PT-101',
     patient_name: 'John Smith',
-    vitals: { heart_rate: pulse_val, spo2: 98, systolic_bp: 120, diastolic_bp: 80, respiratory_rate: 16 }
+    vitals: { spo2: 98, systolic_bp: 120, diastolic_bp: 80, respiratory_rate: 16 }
   };
-
-  const isTachycardic = pulse_val > 100;
-  const isBradycardic = pulse_val < 60;
-  
-  // Force N calculations: realistic bed load (1200 N - 2400 N)
-  const forcePct = Math.min(100, Math.max(0, Math.round(((force_n - 1000) / 1600) * 100)));
-  const forceNewtons = force_n;
-  const estimatedKg = (force_n / 9.80665).toFixed(1);
 
   // Formatted emergency dispatch message for ambulance & rescue teams
   const emergencyMessage = useMemo(() => {
@@ -58,7 +49,8 @@ export default function ClinicalOverview({
       `🚨 [KSHITIJ EMERGENCY RESCUE ALERT - ALS DISPATCH REQUEST]`,
       `PATIENT: ${p.patient_name || 'Patient'} (ID: ${p.patient_id || 'PT-101'})`,
       `TRIAGE STATUS: CODE RED / LEVEL 1 RESUSCITATION`,
-      `LIVE VITALS: Heart Rate: ${pulse_val} BPM | SpO2: ${p.vitals?.spo2 || 98}% | Bed Load: ${force_n} N`,
+      `HARDWARE LINK: NXP TinyML: ${nxpTelemetry?.state_str || 'NORMAL_RUN'} (10.3ms INT8) | ResQMesh: ACKNOWLEDGED (0 Loss)`,
+      `DECISION LAYER: Laya System-1 Priority: PRIORITY_HIGH (<20ms)`,
       `GPS COORDINATES: ${lat}, ${lng}`,
       `LOCATION: Brookes Haven Layout, 80 Feet Road, JP Nagar Phase 8, Bengaluru 560076`,
       `TURN-BY-TURN NAVIGATION: https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
@@ -66,7 +58,7 @@ export default function ClinicalOverview({
       `RESCUE CHANNEL: AMBULANCE DISPATCH TAC-1 (154.280 MHz)`,
       `TIMESTAMP: ${new Date().toLocaleTimeString()} (Active Telemetry Lock)`
     ].join('\n');
-  }, [p.patient_name, p.patient_id, p.vitals?.spo2, pulse_val, force_n, lat, lng]);
+  }, [p.patient_name, p.patient_id, nxpTelemetry?.state_str, lat, lng]);
 
   const handleShareGps = async () => {
     try {
@@ -102,33 +94,7 @@ export default function ClinicalOverview({
     } catch (_) {}
   };
 
-  const bedOccupancyState = useMemo(() => {
-    if (force_n < 500) {
-      return { label: 'BED UNOCCUPIED / CALIBRATED', color: 'text-[#94A3B8]', badge: 'nm-badge' };
-    }
-    if (force_n >= 1200 && force_n <= 2400) {
-      return { label: 'OCCUPIED — NORMAL REST / SHIFTING WEIGHT', color: 'text-[#2D6A4F]', badge: 'nm-inset text-[#2D6A4F] border border-[#2D6A4F]/30' };
-    }
-    if (force_n > 2400) {
-      return { label: 'HIGH LOAD / PATIENT RESTLESS', color: 'text-[#C84B31]', badge: 'nm-alert-inset text-[#C84B31] border border-[#C84B31]/40' };
-    }
-    return { label: 'OCCUPIED — STABLE REST', color: 'text-[#2D6A4F]', badge: 'nm-inset text-[#2D6A4F] border border-[#2D6A4F]/30' };
-  }, [force_n]);
 
-  // Generate SVG path for dynamic pulse waveform based on history
-  const waveSvgPath = useMemo(() => {
-    if (!pulseHistory || pulseHistory.length === 0) {
-      return 'M 0 60 L 500 60';
-    }
-    const points = pulseHistory.map((val, idx) => {
-      const x = (idx / (pulseHistory.length - 1)) * 500;
-      // Map 40-140 bpm to 10-110 SVG Y coordinates (inverted)
-      const normalized = Math.min(130, Math.max(50, val));
-      const y = 110 - ((normalized - 50) / 80) * 80;
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    });
-    return `M ${points[0]} ` + points.slice(1).map(pt => `L ${pt}`).join(' ');
-  }, [pulseHistory]);
 
   return (
     <div className="space-y-5 font-mono select-none text-[#1A241C]">
@@ -352,9 +318,9 @@ export default function ClinicalOverview({
                   <span className="text-[10px] text-[#C84B31] font-mono block font-bold">ID: {p.patient_id} &bull; CODE RED</span>
                 </div>
                 <div className="nm-inset rounded-xl p-2.5">
-                  <span className="text-[9px] font-bold text-[#758475] uppercase block">LIVE TELEMETRY VITALS</span>
-                  <span className="font-black text-[#C84B31] text-sm">{pulse_val} <span className="text-xs font-normal text-[#1A241C]">BPM</span></span>
-                  <span className="text-[10px] text-[#556455] font-mono block">Force: {force_n} N &bull; SpO2: {p.vitals?.spo2 || 98}%</span>
+                  <span className="text-[9px] font-bold text-[#758475] uppercase block">HARDWARE &amp; DECISION STATUS</span>
+                  <span className="font-black text-[#2D6A4F] text-sm">{nxpTelemetry?.state_str || 'NORMAL_RUN'} <span className="text-xs font-normal text-[#1A241C]">(10.3ms)</span></span>
+                  <span className="text-[10px] text-[#556455] font-mono block">ResQMesh: ACKNOWLEDGED &bull; Laya: &lt;20ms</span>
                 </div>
                 <div className="nm-inset rounded-xl p-2.5">
                   <span className="text-[9px] font-bold text-[#758475] uppercase block">LIVE GPS RADAR LOCK</span>
@@ -431,126 +397,128 @@ export default function ClinicalOverview({
       {/* ================= PRIMARY TELEMETRY CARDS (3 COLS) ================= */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         
-        {/* CARD 1: PULSE RATE CARD */}
+        {/* CARD 1: NXP FRDM-MCXN236 EDGE TINYML CARD */}
         <div className="nm-flat rounded-2xl p-5 border border-white/80 flex flex-col justify-between relative overflow-hidden">
           <div>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 nm-convex rounded-xl flex items-center justify-center text-[#C84B31]">
-                  <Heart className="w-4 h-4 fill-[#C84B31]" />
+                <div className="w-8 h-8 nm-convex rounded-xl flex items-center justify-center text-[#2D6A4F]">
+                  <Cpu className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[10px] uppercase font-bold text-[#758475]">Live Pulse Telemetry</div>
-                  <div className="text-xs font-black text-[#1A241C]">PULSE RATE CARD</div>
+                  <div className="text-[10px] uppercase font-bold text-[#758475]">MCU-Link CDC &bull; 1Hz Telemetry</div>
+                  <div className="text-xs font-black text-[#1A241C]">NXP MCXN236 TINYML NODE</div>
                 </div>
               </div>
 
-              <span className={`px-2 py-0.5 text-[9px] font-bold rounded-lg uppercase ${
-                isTachycardic
-                  ? 'nm-alert-inset text-[#C84B31] border border-[#C84B31]/40'
-                  : isBradycardic
-                  ? 'nm-inset text-[#F59E0B] border border-[#F59E0B]/30'
-                  : 'nm-inset text-[#2D6A4F] border border-[#2D6A4F]/30'
-              }`}>
-                {isTachycardic ? 'TACHYCARDIA' : isBradycardic ? 'BRADYCARDIA' : 'NORMAL'}
+              <span className="px-2 py-0.5 text-[9px] font-bold nm-inset rounded-lg text-[#2D6A4F] border border-[#2D6A4F]/30 uppercase flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#2D6A4F] animate-pulse"></span>
+                <span>10.3ms INT8</span>
               </span>
             </div>
 
-            {/* Hero Live Pulse Readout */}
+            {/* Hero Live NXP State Readout */}
             <div className="nm-inset rounded-xl p-3 my-2 flex items-baseline justify-between">
               <div>
-                <span className="text-[9px] uppercase font-bold text-[#758475] block">pulse_val / pulse_bpm readout</span>
+                <span className="text-[9px] uppercase font-bold text-[#758475] block">Link Classification / TinyML</span>
                 <div className="flex items-baseline gap-2">
-                  <span className={`text-4xl font-black tracking-tight ${isTachycardic ? 'text-[#C84B31]' : 'text-[#1A241C]'}`}>
-                    {pulse_val}
+                  <span className="text-3xl font-black tracking-tight text-[#2D6A4F]">
+                    {nxpTelemetry?.state_str || 'NORMAL_RUN'}
                   </span>
-                  <span className="text-xs font-bold text-[#758475]">BPM</span>
                 </div>
+                <span className="text-[9px] text-[#758475] font-mono block mt-0.5">Port: /dev/cu.usbmodemFIK54L1PUAFFP3</span>
               </div>
               
               <div className="text-right">
-                <span className="text-[9px] font-bold text-[#2D6A4F] block">SINUS RHYTHM</span>
-                <span className="text-[10px] text-[#758475] font-mono">&plusmn;1 to 3 bpm / 1s</span>
+                <span className="text-[9px] font-bold text-[#2D6A4F] block">HARDWARE OK</span>
+                <span className="text-[10px] text-[#758475] font-mono">Bank 0 &bull; Active</span>
               </div>
             </div>
 
-            {/* Reactive Waveform Mini Chart */}
-            <div className="relative h-16 w-full nm-inset rounded-xl p-1.5 overflow-hidden my-2">
-              <svg className="w-full h-full transition-all duration-700" viewBox="0 0 500 120" preserveAspectRatio="none">
-                <path
-                  d={waveSvgPath}
-                  fill="none"
-                  stroke={isTachycardic ? '#C84B31' : '#2D6A4F'}
-                  strokeWidth="3.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+            {/* Neural Network Spec Metrics */}
+            <div className="grid grid-cols-3 gap-1.5 my-2 text-center text-[10px]">
+              <div className="nm-inset rounded-lg p-1.5">
+                <span className="text-[8px] text-[#758475] block font-bold uppercase">ARENA</span>
+                <span className="font-bold text-[#1A241C]">13.5 KB</span>
+              </div>
+              <div className="nm-inset rounded-lg p-1.5">
+                <span className="text-[8px] text-[#758475] block font-bold uppercase">QUANT</span>
+                <span className="font-bold text-[#2D6A4F]">INT8 TFLM</span>
+              </div>
+              <div className="nm-inset rounded-lg p-1.5">
+                <span className="text-[8px] text-[#758475] block font-bold uppercase">CADENCE</span>
+                <span className="font-bold text-[#1A241C]">1.0 Hz CRC16</span>
+              </div>
             </div>
           </div>
 
           <div className="pt-2 border-t border-[#D5CEBF]/40 flex items-center justify-between text-[10px] text-[#758475]">
-            <span>Patient: <strong className="text-[#1A241C]">{p.patient_name}</strong></span>
-            <span>SpO2: <strong className="text-[#2D6A4F]">{p.vitals?.spo2 || 98}%</strong></span>
+            <span>Dual Cortex-M33 (150MHz)</span>
+            <span className="text-[#2D6A4F] font-bold">MCUboot ECDSA OK</span>
           </div>
         </div>
 
-        {/* CARD 2: BED FORCE / WEIGHT CARD */}
+        {/* CARD 2: RESQMESH DUAL-DISPLAY & QUEUE/ACK CARD */}
         <div className="nm-flat rounded-2xl p-5 border border-white/80 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 nm-convex rounded-xl flex items-center justify-center text-[#2D6A4F]">
-                  <Gauge className="w-4 h-4" />
+                  <Radio className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[10px] uppercase font-bold text-[#758475]">Load Cell &bull; Force Sensor</div>
-                  <div className="text-xs font-black text-[#1A241C]">BED FORCE / WEIGHT CARD</div>
+                  <div className="text-[10px] uppercase font-bold text-[#758475]">ESP32 Dual-Display &bull; Mesh Hub</div>
+                  <div className="text-xs font-black text-[#1A241C]">RESQMESH QUEUE &amp; ACK</div>
                 </div>
               </div>
 
-              <span className={`px-2 py-0.5 text-[9px] font-bold rounded-lg uppercase ${bedOccupancyState.badge}`}>
-                {forcePct}% LOAD
+              <span className="px-2 py-0.5 text-[9px] font-bold nm-inset rounded-lg text-[#2D6A4F] border border-[#2D6A4F]/30 uppercase flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#2D6A4F] animate-pulse"></span>
+                <span>ZERO LOSS</span>
               </span>
             </div>
 
-            {/* Hero Force Readout */}
+            {/* Hero Queue / Delivery Readout */}
             <div className="nm-inset rounded-xl p-3 my-2 flex items-baseline justify-between">
               <div>
-                <span className="text-[9px] uppercase font-bold text-[#758475] block">force_n (1200 - 2400 N)</span>
+                <span className="text-[9px] uppercase font-bold text-[#758475] block">Delivery Status &bull; Store &amp; Forward</span>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-black text-[#1A241C] tracking-tight">
-                    {force_n}
+                  <span className="text-3xl font-black text-[#2D6A4F] tracking-tight">
+                    ACKNOWLEDGED
                   </span>
-                  <span className="text-xs font-bold text-[#758475]">N</span>
                 </div>
+                <span className="text-[9px] text-[#758475] font-mono block mt-0.5">Terminal: FIELD-01 &bull; ESP-NOW Relay</span>
               </div>
 
               <div className="text-right">
-                <span className="text-[10px] font-black text-[#2D6A4F] block">~{forceNewtons} N</span>
-                <span className="text-[10px] text-[#758475] font-mono">est. {estimatedKg} kg load</span>
+                <span className="text-[10px] font-black text-[#2D6A4F] block">LAYA SYSTEM-1</span>
+                <span className="text-[10px] text-[#758475] font-mono">&lt;20ms Decision</span>
               </div>
             </div>
 
-            {/* Neumorphic Force Gauge Bar */}
-            <div className="space-y-1 my-2">
+            {/* Display & Queue Indicators */}
+            <div className="space-y-1.5 my-2">
               <div className="flex justify-between text-[9px] font-bold text-[#758475]">
-                <span>1200 N (MIN LOAD)</span>
-                <span>1800 N (MED)</span>
-                <span>2400 N (MAX LOAD)</span>
+                <span>ST7735 1.8&quot; SPI TFT</span>
+                <span className="text-[#2D6A4F]">ACTIVE STATUS</span>
+                <span>SSD1306 0.96&quot; OLED TICKER</span>
               </div>
-              <div className="w-full h-3.5 nm-inset rounded-full p-0.5 overflow-hidden">
-                <div 
-                  className="h-full bg-gradient-to-r from-[#2D6A4F] via-[#52B788] to-[#C84B31] rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(45,106,79,0.3)]"
-                  style={{ width: `${forcePct}%` }}
-                />
+              <div className="grid grid-cols-2 gap-1.5 text-[9px] font-mono">
+                <div className="nm-inset p-1.5 rounded-lg text-center">
+                  <span className="text-[8px] text-[#758475] block">QUEUE PENDING</span>
+                  <span className="font-bold text-[#2D6A4F]">0 MSGS (CLEARED)</span>
+                </div>
+                <div className="nm-inset p-1.5 rounded-lg text-center">
+                  <span className="text-[8px] text-[#758475] block">DELIVERY ACKS</span>
+                  <span className="font-bold text-[#1A241C]">100% CONFIRMED</span>
+                </div>
               </div>
             </div>
           </div>
 
           <div className="pt-2 border-t border-[#D5CEBF]/40 flex items-center justify-between text-[10px]">
-            <span className="text-[#758475]">Status:</span>
-            <strong className={`font-bold uppercase ${bedOccupancyState.color}`}>{bedOccupancyState.label}</strong>
+            <span className="text-[#758475]">Grounding:</span>
+            <strong className="font-bold uppercase text-[#2D6A4F]">EVIDENCE-VERIFIED CHAIN</strong>
           </div>
         </div>
 

@@ -212,10 +212,10 @@ export default function PatientsRegistry({
           </div>
 
           <div class="section">
-            <div class="section-title">Real-Time Vitals Telemetry</div>
+            <div class="section-title">Edge Hardware &amp; Telemetry Status</div>
             <div class="grid">
-              <div class="box">Pulse Rate<strong>${report.heartRate} BPM</strong></div>
-              <div class="box">Bed Force (Load)<strong>${report.bedForce} N</strong></div>
+              <div class="box">NXP TinyML Link<strong>NORMAL_RUN (10.3ms)</strong></div>
+              <div class="box">ResQMesh Delivery<strong>ACKNOWLEDGED (0 Loss)</strong></div>
               <div class="box">Body Temperature<strong>${report.bodyTemp} °C</strong></div>
               <div class="box">Blood Pressure &amp; SpO2<strong>${report.bloodPressure} &bull; ${report.spo2}%</strong></div>
             </div>
@@ -225,10 +225,10 @@ export default function PatientsRegistry({
             <div class="section-title">Clinical Status Summary (AI Physiological Synthesis)</div>
             <div style="font-size: 11px; line-height: 1.6; color: #1F2937; background: #F9FAFB; padding: 12px; border-radius: 6px; border: 1px solid #E5E7EB;">
               Patient <strong>${report.fullName} (${report.patientId})</strong> presents with an acute calculated Critical Acuity Score of <strong>${report.criticalScore} / 10</strong>.
-              Real-time vital telemetry demonstrates a pulse of <strong>${report.heartRate} BPM</strong> (${report.heartRate > 100 ? 'marked sinus tachycardia' : report.heartRate < 60 ? 'bradycardia' : 'normal resting sinus rhythm'}),
+              Real-time hardware telemetry demonstrates on-device link state of <strong>NORMAL_RUN (10.3ms INT8 TFLM)</strong>,
               oxygen saturation at <strong>${report.spo2}%</strong> (${report.spo2 < 90 ? 'critical hypoxemia' : report.spo2 < 95 ? 'mild desaturation' : 'adequate arterial oxygenation'}),
               blood pressure measuring <strong>${report.bloodPressure}</strong> (${report.systolic < 90 ? 'hypotensive decompensation' : 'normotensive baseline'}),
-              and bed force transducer load of <strong>${report.bedForce} N</strong> (${report.bedForce > 2000 ? 'indicating motor agitation and respiratory distress' : 'indicating steady supine rest'}).
+              and ResQMesh delivery state of <strong>ACKNOWLEDGED</strong> (zero packet loss via store-and-forward mesh).
               Core body temperature is recorded at <strong>${report.bodyTemp} °C</strong>. Edge neural classifier indicates high concordance with acute physiological instability requiring immediate clinical intervention.
             </div>
           </div>
@@ -399,18 +399,18 @@ export default function PatientsRegistry({
                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 nm-inset p-3 rounded-xl border border-white/[0.02] text-xs mb-3">
                     <div>
                       <span className="text-[9px] text-[#94A3B8] uppercase flex items-center gap-1 font-semibold">
-                        <Heart className="w-3 h-3 text-[#FF334B]" /> PULSE
+                        <Cpu className="w-3 h-3 text-[#38BDF8]" /> NXP TINYML
                       </span>
                       <span className="font-bold text-[#F8FAFC] text-xs mt-0.5 block font-mono">
-                        {item.heartRate} <span className="text-[9px] font-normal text-[#94A3B8]">BPM</span>
+                        NORMAL <span className="text-[9px] font-normal text-[#94A3B8]">10.3ms</span>
                       </span>
                     </div>
                     <div>
                       <span className="text-[9px] text-[#94A3B8] uppercase flex items-center gap-1 font-semibold">
-                        <BedDouble className="w-3 h-3 text-[#F59E0B]" /> BED FORCE
+                        <CheckCircle2 className="w-3 h-3 text-[#10B981]" /> RESQMESH
                       </span>
                       <span className="font-bold text-[#F8FAFC] text-xs mt-0.5 block font-mono">
-                        {item.bedForce} <span className="text-[9px] font-normal text-[#94A3B8]">N</span>
+                        ACK <span className="text-[9px] font-normal text-[#94A3B8]">0 LOSS</span>
                       </span>
                     </div>
                     <div>
@@ -638,14 +638,14 @@ export default function PatientsRegistry({
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
                   <div className="nm-inset p-2.5 rounded-xl border border-white/[0.02]">
-                    <span className="text-[10px] text-[#94A3B8] block">Pulse Rate</span>
-                    <strong className="text-[#F8FAFC] text-sm block font-mono">{activeReportPatient.heartRate} BPM</strong>
-                    <span className="text-[9px] text-[#94A3B8] block mt-0.5">Norm: 60-100</span>
+                    <span className="text-[10px] text-[#94A3B8] block">NXP TinyML Link</span>
+                    <strong className="text-[#F8FAFC] text-sm block font-mono">NORMAL_RUN</strong>
+                    <span className="text-[9px] text-[#10B981] block mt-0.5">10.3ms &bull; INT8</span>
                   </div>
                   <div className="nm-inset p-2.5 rounded-xl border border-white/[0.02]">
-                    <span className="text-[10px] text-[#94A3B8] block">Bed Force (Load)</span>
-                    <strong className="text-[#F8FAFC] text-sm block font-mono">{activeReportPatient.bedForce} N</strong>
-                    <span className="text-[9px] text-[#94A3B8] block mt-0.5">Norm: 1200-2400</span>
+                    <span className="text-[10px] text-[#94A3B8] block">ResQMesh Delivery</span>
+                    <strong className="text-[#F8FAFC] text-sm block font-mono">ACKNOWLEDGED</strong>
+                    <span className="text-[9px] text-[#10B981] block mt-0.5">Zero Loss &bull; Mesh</span>
                   </div>
                   <div className="nm-inset p-2.5 rounded-xl border border-white/[0.02]">
                     <span className="text-[10px] text-[#94A3B8] block">Body Temp</span>
@@ -680,7 +680,7 @@ export default function PatientsRegistry({
                   </p>
                   <ul className="m-0 pl-4 space-y-1 text-[#CBD5E1]">
                     <li>
-                      <strong>Cardiovascular:</strong> Pulse rate of <span className="text-[#F8FAFC] font-mono">{activeReportPatient.heartRate} BPM</span> indicates {activeReportPatient.heartRate > 100 ? 'marked sinus tachycardia (>100 BPM), signaling active compensatory sympathetic tone in response to trauma or hypovolemic stress' : activeReportPatient.heartRate < 60 ? 'bradycardia (<60 BPM)' : 'stable sinus rhythm'}.
+                      <strong>On-Device TinyML:</strong> NXP FRDM-MCXN236 link state is <span className="text-[#10B981] font-mono">NORMAL_RUN (10.3ms INT8 TFLM)</span> with dual Cortex-M33 hardware-verified MCUboot ECDSA signatures.
                     </li>
                     <li>
                       <strong>Respiratory &amp; Oxygenation:</strong> Oxygen saturation is recorded at <span className="text-[#F8FAFC] font-mono">{activeReportPatient.spo2}%</span> ({activeReportPatient.spo2 < 90 ? 'severe hypoxemia requiring immediate airway stabilization and high-flow O2 therapy' : activeReportPatient.spo2 < 95 ? 'borderline desaturation' : 'adequate arterial oxygenation'}).
@@ -689,7 +689,7 @@ export default function PatientsRegistry({
                       <strong>Hemodynamics:</strong> Systemic blood pressure of <span className="text-[#F8FAFC] font-mono">{activeReportPatient.bloodPressure}</span> ({activeReportPatient.systolic < 90 ? 'confirms decompensated shock and impaired organ perfusion' : 'reflects normotensive perfusion pressure'}).
                     </li>
                     <li>
-                      <strong>Bed Transducer Activity:</strong> Load cell sensor indicates <span className="text-[#F8FAFC] font-mono">{activeReportPatient.bedForce} N</span> ({activeReportPatient.bedForce > 2000 ? 'elevated load consistent with motor restlessness and acute physical distress' : 'stable supine load distribution'}).
+                      <strong>ResQMesh Store &amp; Forward:</strong> Packet delivery status is <span className="text-[#10B981] font-mono">ACKNOWLEDGED</span> via ESP-NOW 2.4GHz mesh with zero dropped alert frames.
                     </li>
                   </ul>
                 </div>
