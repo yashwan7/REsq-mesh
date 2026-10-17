@@ -26,6 +26,7 @@ from .blood_bank_engine import get_blood_bank_state, process_blood_bank_action
 from .mqtt_engine import mqtt_engine
 from .decision_layer import laya_decision_layer
 from .slm_engine import edge_slm_engine, AVAILABLE_SLM_MODELS
+from .model_bakeoff import model_bakeoff_engine
 
 from backend.cdc import (
     cdc_service,
@@ -954,6 +955,49 @@ async def evaluate_decision_layer_endpoint(req: DecisionLayerEvaluateRequest):
     """Executes 2-stage hierarchical triage: Laya System 1 Decision Layer (<25ms) + Edge SLM System 2."""
     result = await edge_slm_engine.evaluate_with_decision_layer(req.capsule)
     return result
+
+# --- 3-Model Bake-off & Evidence-Grounded Investigator Endpoints ---
+
+class InvestigateReportRequest(BaseModel):
+    event_id: str = "EVT-8042"
+    scenario: str = "simulated_bed_exit_collapse"
+    evidence: Optional[List[str]] = None
+    primary_network: str = "down"
+    delivery_acknowledged: bool = False
+    model_name: str = "Qwen3-4B-Instruct"
+
+class DemoActTriggerRequest(BaseModel):
+    act: int # 1 = Detect, 2 = Disconnect, 3 = Investigate, 4 = Recover
+
+@app.get("/api/bakeoff/results")
+def get_bakeoff_results_endpoint():
+    """Returns the 3-model bake-off table (Qwen3-4B vs SmolLM3-3B vs Gemma 4 e2b)."""
+    return model_bakeoff_engine.get_bakeoff_table()
+
+@app.post("/api/investigate/report")
+def generate_investigate_report_endpoint(req: InvestigateReportRequest):
+    """Generates an evidence-grounded report strictly separating observed, inferred, and delivery receipts."""
+    return model_bakeoff_engine.generate_investigator_report(
+        event_id=req.event_id,
+        scenario=req.scenario,
+        evidence=req.evidence,
+        primary_network=req.primary_network,
+        delivery_acknowledged=req.delivery_acknowledged,
+        model_name=req.model_name
+    )
+
+@app.post("/api/demo/trigger-act")
+async def trigger_demo_act_endpoint(req: DemoActTriggerRequest):
+    """Triggers the 4-act live demonstration state machine across dashboard and ESP32."""
+    act_data = {
+        1: {"act": 1, "name": "DETECT", "event_id": "EVT-8042", "net": "HEALTHY", "ack": False, "msg": "Event EVT-8042 detected locally by NXP TinyML"},
+        2: {"act": 2, "name": "DISCONNECT", "event_id": "EVT-8042", "net": "DOWN", "ack": False, "msg": "Primary network cut -> Queued locally in PENDING buffer"},
+        3: {"act": 3, "name": "INVESTIGATE", "event_id": "EVT-8042", "net": "RELAY_ESPNOW", "ack": False, "msg": "Qwen3-4B generates evidence report (Unconfirmed ACK)"},
+        4: {"act": 4, "name": "RECOVER", "event_id": "EVT-8042", "net": "RESTORED", "ack": True, "msg": "Network restored -> ACKs delivered with 0 duplicate records"}
+    }.get(req.act, {"act": req.act, "msg": "Unknown act"})
+    
+    await broadcast_ws("DEMO_ACT_UPDATE", act_data)
+    return act_data
 
 # --- WebSocket Channel ---
 @app.websocket("/ws")

@@ -32,6 +32,22 @@
       "destination": "/api/decision-layer.js"
     },
     {
+      "source": "/api/bakeoff/(.*)",
+      "destination": "/api/bakeoff.js"
+    },
+    {
+      "source": "/api/bakeoff",
+      "destination": "/api/bakeoff.js"
+    },
+    {
+      "source": "/api/investigate/(.*)",
+      "destination": "/api/bakeoff.js"
+    },
+    {
+      "source": "/api/investigate",
+      "destination": "/api/bakeoff.js"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
