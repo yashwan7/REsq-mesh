@@ -24,6 +24,14 @@
       "destination": "/api/bloodbank.js"
     },
     {
+      "source": "/api/decision-layer/(.*)",
+      "destination": "/api/decision-layer.js"
+    },
+    {
+      "source": "/api/decision-layer",
+      "destination": "/api/decision-layer.js"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

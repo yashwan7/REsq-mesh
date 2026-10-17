@@ -24,6 +24,8 @@ from .mock_generator import seed_initial_mock_data
 from .security import sign_capsule, verify_capsule
 from .blood_bank_engine import get_blood_bank_state, process_blood_bank_action
 from .mqtt_engine import mqtt_engine
+from .decision_layer import laya_decision_layer
+from .slm_engine import edge_slm_engine, AVAILABLE_SLM_MODELS
 
 from backend.cdc import (
     cdc_service,
@@ -918,6 +920,40 @@ async def cdc_simulate_crud_endpoint(req: CdcSimulateCrudRequest):
     status = cdc_service.get_status().model_dump()
     await broadcast_ws("CDC_STATUS_TICK", status)
     return {"operation_result": result, "pipeline_status": status}
+
+# --- Laya Decision Layer & Open-Weight Edge SLM Endpoints ---
+
+class SlmModelSwitchRequest(BaseModel):
+    model: str
+
+class DecisionLayerEvaluateRequest(BaseModel):
+    capsule: CaseCapsule
+
+@app.get("/api/decision-layer/models")
+def get_decision_layer_models():
+    """Returns available open-weights SLMs (Qwen2.5-0.5B, SmolLM2-360M) and Laya Decision Engine status."""
+    return edge_slm_engine.get_models_info()
+
+@app.post("/api/decision-layer/switch-model")
+def switch_slm_model(req: SlmModelSwitchRequest):
+    """Switch active open-weight model between Qwen2.5-0.5B and SmolLM2-360M."""
+    success = edge_slm_engine.set_active_model(req.model)
+    if not success:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Invalid model key. Choose from: {list(AVAILABLE_SLM_MODELS.keys())}"
+        )
+    return {
+        "status": "ok", 
+        "active_model": edge_slm_engine.active_model_key, 
+        "info": AVAILABLE_SLM_MODELS[edge_slm_engine.active_model_key]
+    }
+
+@app.post("/api/decision-layer/evaluate")
+async def evaluate_decision_layer_endpoint(req: DecisionLayerEvaluateRequest):
+    """Executes 2-stage hierarchical triage: Laya System 1 Decision Layer (<25ms) + Edge SLM System 2."""
+    result = await edge_slm_engine.evaluate_with_decision_layer(req.capsule)
+    return result
 
 # --- WebSocket Channel ---
 @app.websocket("/ws")
