@@ -9,6 +9,7 @@
 [![Frontend](https://img.shields.io/badge/frontend-React%20%2B%20Vite-61dafb)](#quickstart)
 [![Edge AI](https://img.shields.io/badge/edge%20AI-TFLite%20INT8-orange)](#edge-ai-on-the-nxp-frdm-mcxn236)
 [![Local LLM](https://img.shields.io/badge/local%20LLM-Llama%203.2%203B%20via%20Ollama-blueviolet)](#open-source-ai-in-the-system)
+[![DigitalOcean](https://img.shields.io/badge/DigitalOcean-App%20Platform%20(BLR1)-0080FF?logo=digitalocean&logoColor=white)](https://cloud.digitalocean.com/apps)
 
 **[Live dashboard](https://dashboard-pi-indol-76.vercel.app)** · **[Repository](https://github.com/yashwan7/REsq-mesh)** · Built by **Team Izanagi**
 
@@ -371,6 +372,20 @@ Set `OTEL_SDK_DISABLED=true` to turn telemetry off explicitly.
 3. Change a field in a signed capsule and send it to `POST /api/capsule`. The status becomes `TAMPERED`.
 4. Change `time_to_help` from 20 minutes to 2 days. The protocol changes from Acute Stabilization to Prolonged Field Care.
 5. Use the network simulation controls to degrade Port A and watch the failover path change.
+
+### 6. Cloud Base Station on DigitalOcean (BLR1 Bengaluru)
+
+While field terminals and mesh nodes run 100% offline, the central hospital gateway and disaster merge hub can be deployed to **DigitalOcean App Platform** or a **DigitalOcean Droplet** in the **BLR1 (Bengaluru)** region:
+
+[![Deploy to DigitalOcean](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/yashwan7/REsq-mesh/tree/main)
+
+- **App Platform Spec**: Located in [`.do/app.yaml`](file:///.do/app.yaml), configured for the `blr` region with zero-downtime auto-deploy on git push.
+- **Docker Container**: Build and run locally or on a DigitalOcean Droplet:
+  ```bash
+  docker build -t resqmesh-backend .
+  docker run -d -p 8000:8000 --name resqmesh resqmesh-backend
+  ```
+- **DigitalOcean Spaces (Object Storage)**: S3-compatible cold storage for encrypted HMAC-SHA256 audit archives and Parquet CDC telemetry data.
 
 ## Configuration
 
