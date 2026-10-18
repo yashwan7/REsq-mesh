@@ -449,7 +449,13 @@ Team collaboration rules are in `.agents/rules/git_collaboration.md`.
 
 ## License
 
-The licence has not been set yet. Add a `LICENSE` file (for example MIT or Apache-2.0) before public release. Third-party models keep their own licences, as listed in [Open-source AI in the system](#open-source-ai-in-the-system).
+Copyright (c) 2026 Team Izanagi (Yashwanth Gowda S.N., M. Tejas Navada, R.J. Harshavardhan)
+
+REsq Mesh is released under the MIT License. You may use, copy, modify, merge, publish, distribute, sublicense, and sell copies of the software, as long as you keep the copyright notice and the licence text in all copies or substantial portions. The software is provided "as is", without warranty of any kind. The full text is in the LICENSE file.
+
+Third-party components keep their own licences. This includes the open-weight models (Llama 3.2 under the Llama 3.2 Community License; Qwen2.5 and SmolLM2 under Apache-2.0), TensorFlow Lite for Microcontrollers, and the Python and JavaScript libraries listed in backend/requirements.txt and dashboard/package.json. Check each licence before you redistribute them.
+
+Not a medical device. REsq Mesh is a research and demonstration system. The MIT warranty disclaimer applies, and clinicians must review every recommendation. Do not use it as the only basis for patient care.
 
 ---
 
