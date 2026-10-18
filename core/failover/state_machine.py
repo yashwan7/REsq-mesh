@@ -19,6 +19,10 @@ from .models import (
     PortId,
     SystemState,
 )
+from backend.telemetry import failover_transitions, get_tracer
+
+
+tracer = get_tracer("resq_mesh.failover")
 
 
 class FailoverStateMachine:
@@ -342,13 +346,22 @@ class FailoverStateMachine:
             "message": eval_result.message,
         }
 
-        # 1. State change callback
+        # 1. State change callback and transition telemetry
         if old_state != new_state:
-            for cb in list(self._on_state_change_callbacks):
-                try:
-                    cb(old_state, new_state, eval_result)
-                except Exception:
-                    pass
+            with tracer.start_as_current_span("failover.transition") as span:
+                span.set_attribute("failover.from", old_state.value)
+                span.set_attribute("failover.to", new_state.value)
+                span.set_attribute("failover.active_path", eval_result.active_path.value)
+                failover_transitions.add(
+                    1,
+                    {"from": old_state.value, "to": new_state.value},
+                )
+                span.add_event("failover.transition")
+                for cb in list(self._on_state_change_callbacks):
+                    try:
+                        cb(old_state, new_state, eval_result)
+                    except Exception as exc:
+                        span.record_exception(exc)
 
         # 2. Warning callback if warning score > 0.60
         if eval_result.port_a_degradation_score > 0.60 or new_state == SystemState.STATE_WARNING:

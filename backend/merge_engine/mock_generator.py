@@ -26,7 +26,7 @@ def seed_initial_mock_data():
         medications=[
             MedicationEntry(medication="Fentanyl", dose="100mcg", administered_at="14:15", administered_by="Medic Echo", entry_id="M1")
         ],
-        gps=GPSLocation(lat=12.871773, lng=77.576856, altitude=920.0),
+        gps=GPSLocation(lat=12.9352, lng=77.6244, altitude=920.0),
         triage_color="RED"
     )
     p1_signed = sign_capsule(p1.model_dump())
@@ -52,7 +52,7 @@ def seed_initial_mock_data():
         medications=[
             MedicationEntry(medication="Ceftriaxone", dose="1g IV", administered_at="12:00", administered_by="Sgt. Bradley", entry_id="M2")
         ],
-        gps=GPSLocation(lat=12.875210, lng=77.579430, altitude=925.0),
+        gps=GPSLocation(lat=12.9372, lng=77.6280, altitude=925.0),
         triage_color="YELLOW"
     )
     p2_signed = sign_capsule(p2.model_dump())
@@ -76,7 +76,7 @@ def seed_initial_mock_data():
         red_flags=["spinal_cord_immobilized", "dysphagia"],
         eye_gaze=EyeGaze(command="CALL_NURSE", direction="CENTER", blink_count=2, timestamp=now - 15),
         medications=[],
-        gps=GPSLocation(lat=12.868920, lng=77.574210, altitude=915.0),
+        gps=GPSLocation(lat=12.9328, lng=77.6205, altitude=915.0),
         triage_color="YELLOW"
     )
     p3_signed = sign_capsule(p3.model_dump())
@@ -100,7 +100,7 @@ def seed_initial_mock_data():
         red_flags=[],
         eye_gaze=EyeGaze(command="BATHROOM", direction="RIGHT", blink_count=1, timestamp=now - 30),
         medications=[],
-        gps=GPSLocation(lat=12.873540, lng=77.572180, altitude=918.0),
+        gps=GPSLocation(lat=12.9340, lng=77.6220, altitude=918.0),
         triage_color="GREEN",
         hmac_signature="bad_tampered_hash_9876543210deadbeef"
     )
@@ -127,7 +127,7 @@ def seed_initial_mock_data():
             MedicationEntry(medication="Tranexamic Acid", dose="1g IV", administered_at="14:20", administered_by="Dr. Nair", entry_id="M2"),
             MedicationEntry(medication="O-Negative RBC", dose="2 Units", administered_at="14:24", administered_by="Medic Sierra", entry_id="M3")
         ],
-        gps=GPSLocation(lat=12.874500, lng=77.576800, altitude=918.0),
+        gps=GPSLocation(lat=12.9365, lng=77.6258, altitude=918.0),
         triage_color="RED"
     )
     p5_signed = sign_capsule(p5.model_dump())
@@ -154,7 +154,7 @@ def seed_initial_mock_data():
             MedicationEntry(medication="Aspirin", dose="325mg PO", administered_at="14:05", administered_by="Medic Alpha", entry_id="M4"),
             MedicationEntry(medication="Heparin", dose="5000 IU IV", administered_at="14:10", administered_by="Medic Alpha", entry_id="M5")
         ],
-        gps=GPSLocation(lat=12.889500, lng=77.564500, altitude=912.0),
+        gps=GPSLocation(lat=12.9348, lng=77.6115, altitude=912.0),
         triage_color="RED"
     )
     p6_signed = sign_capsule(p6.model_dump())
@@ -180,7 +180,7 @@ def seed_initial_mock_data():
         medications=[
             MedicationEntry(medication="Albuterol Nebulizer", dose="5mg", administered_at="14:00", administered_by="Medic Bravo", entry_id="M8")
         ],
-        gps=GPSLocation(lat=12.873200, lng=77.581200, altitude=917.0),
+        gps=GPSLocation(lat=12.9308, lng=77.6315, altitude=917.0),
         triage_color="YELLOW"
     )
     p7_signed = sign_capsule(p7.model_dump())
@@ -206,7 +206,7 @@ def seed_initial_mock_data():
         medications=[
             MedicationEntry(medication="Ibuprofen", dose="400mg PO", administered_at="13:15", administered_by="Medic Echo", entry_id="M11")
         ],
-        gps=GPSLocation(lat=12.872100, lng=77.575500, altitude=921.0),
+        gps=GPSLocation(lat=12.9360, lng=77.6268, altitude=921.0),
         triage_color="GREEN"
     )
     p8_signed = sign_capsule(p8.model_dump())

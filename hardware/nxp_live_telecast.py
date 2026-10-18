@@ -109,8 +109,8 @@ def run_telecast(port: str, baud: int = 115200, to_mqtt: bool = False, max_count
                             "hub_online": True,
                             "pulse_val": 76,
                             "force_n": 1820,
-                            "lat": "12.871773",
-                            "lng": "77.576856"
+                            "lat": "12.9352",
+                            "lng": "77.6244"
                         }
                         mqtt_client.publish("izanagi/sensors/data", json.dumps(packet))
                 else:

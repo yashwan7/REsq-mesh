@@ -12,14 +12,14 @@ import {
 const INITIAL_PHARMACIES = [
   {
     id: 'PHARM-01',
-    name: 'MedPlus Pharmacy — 80 Feet Road (Brookes Haven)',
-    address: '80 Feet Road, Brookes Haven Layout, JP Nagar 8th Phase, Bengaluru 560076',
-    locality: 'Brookes Haven Layout',
-    phone: '+91 80 2685 4101',
+    name: 'MedPlus Pharmacy — 80 Feet Road (Koramangala 4th Block)',
+    address: '80 Feet Road, 4th Block, Koramangala, Bengaluru 560034',
+    locality: '4th Block Koramangala',
+    phone: '+91 80 2553 4101',
     operating_hours: '24/7 Day & Night Emergency Pharmacy',
     is_open: true,
-    lat: 12.872200,
-    lng: 77.576600,
+    lat: 12.9356,
+    lng: 77.6240,
     distance_km: 0.08,
     verified_at: 'Just now',
     is_verified: true,
@@ -93,15 +93,15 @@ const INITIAL_PHARMACIES = [
   },
   {
     id: 'PHARM-02',
-    name: 'Apollo Pharmacy — 80 Feet Road (Opp. RVITM)',
-    address: '80 Feet Road, Opp. RVITM Campus, JP Nagar 8th Phase, Bengaluru 560076',
-    locality: 'RVITM Campus Corridor',
-    phone: '+91 80 2685 5522',
+    name: 'Apollo Pharmacy — 100 Feet Road (Sony World Signal)',
+    address: '100 Feet Road, Near Sony World Signal, Koramangala 4th Block, Bengaluru 560034',
+    locality: 'Sony World Junction',
+    phone: '+91 80 2553 5522',
     operating_hours: '24/7 Emergency Operation',
     is_open: true,
-    lat: 12.873500,
-    lng: 77.576100,
-    distance_km: 0.22,
+    lat: 12.9360,
+    lng: 77.6265,
+    distance_km: 0.25,
     verified_at: '3 mins ago',
     is_verified: true,
     network_status: 'ONLINE_MESH',
@@ -174,15 +174,15 @@ const INITIAL_PHARMACIES = [
   },
   {
     id: 'PHARM-03',
-    name: 'Wellness Forever 24x7 Chemist (Near Epitome Elan)',
-    address: '80 Feet Road, Near Tara Cafe & Epitome Elan, JP Nagar 8th Phase, Bengaluru 560076',
-    locality: 'Epitome Elan / 80 Feet Rd',
+    name: 'Wellness Forever 24x7 Chemist (Koramangala)',
+    address: '80 Feet Road, Near Maharaja Signal, Koramangala 4th Block, Bengaluru 560034',
+    locality: 'Maharaja Signal Corridor',
     phone: '+91 80 4322 8800',
     operating_hours: '24/7 Day & Night Pharmacy',
     is_open: true,
-    lat: 12.874800,
-    lng: 77.577200,
-    distance_km: 0.35,
+    lat: 12.9348,
+    lng: 77.6235,
+    distance_km: 0.12,
     verified_at: '8 mins ago',
     is_verified: true,
     network_status: 'STABLE_CELLULAR',
@@ -239,15 +239,15 @@ const INITIAL_PHARMACIES = [
   },
   {
     id: 'PHARM-04',
-    name: 'TR Hospital 24/7 Casualty Pharmacy',
-    address: 'TR Hospital Campus, 80 Feet Road, Kothanur, JP Nagar 8th Phase 560076',
-    locality: 'Kothanur 80 Feet Road',
-    phone: '+91 80 2685 0099',
+    name: 'St. John’s Hospital 24/7 Casualty Pharmacy',
+    address: 'St. John’s Hospital Campus, Sarjapur Road, Koramangala, Bengaluru 560034',
+    locality: 'St. John’s Medical Enclave',
+    phone: '+91 80 2206 5000',
     operating_hours: '24/7 Hospital Trauma Dispensary',
     is_open: true,
-    lat: 12.880755,
-    lng: 77.584167,
-    distance_km: 1.2,
+    lat: 12.9315,
+    lng: 77.6210,
+    distance_km: 0.55,
     verified_at: '2 mins ago',
     is_verified: true,
     network_status: 'ONLINE_MESH',
@@ -304,15 +304,15 @@ const INITIAL_PHARMACIES = [
   },
   {
     id: 'PHARM-05',
-    name: 'Sanjivani Medical & General Stores',
-    address: 'Kothanur Dinne Main Rd, Near Krishna Nagar Kere, JP Nagar 8th Phase 560076',
-    locality: 'Krishna Nagar Lake Sector',
-    phone: '+91 80 2686 1144',
+    name: 'Sanjivani Medical & General Stores (Koramangala 5th Block)',
+    address: 'KHB Colony, 5th Block, Koramangala, Bengaluru 560095',
+    locality: '5th Block Koramangala',
+    phone: '+91 80 2553 1144',
     operating_hours: '07:30 - 23:30 (Open Now)',
     is_open: true,
-    lat: 12.876500,
-    lng: 77.580200,
-    distance_km: 0.65,
+    lat: 12.9340,
+    lng: 77.6185,
+    distance_km: 0.62,
     verified_at: '15 mins ago',
     is_verified: true,
     network_status: 'ONLINE_MESH',
@@ -353,15 +353,15 @@ const INITIAL_PHARMACIES = [
   },
   {
     id: 'PHARM-06',
-    name: 'Jan Aushadhi Kendra (Generic Pharmacy)',
-    address: 'Chunchgatta Main Rd, Konanakunte, JP Nagar 8th Phase, Bengaluru 560062',
-    locality: 'Chunchgatta / Konanakunte',
-    phone: '+91 80 2686 3399',
+    name: 'Pradhan Mantri Jan Aushadhi Kendra (Koramangala 6th Block)',
+    address: '6th Block, Near BDA Complex, Koramangala, Bengaluru 560095',
+    locality: '6th Block Koramangala',
+    phone: '+91 80 2553 3399',
     operating_hours: '08:00 - 21:00 (Open Now)',
     is_open: true,
-    lat: 12.881200,
-    lng: 77.571500,
-    distance_km: 1.2,
+    lat: 12.9375,
+    lng: 77.6215,
+    distance_km: 0.40,
     verified_at: 'Just now',
     is_verified: true,
     network_status: 'ONLINE_MESH',
@@ -578,7 +578,7 @@ export default function PharmacyNetwork({ patients: _patients = [], onSelectPati
 
     if (!mapInstanceRef.current) {
       const map = L.map(mapContainerRef.current, {
-        center: [12.871773, 77.576856],
+        center: [12.9352, 77.6244],
         zoom: 15,
         zoomControl: true,
         attributionControl: false
@@ -635,7 +635,7 @@ export default function PharmacyNetwork({ patients: _patients = [], onSelectPati
     markersRef.current.forEach(m => m.remove());
     markersRef.current = [];
 
-    // Add Base Clinical Station Marker at 12.871773, 77.576856 (Brookes Haven / 80 Feet Road)
+    // Add Base Clinical Station Marker at 12.9352, 77.6244 (Koramangala / 80 Feet Road)
     const hospitalIconHtml = `
       <div style="position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
         <div style="position: absolute; inset: 0; border-radius: 50%; background: rgba(45,106,79,0.25); animation: ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
@@ -645,7 +645,7 @@ export default function PharmacyNetwork({ patients: _patients = [], onSelectPati
           </svg>
         </div>
         <div style="position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); white-space: nowrap; background: #1A241C; color: #52B788; font-size: 9px; font-weight: 800; font-family: monospace; padding: 1px 6px; border-radius: 4px; border: 1px solid #52B788; box-shadow: 0 2px 6px rgba(0,0,0,0.4); pointer-events: none;">
-          80 FT RD • BROOKES HAVEN
+          80 FT RD • KORAMANGALA
         </div>
       </div>
     `;
@@ -655,11 +655,11 @@ export default function PharmacyNetwork({ patients: _patients = [], onSelectPati
       iconSize: [44, 44],
       iconAnchor: [22, 22]
     });
-    const hqMarker = L.marker([12.871773, 77.576856], { icon: hospitalIcon }).addTo(map);
+    const hqMarker = L.marker([12.9352, 77.6244], { icon: hospitalIcon }).addTo(map);
     hqMarker.bindPopup(`
       <div style="font-family: monospace; font-size: 11px; color: #1A241C; padding: 2px;">
         <strong style="color: #2D6A4F; font-size: 12px;">[BASE] KSHITIJ CLINICAL DISPATCH HQ</strong><br/>
-        <div style="color: #556558; margin-top: 2px;">80 Feet Road, Brookes Haven Layout, JP Nagar Phase 8</div>
+        <div style="color: #556558; margin-top: 2px;">80 Feet Road, 4th Block, Koramangala, Bengaluru</div>
         <div style="color: #2D6A4F; font-weight: bold; margin-top: 4px;">GPS Radar Focal Anchor (0.0 km)</div>
       </div>
     `);
@@ -998,7 +998,7 @@ export default function PharmacyNetwork({ patients: _patients = [], onSelectPati
               SECTOR PHARMACY RADAR MAP
             </span>
             <span className="text-[10px] text-[#94A3B8]">
-              &bull; Center: [12.871773, 77.576856] &bull; 6 Tracked Depots
+              &bull; Center: [12.9352, 77.6244] &bull; 6 Tracked Depots
             </span>
           </div>
 
@@ -1064,7 +1064,7 @@ export default function PharmacyNetwork({ patients: _patients = [], onSelectPati
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-[#1A241C] border border-[#52B788] inline-block shadow-[0_0_6px_#52B788]" />
-              <strong>Base Clinical Station (12.871773, 77.576856)</strong>
+              <strong>Base Clinical Station (12.9352, 77.6244)</strong>
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-sm bg-[#2D6A4F] inline-block shadow-[0_0_6px_#2D6A4F]" />

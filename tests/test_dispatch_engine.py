@@ -21,11 +21,12 @@ class TestDispatchEngine(unittest.IsolatedAsyncioTestCase):
         
         # Verify real hospitals exist
         hospital_names = [h["name"] for h in state["hospitals"]]
-        self.assertIn("TR Hospital, JP Nagar 8th Phase", hospital_names)
-        self.assertIn("Rajnandani Hospital, JP Nagar 8th Phase", hospital_names)
-        self.assertIn("Metro Hospital, Kanakapura Road", hospital_names)
-        self.assertIn("Fortis Hospital, Bannerghatta Road", hospital_names)
-        self.assertIn("Aster RV Hospital, JP Nagar 1st Phase", hospital_names)
+        self.assertIn("Beams Multi Speciality Hospital, Koramangala", hospital_names)
+        self.assertIn("Apollo Spectra Hospitals, Koramangala", hospital_names)
+        self.assertIn("St. John’s Medical College Hospital", hospital_names)
+        self.assertIn("Kaveri Multi Speciality Hospital, Madiwala", hospital_names)
+        self.assertIn("Manipal Hospital, Sarjapur Road", hospital_names)
+        self.assertIn("Jayadeva Institute of Cardiovascular Sciences", hospital_names)
 
     def test_initial_multi_offers(self):
         state = self.coordinator.get_state()
@@ -45,7 +46,7 @@ class TestDispatchEngine(unittest.IsolatedAsyncioTestCase):
         second_amb_id = state["active_offers"][1]["ambulance_id"]
 
         decline_res = await self.coordinator.respond_to_offer_atomic(
-            emergency_id="EMG-JP-101",
+            emergency_id="EMG-KORA-101",
             ambulance_id=first_amb_id,
             response_type="DECLINE"
         )
@@ -54,7 +55,7 @@ class TestDispatchEngine(unittest.IsolatedAsyncioTestCase):
 
         # 2. Accept with second ambulance
         accept_res = await self.coordinator.respond_to_offer_atomic(
-            emergency_id="EMG-JP-101",
+            emergency_id="EMG-KORA-101",
             ambulance_id=second_amb_id,
             response_type="ACCEPT"
         )
@@ -79,8 +80,8 @@ class TestDispatchEngine(unittest.IsolatedAsyncioTestCase):
 
         # Run concurrent acceptances
         results = await asyncio.gather(
-            self.coordinator.respond_to_offer_atomic("EMG-JP-101", amb_a, "ACCEPT"),
-            self.coordinator.respond_to_offer_atomic("EMG-JP-101", amb_b, "ACCEPT")
+            self.coordinator.respond_to_offer_atomic("EMG-KORA-101", amb_a, "ACCEPT"),
+            self.coordinator.respond_to_offer_atomic("EMG-KORA-101", amb_b, "ACCEPT")
         )
 
         successes = [r for r in results if r.get("success") is True]

@@ -69,6 +69,29 @@ npm run dev
 # Dashboard available at http://localhost:5173
 ```
 
+### 3. Local observability (optional)
+
+The backend emits OpenTelemetry traces and metrics when the OTel packages are
+installed and an OTLP collector endpoint is configured. The SDK is safe to
+leave enabled without a collector; it will not interrupt triage or failover.
+
+```bash
+docker run --rm --name jaeger \
+  -p 16686:16686 -p 4317:4317 -p 4318:4318 \
+  jaegertracing/all-in-one:latest
+
+export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318
+export OTEL_SERVICE_NAME=resq-mesh-backend
+```
+
+Open [Jaeger](http://localhost:16686) and submit `POST /api/triage` to see
+`triage.evaluate` and `llm.generate` spans. If Ollama is unavailable, the
+trace records the fallback reason and the `resq.triage.fallbacks` metric is
+incremented. Patient identifiers, prompts, vitals, clinical summaries,
+signatures, and secrets are intentionally excluded from telemetry.
+
+Set `OTEL_SDK_DISABLED=true` to turn telemetry off explicitly.
+
 ---
 
 ## Team Git Collaboration Rules

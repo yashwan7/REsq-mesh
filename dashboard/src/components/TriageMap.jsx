@@ -35,10 +35,10 @@ export default function TriageMap({ patients = [], selectedPatientId, onSelectPa
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyC6AaQ9mU-hfC7aLE-G1mXoiBixf-UG1-s';
   const [mapType, setMapType] = useState('google-roads'); // 'google-roads' | 'google-hybrid' | 'google-terrain' | 'tactical-dark' | 'light-streets' | 'osm'
 
-  // Operating Anchor & Radius (JP Nagar Demo defaults)
+  // Operating Anchor & Radius (Koramangala Demo defaults)
   const [operatingAnchor, setOperatingAnchor] = useState(DEMO_ANCHOR);
   const [operatingRadiusKm, setOperatingRadiusKm] = useState(5.0);
-  const [selectedLocationId, setSelectedLocationId] = useState('LOC-BROOKES-HAVEN');
+  const [selectedLocationId, setSelectedLocationId] = useState('LOC-KORAMANGALA-4TH');
 
   // Layer Visibility Toggles
   const [showHospitals, setShowHospitals] = useState(true);
@@ -48,7 +48,7 @@ export default function TriageMap({ patients = [], selectedPatientId, onSelectPa
 
   // Active Emergency State
   const [activeEmergency, setActiveEmergency] = useState({
-    emergency_id: 'EMG-JP-101',
+    emergency_id: 'EMG-KORA-101',
     patient_id: selectedPatientId || 'PT-101',
     patient_name: 'Major Vikram Rathore (Blast Trauma)',
     priority: 'IMMEDIATE_RED',
@@ -69,7 +69,7 @@ export default function TriageMap({ patients = [], selectedPatientId, onSelectPa
       event_id: 'EVT-1001',
       timestamp: new Date().toLocaleTimeString(),
       event_type: 'RADAR_INITIALIZED',
-      details: 'GPS Radar anchored to 80 Feet Road, Brookes Haven Layout, JP Nagar Phase 8, Bengaluru (12.872678, 77.575814). Initial 5km sector surveillance engaged.',
+      details: 'GPS Radar anchored to 80 Feet Road, 4th Block, Koramangala, Bengaluru (12.9352, 77.6244). Initial 5km sector surveillance engaged.',
       is_demo: true
     }
   ]);
@@ -381,7 +381,7 @@ export default function TriageMap({ patients = [], selectedPatientId, onSelectPa
       address: loc.landmark,
       lat: loc.lat,
       lng: loc.lng,
-      locality: 'JP Nagar / South Bengaluru'
+      locality: 'Koramangala / South Bengaluru'
     };
     setOperatingAnchor(newAnchor);
     setActiveEmergency(prev => ({
@@ -416,12 +416,12 @@ export default function TriageMap({ patients = [], selectedPatientId, onSelectPa
     }
   };
 
-  // Reset to default anchor (80 Feet Road, Brookes Haven)
+  // Reset to default anchor (80 Feet Road, Koramangala 4th Block)
   const handleResetToRiaItm = async () => {
     const defaultLoc = ALTERNATIVE_LOCATIONS[0];
     await handleSelectLocation(defaultLoc);
     setOperatingRadiusKm(5.0);
-    showNotice('Radar recentered to default anchor: 80 Feet Road, Brookes Haven Layout, JP Nagar Phase 8.');
+    showNotice('Radar recentered to default anchor: 80 Feet Road, 4th Block, Koramangala (12.9352, 77.6244).');
 
     if (isLiveApiConnected) {
       try {
@@ -1359,7 +1359,7 @@ export default function TriageMap({ patients = [], selectedPatientId, onSelectPa
             {activeTab === 'pharmacies' && (
               <div className="space-y-2.5">
                 <div className="text-[10px] text-[#556558] border-b border-[#D5CEBF] pb-1.5 font-sans flex items-center justify-between">
-                  <span>Verified Medical Stores on 80 Feet Road &amp; JP Nagar 8th Phase:</span>
+                  <span>Verified Medical Stores on 80 Feet Road &amp; Koramangala:</span>
                   <span className="font-mono text-[#2D6A4F] font-bold">RADAR TILES</span>
                 </div>
 
@@ -1425,7 +1425,7 @@ export default function TriageMap({ patients = [], selectedPatientId, onSelectPa
             {activeTab === 'fleet' && (
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between text-[10px] text-[#94A3B8] border-b border-white/[0.04] pb-1.5 font-sans">
-                  <span>ACTIVE FLEET &bull; JP NAGAR SECTOR</span>
+                  <span>ACTIVE FLEET &bull; KORAMANGALA SECTOR</span>
                   <span className="text-[#2D6A4F] font-bold font-mono">100% TELEMETRY</span>
                 </div>
 

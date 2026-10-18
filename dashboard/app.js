@@ -160,8 +160,8 @@ const state = {
       respiratory_rate: 16
     },
     gps: {
-      latitude: 12.9716,
-      longitude: 77.5946,
+      latitude: 12.9352,
+      longitude: 77.6244,
       altitude_m: 920.0
     },
     eye_gaze: {

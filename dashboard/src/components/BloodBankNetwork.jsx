@@ -123,8 +123,8 @@ export default function BloodBankNetwork({
 
     if (!mapInstanceRef.current) {
       const map = L.map(mapContainerRef.current, {
-        center: [28.6150, 77.2180],
-        zoom: 12,
+        center: [12.9352, 77.6244],
+        zoom: 13,
         zoomControl: true
       });
       mapInstanceRef.current = map;
@@ -174,11 +174,11 @@ export default function BloodBankNetwork({
       iconSize: [34, 34],
       iconAnchor: [17, 17]
     });
-    const hospMarker = L.marker([28.6150, 77.2100], { icon: hospIcon })
+    const hospMarker = L.marker([12.9352, 77.6244], { icon: hospIcon })
       .bindPopup(`
         <div style="background: #141416; color: #F5F5F5; font-family: monospace; font-size: 11px; padding: 4px; border: 1px solid #35353B;">
           <strong style="color: #FF2D3D;">FST Alpha Forward Base</strong><br>
-          <span style="color: #A1A1AA;">Requesting Surgical Facility Anchor</span>
+          <span style="color: #A1A1AA;">80 Feet Rd, 4th Block, Koramangala</span>
         </div>
       `)
       .addTo(map);

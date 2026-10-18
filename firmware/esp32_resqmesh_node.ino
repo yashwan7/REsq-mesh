@@ -68,7 +68,7 @@ HardwareSerial NxpSerial(2);
 struct ResQMeshTelemetry {
   const char* nodeId = "FIELD-01";
   const char* gpsStatus = "DEMO COORDS";
-  const char* gpsCoords = "12.8717N, 77.5768E";
+  const char* gpsCoords = "12.9352N, 77.6244E";
   const char* nxpLinkStatus = "FRDM-MCXN236: OK";
   
   // NXP TinyML Network Health (Inference: 10.3ms)

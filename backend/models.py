@@ -18,8 +18,8 @@ class EyeGaze(BaseModel):
     timestamp: Optional[float] = Field(default_factory=time.time)
 
 class GPSLocation(BaseModel):
-    lat: float = Field(default=12.871773, description="Latitude")
-    lng: float = Field(default=77.576856, description="Longitude")
+    lat: float = Field(default=12.9352, description="Latitude")
+    lng: float = Field(default=77.6244, description="Longitude")
     altitude: Optional[float] = Field(default=920.0, description="Altitude in meters")
 
 class MedicationEntry(BaseModel):

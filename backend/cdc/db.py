@@ -472,8 +472,8 @@ class CdcDatabaseManager:
 
             # Insert initial fleet
             fleet_data = [
-                ("AMB-ALPHA-01", "MEDEVAC-1", "EN_ROUTE", "PT-901", 12.871773, 77.576856, 88.5, now),
-                ("AMB-BRAVO-02", "MEDEVAC-2", "IDLE_STATION", None, 12.875200, 77.580100, 95.0, now),
+                ("AMB-ALPHA-01", "MEDEVAC-1", "EN_ROUTE", "PT-901", 12.9352, 77.6244, 88.5, now),
+                ("AMB-BRAVO-02", "MEDEVAC-2", "IDLE_STATION", None, 12.9380, 77.6280, 95.0, now),
             ]
             conn.executemany("""
             INSERT INTO dispatch_fleet (vehicle_id, callsign, status, assigned_patient, lat, lng, fuel_pct, updated_at)

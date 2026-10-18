@@ -11,8 +11,8 @@ class TestDispatchEndpoints(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertTrue(data["demo_mode"])
-        self.assertEqual(data["operating_anchor"]["name"], "80 Feet Road, Brookes Haven Layout, JP Nagar Phase 8, Bengaluru")
-        self.assertEqual(len(data["hospitals"]), 8)
+        self.assertEqual(data["operating_anchor"]["name"], "80 Feet Road, 4th Block, Koramangala, Bengaluru")
+        self.assertEqual(len(data["hospitals"]), 6)
         self.assertEqual(len(data["ambulances"]), 12)
         self.assertEqual(len(data["active_offers"]), 3)
 
@@ -23,7 +23,7 @@ class TestDispatchEndpoints(unittest.TestCase):
         first_amb = state["active_offers"][0]["ambulance_id"]
 
         res = self.client.post("/api/dispatch/respond-offer", json={
-            "emergency_id": "EMG-JP-101",
+            "emergency_id": "EMG-KORA-101",
             "ambulance_id": first_amb,
             "response": "ACCEPT"
         })
@@ -35,7 +35,7 @@ class TestDispatchEndpoints(unittest.TestCase):
         # Subsequent accept from another ambulance must be rejected with ALREADY_ASSIGNED
         second_amb = state["active_offers"][1]["ambulance_id"]
         res2 = self.client.post("/api/dispatch/respond-offer", json={
-            "emergency_id": "EMG-JP-101",
+            "emergency_id": "EMG-KORA-101",
             "ambulance_id": second_amb,
             "response": "ACCEPT"
         })

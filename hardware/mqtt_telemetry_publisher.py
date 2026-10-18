@@ -13,8 +13,8 @@ Payload Format:
   "pulse_val": number,
   "force_n": number,
   "hub_online": boolean,
-  "lat": "12.871773",
-  "lng": "77.576856"
+  "lat": "12.9352",
+  "lng": "77.6244"
 }
 
 Usage:
@@ -42,8 +42,8 @@ BROKER_HOST = "broker.hivemq.com"
 BROKER_PORT = 1883
 TOPIC = "izanagi/sensors/data"
 
-LAT_BROOKES_HAVEN = "12.871773"
-LNG_BROOKES_HAVEN = "77.576856"
+LAT_BROOKES_HAVEN = "12.9352"
+LNG_BROOKES_HAVEN = "77.6244"
 
 class SensorStreamSimulator:
     def __init__(self, interval: float = 1.0, tachycardia: bool = False):
@@ -105,8 +105,8 @@ class SensorStreamSimulator:
         force_n = max(0, min(4095, force_base + force_noise))
 
         # 3. Geo coordinate drift (micro-meter GPS accuracy simulation)
-        lat_drift = 12.871773 + math.sin(t * 0.1) * 0.000015
-        lng_drift = 77.576856 + math.cos(t * 0.1) * 0.000015
+        lat_drift = 12.9352 + math.sin(t * 0.1) * 0.000015
+        lng_drift = 77.6244 + math.cos(t * 0.1) * 0.000015
 
         payload = {
             "pulse_val": pulse_val,

@@ -25,15 +25,15 @@ class TestMqttEngine(unittest.TestCase):
             "pulse_val": 84,
             "force_n": 2150,
             "hub_online": True,
-            "lat": "12.871773",
-            "lng": "77.576856"
+            "lat": "12.9352",
+            "lng": "77.6244"
         }
         res = self.engine.ingest_packet(payload)
         self.assertEqual(res["pulse_val"], 84)
         self.assertEqual(res["force_n"], 2150)
         self.assertTrue(res["hub_online"])
-        self.assertEqual(res["lat"], "12.871773")
-        self.assertEqual(res["lng"], "77.576856")
+        self.assertEqual(res["lat"], "12.9352")
+        self.assertEqual(res["lng"], "77.6244")
         self.assertEqual(self.engine.packet_count, 1)
 
     def test_ingest_alternative_keys_resilience(self):
@@ -41,15 +41,15 @@ class TestMqttEngine(unittest.TestCase):
             "pulse_bpm": 112,
             "force": 3200,
             "online": False,
-            "latitude": "12.872200",
-            "longitude": "77.576600"
+            "latitude": "12.9360",
+            "longitude": "77.6250"
         }
         res = self.engine.ingest_packet(payload)
         self.assertEqual(res["pulse_val"], 112)
         self.assertEqual(res["force_n"], 3200)
         self.assertFalse(res["hub_online"])
-        self.assertEqual(res["lat"], "12.872200")
-        self.assertEqual(res["lng"], "77.576600")
+        self.assertEqual(res["lat"], "12.9360")
+        self.assertEqual(res["lng"], "77.6250")
 
     def test_listener_dispatch(self):
         received_packets = []

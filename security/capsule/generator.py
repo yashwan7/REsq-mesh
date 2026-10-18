@@ -148,7 +148,7 @@ class PatientCapsuleGenerator:
 
         # Step 8: GPS Transit movement
         if num_steps >= 8:
-            self.set_gps(12.9750, 77.6000, 925.0)
+            self.set_gps(12.9370, 77.6260, 925.0)
             results.append(self.generate_next_signed_capsule())
 
         return results

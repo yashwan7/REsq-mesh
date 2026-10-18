@@ -1,11 +1,19 @@
 import os
 import json
+import time
 import httpx
 from typing import Dict, Any, List, Optional
 from .models import CaseCapsule, TriageEvaluationResponse, TimelineIncident
+from backend.telemetry import (
+    get_tracer,
+    triage_fallbacks,
+    triage_latency,
+    triage_requests,
+)
 
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2:3b")
+tracer = get_tracer("resq_mesh.triage")
 
 def calculate_clinical_metrics(capsule: CaseCapsule) -> Dict[str, float]:
     """
@@ -238,39 +246,66 @@ def generate_fallback_triage(capsule: CaseCapsule, metrics: Dict[str, float]) ->
 async def evaluate_clinical_triage(capsule: CaseCapsule) -> TriageEvaluationResponse:
     metrics = calculate_clinical_metrics(capsule)
     prompt = construct_triage_prompt(capsule, metrics)
+    started = time.perf_counter()
 
-    try:
-        async with httpx.AsyncClient(timeout=4.0) as client:
-            response = await client.post(
-                f"{OLLAMA_HOST}/api/generate",
-                json={
-                    "model": OLLAMA_MODEL,
-                    "prompt": prompt,
-                    "format": "json",
-                    "stream": False,
-                    "options": {
-                        "temperature": 0.2,
-                        "num_predict": 450
-                    }
-                }
-            )
-            if response.status_code == 200:
-                data = response.json()
-                raw_response = data.get("response", "{}")
-                parsed = json.loads(raw_response)
-                
-                return TriageEvaluationResponse(
-                    patient_id=capsule.patient_id,
-                    priority_score=parsed.get("priority_score", metrics["priority_score"]),
-                    triage_level=parsed.get("triage_level", "DELAYED_YELLOW"),
-                    protocol_mode=parsed.get("protocol_mode", "TACTICAL_STANDARD"),
-                    clinical_summary=parsed.get("clinical_summary", "Evaluation complete."),
-                    action_steps=parsed.get("action_steps", ["Continue monitoring patient."]),
-                    red_flag_triggers=parsed.get("red_flag_triggers", []),
-                    rationing_guidelines=parsed.get("rationing_guidelines", []),
-                    evaluation_source=f"nirantara:{OLLAMA_MODEL}"
-                )
-    except Exception:
-        pass
+    with tracer.start_as_current_span("triage.evaluate") as span:
+        result: Optional[TriageEvaluationResponse] = None
+        fallback_reason: Optional[str] = None
 
-    return generate_fallback_triage(capsule, metrics)
+        try:
+            with tracer.start_as_current_span("llm.generate") as llm_span:
+                llm_span.set_attribute("gen_ai.system", "ollama")
+                llm_span.set_attribute("gen_ai.request.model", OLLAMA_MODEL)
+                llm_span.set_attribute("gen_ai.request.temperature", 0.2)
+                llm_span.set_attribute("gen_ai.request.max_tokens", 450)
+
+                async with httpx.AsyncClient(timeout=4.0) as client:
+                    response = await client.post(
+                        f"{OLLAMA_HOST}/api/generate",
+                        json={
+                            "model": OLLAMA_MODEL,
+                            "prompt": prompt,
+                            "format": "json",
+                            "stream": False,
+                            "options": {
+                                "temperature": 0.2,
+                                "num_predict": 450
+                            }
+                        }
+                    )
+                if response.status_code != 200:
+                    fallback_reason = f"http_{response.status_code}"
+                else:
+                    data = response.json()
+                    parsed = json.loads(data.get("response", "{}"))
+                    result = TriageEvaluationResponse(
+                        patient_id=capsule.patient_id,
+                        priority_score=parsed.get("priority_score", metrics["priority_score"]),
+                        triage_level=parsed.get("triage_level", "DELAYED_YELLOW"),
+                        protocol_mode=parsed.get("protocol_mode", "TACTICAL_STANDARD"),
+                        clinical_summary=parsed.get("clinical_summary", "Evaluation complete."),
+                        action_steps=parsed.get("action_steps", ["Continue monitoring patient."]),
+                        red_flag_triggers=parsed.get("red_flag_triggers", []),
+                        rationing_guidelines=parsed.get("rationing_guidelines", []),
+                        evaluation_source=f"nirantara:{OLLAMA_MODEL}"
+                    )
+        except Exception as exc:
+            fallback_reason = type(exc).__name__
+            span.record_exception(exc)
+
+        if result is None:
+            result = generate_fallback_triage(capsule, metrics)
+            reason = fallback_reason or "unknown"
+            triage_fallbacks.add(1, {"reason": reason})
+            span.set_attribute("triage.fallback", True)
+            span.set_attribute("triage.fallback_reason", reason)
+        else:
+            span.set_attribute("triage.fallback", False)
+
+        span.set_attribute("triage.evaluation_source", result.evaluation_source)
+        triage_requests.add(1, {"source": result.evaluation_source})
+        triage_latency.record(
+            (time.perf_counter() - started) * 1000,
+            {"source": result.evaluation_source},
+        )
+        return result

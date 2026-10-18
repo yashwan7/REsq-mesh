@@ -10,107 +10,81 @@ import asyncio
 from typing import Dict, List, Optional, Any
 from pydantic import BaseModel, Field
 
-# Verified JP Nagar Default Anchor: 80 Feet Road, Brookes Haven Layout, JP Nagar Phase 8, Bengaluru, 560076
+# Verified Koramangala Default Anchor: 80 Feet Road, 4th Block, Koramangala, Bengaluru, 560034
 DEFAULT_ANCHOR = {
-    "name": "80 Feet Road, Brookes Haven Layout, JP Nagar Phase 8, Bengaluru",
-    "address": "80 Feet Road, Brookes Haven Layout, JP Nagar Phase 8, Bengaluru, Karnataka 560076",
-    "lat": 12.871773,
-    "lng": 77.576856,
-    "locality": "Brookes Haven Layout, JP Nagar Phase 8",
-    "pincode": "560076"
+    "name": "80 Feet Road, 4th Block, Koramangala, Bengaluru",
+    "address": "80 Feet Road, 4th Block, Koramangala, Bengaluru, Karnataka 560034",
+    "lat": 12.9352,
+    "lng": 77.6244,
+    "locality": "4th Block, Koramangala",
+    "pincode": "560034"
 }
 
-# Real, Verified Hospitals in JP Nagar Phase 8 / Kothanur / Konanakunte Operating Area
+# Real, Verified Hospitals in Koramangala Operating Area
 VERIFIED_HOSPITALS = [
     {
-        "hospital_id": "HOSP-TR-KOTHANUR",
-        "name": "TR Hospital, JP Nagar 8th Phase",
-        "address": "80 Feet Road, Kothanur, JP Nagar 8th Phase, Bengaluru 560076",
-        "lat": 12.880755,
-        "lng": 77.584167,
-        "phone": "+91 80 2685 0099",
-        "capabilities": ["24/7 Casualty", "Emergency Trauma Resus", "General ICU", "In-house Pharmacy"],
-        "total_beds": 65,
-        "icu_available": 6,
+        "hospital_id": "HOSP-ST-JOHNS",
+        "name": "St. John’s Medical College Hospital",
+        "address": "Sarjapur Main Rd, John Nagar, Koramangala, Bengaluru 560034",
+        "lat": 12.9315,
+        "lng": 77.6210,
+        "phone": "+91 80 2206 5000",
+        "capabilities": ["Level-1 Emergency Trauma Care", "24/7 Casualty", "Critical Resus ICU", "Blood Bank"],
+        "total_beds": 1200,
+        "icu_available": 42,
         "triage_compatibility": ["IMMEDIATE_RED", "DELAYED_YELLOW"],
         "verified": True
     },
     {
-        "hospital_id": "HOSP-RAJNANDANI",
-        "name": "Rajnandani Hospital, JP Nagar 8th Phase",
-        "address": "Chunchgatta Main Rd, Konanakunte, JP Nagar 8th Phase, Bengaluru 560062",
-        "lat": 12.884545,
-        "lng": 77.570128,
-        "phone": "+91 80 2686 2200",
-        "capabilities": ["Emergency Critical Care", "Orthopedic Trauma", "Obstetric Emergency", "ICU"],
-        "total_beds": 80,
-        "icu_available": 8,
-        "triage_compatibility": ["IMMEDIATE_RED", "DELAYED_YELLOW"],
-        "verified": True
-    },
-    {
-        "hospital_id": "HOSP-METRO-KANAK",
-        "name": "Metro Hospital, Kanakapura Road",
-        "address": "Near Konanakunte Cross Metro Station, Kanakapura Rd, Bengaluru 560062",
-        "lat": 12.891589,
-        "lng": 77.560715,
-        "phone": "+91 80 2666 4433",
-        "capabilities": ["24/7 Trauma Care", "Cardiac Resuscitation", "Emergency ICU", "Dialysis"],
-        "total_beds": 100,
-        "icu_available": 10,
-        "triage_compatibility": ["IMMEDIATE_RED", "DELAYED_YELLOW"],
-        "verified": True
-    },
-    {
-        "hospital_id": "HOSP-FORTIS-BG",
-        "name": "Fortis Hospital, Bannerghatta Road",
-        "address": "154/9, Bannerghatta Rd, Opposite IIMB, Bengaluru 560076",
-        "lat": 12.894210,
-        "lng": 77.598920,
-        "phone": "+91 80 6621 4444",
-        "capabilities": ["Level-1 Emergency Care", "Critical Polytrauma", "ECMO", "Cath Lab"],
-        "total_beds": 280,
-        "icu_available": 18,
-        "triage_compatibility": ["IMMEDIATE_RED", "DELAYED_YELLOW"],
-        "verified": True
-    },
-    {
-        "hospital_id": "HOSP-SAMMPRADA",
-        "name": "Sammprada Hospital, JP Nagar 3rd Phase",
-        "address": "8th Main Rd, JP Nagar 3rd Phase, Bengaluru 560078",
-        "lat": 12.906385,
-        "lng": 77.594680,
+        "hospital_id": "HOSP-APOLLO-SPECTRA",
+        "name": "Apollo Spectra Hospitals, Koramangala",
+        "address": "5th Block, 143, 1st Cross Rd, KHB Colony, Koramangala, Bengaluru 560095",
+        "lat": 12.9344,
+        "lng": 77.6292,
         "phone": "+91 80 4333 5555",
-        "capabilities": ["Surgical Critical Care", "Emergency OT", "Trauma Stabilization"],
-        "total_beds": 90,
-        "icu_available": 6,
-        "triage_compatibility": ["DELAYED_YELLOW", "MINIMAL_GREEN"],
-        "verified": True
-    },
-    {
-        "hospital_id": "HOSP-ASTER-RV",
-        "name": "Aster RV Hospital, JP Nagar 1st Phase",
-        "address": "CA-37, 24th Main Rd, LIC Colony, JP Nagar 1st Phase, Bengaluru 560078",
-        "lat": 12.911417,
-        "lng": 77.585027,
-        "phone": "+91 80 6605 5000",
-        "capabilities": ["Level-1 Trauma", "24/7 Emergency", "Critical Resus", "Neuro-trauma"],
-        "total_beds": 250,
-        "icu_available": 14,
-        "triage_compatibility": ["IMMEDIATE_RED", "DELAYED_YELLOW"],
-        "verified": True
-    },
-    {
-        "hospital_id": "HOSP-RAJSHEKAR",
-        "name": "Rajshekar Multi Speciality Hospital, JP Nagar",
-        "address": "21st Main Rd, Marenhalli, JP Nagar 1st Phase, Bengaluru 560078",
-        "lat": 12.912640,
-        "lng": 77.579480,
-        "phone": "+91 80 2664 6100",
-        "capabilities": ["24/7 Casualty", "Neuro-trauma", "Orthopedic ER", "ICU"],
-        "total_beds": 120,
+        "capabilities": ["Emergency Critical Care", "Orthopedic Trauma", "Surgical Resus", "ICU"],
+        "total_beds": 95,
         "icu_available": 8,
         "triage_compatibility": ["IMMEDIATE_RED", "DELAYED_YELLOW"],
+        "verified": True
+    },
+    {
+        "hospital_id": "HOSP-BEAMS-KORA",
+        "name": "Beams Multi Speciality Hospital, Koramangala",
+        "address": "6th Block, 80 Feet Road, Koramangala, Bengaluru 560095",
+        "lat": 12.9330,
+        "lng": 77.6260,
+        "phone": "+91 80 2552 1100",
+        "capabilities": ["24/7 Casualty", "Trauma Stabilization", "Emergency OT", "ICU"],
+        "total_beds": 75,
+        "icu_available": 6,
+        "triage_compatibility": ["IMMEDIATE_RED", "DELAYED_YELLOW"],
+        "verified": True
+    },
+    {
+        "hospital_id": "HOSP-MANIPAL-SARJ",
+        "name": "Manipal Hospital, Sarjapur Road",
+        "address": "Sarjapur Main Rd, Iblur Junction, Bengaluru 560102",
+        "lat": 12.9260,
+        "lng": 77.6350,
+        "phone": "+91 80 2502 4444",
+        "capabilities": ["Level-1 Trauma", "Cardiac Resuscitation", "Emergency ICU", "ECMO"],
+        "total_beds": 350,
+        "icu_available": 22,
+        "triage_compatibility": ["IMMEDIATE_RED", "DELAYED_YELLOW"],
+        "verified": True
+    },
+    {
+        "hospital_id": "HOSP-KAVERI-MADI",
+        "name": "Kaveri Multi Speciality Hospital, Madiwala",
+        "address": "Hosur Main Rd, Madiwala Junction, Bengaluru 560068",
+        "lat": 12.9230,
+        "lng": 77.6200,
+        "phone": "+91 80 2553 4400",
+        "capabilities": ["Emergency Polytrauma", "Neuro-trauma", "ICU", "Dialysis"],
+        "total_beds": 140,
+        "icu_available": 12,
+        "triage_compatibility": ["DELAYED_YELLOW", "MINIMAL_GREEN"],
         "verified": True
     },
     {
@@ -128,14 +102,14 @@ VERIFIED_HOSPITALS = [
     }
 ]
 
-# 12 Simulated Ambulances distributed around Brookes Haven / JP Nagar 8th Phase (Deterministic Demo Fixtures)
+# 12 Simulated Ambulances distributed around Koramangala 4th Block (Deterministic Demo Fixtures)
 INITIAL_AMBULANCE_FIXTURES = [
     {
         "ambulance_id": "AMB-01",
-        "callsign": "Brookes Haven ALS Alpha-1",
+        "callsign": "Koramangala ALS Alpha-1",
         "vehicle_type": "ALS (Advanced Life Support)",
-        "lat": 12.874800,
-        "lng": 77.576500,
+        "lat": 12.9358,
+        "lng": 77.6248,
         "status": "AVAILABLE",
         "assignment_state": "UNASSIGNED",
         "assigned_emergency_id": None,
@@ -148,10 +122,10 @@ INITIAL_AMBULANCE_FIXTURES = [
     },
     {
         "ambulance_id": "AMB-02",
-        "callsign": "RVITM Gate BLS Beta-2",
+        "callsign": "St. John’s Gate BLS Beta-2",
         "vehicle_type": "BLS (Basic Life Support)",
-        "lat": 12.871500,
-        "lng": 77.574200,
+        "lat": 12.9320,
+        "lng": 77.6215,
         "status": "AVAILABLE",
         "assignment_state": "UNASSIGNED",
         "assigned_emergency_id": None,
@@ -164,10 +138,10 @@ INITIAL_AMBULANCE_FIXTURES = [
     },
     {
         "ambulance_id": "AMB-03",
-        "callsign": "Kothanur MICU Critical-3",
+        "callsign": "Sony World MICU Critical-3",
         "vehicle_type": "MICU (Mobile ICU)",
-        "lat": 12.878200,
-        "lng": 77.581500,
+        "lat": 12.9370,
+        "lng": 77.6272,
         "status": "AVAILABLE",
         "assignment_state": "UNASSIGNED",
         "assigned_emergency_id": None,
@@ -180,10 +154,10 @@ INITIAL_AMBULANCE_FIXTURES = [
     },
     {
         "ambulance_id": "AMB-04",
-        "callsign": "Krishna Kere ALS-4",
+        "callsign": "Wipro Park ALS-4",
         "vehicle_type": "ALS (Advanced Life Support)",
-        "lat": 12.870500,
-        "lng": 77.582800,
+        "lat": 12.9312,
+        "lng": 77.6310,
         "status": "AVAILABLE",
         "assignment_state": "UNASSIGNED",
         "assigned_emergency_id": None,
@@ -196,10 +170,10 @@ INITIAL_AMBULANCE_FIXTURES = [
     },
     {
         "ambulance_id": "AMB-05",
-        "callsign": "Chunchgatta BLS Patrol-5",
+        "callsign": "Koramangala 5th BLS Patrol-5",
         "vehicle_type": "BLS (Basic Life Support)",
-        "lat": 12.883500,
-        "lng": 77.569500,
+        "lat": 12.9345,
+        "lng": 77.6190,
         "status": "AVAILABLE",
         "assignment_state": "UNASSIGNED",
         "assigned_emergency_id": None,
@@ -212,10 +186,10 @@ INITIAL_AMBULANCE_FIXTURES = [
     },
     {
         "ambulance_id": "AMB-06",
-        "callsign": "Konanakunte Rapid BLS-6",
+        "callsign": "Nexus Forum Rapid BLS-6",
         "vehicle_type": "BLS (Basic Life Support)",
-        "lat": 12.888000,
-        "lng": 77.574000,
+        "lat": 12.9350,
+        "lng": 77.6120,
         "status": "AVAILABLE",
         "assignment_state": "UNASSIGNED",
         "assigned_emergency_id": None,
@@ -228,10 +202,10 @@ INITIAL_AMBULANCE_FIXTURES = [
     },
     {
         "ambulance_id": "AMB-07",
-        "callsign": "Kanakapura Metro MICU-7",
+        "callsign": "Sarjapur Rd MICU-7",
         "vehicle_type": "MICU (Mobile ICU)",
-        "lat": 12.891500,
-        "lng": 77.562000,
+        "lat": 12.9280,
+        "lng": 77.6330,
         "status": "AVAILABLE",
         "assignment_state": "UNASSIGNED",
         "assigned_emergency_id": None,
@@ -244,10 +218,10 @@ INITIAL_AMBULANCE_FIXTURES = [
     },
     {
         "ambulance_id": "AMB-08",
-        "callsign": "Bannerghatta Gottigere BLS-8",
+        "callsign": "Madiwala Junction BLS-8",
         "vehicle_type": "BLS (Basic Life Support)",
-        "lat": 12.876000,
-        "lng": 77.592000,
+        "lat": 12.9240,
+        "lng": 77.6210,
         "status": "AVAILABLE",
         "assignment_state": "UNASSIGNED",
         "assigned_emergency_id": None,
@@ -260,10 +234,10 @@ INITIAL_AMBULANCE_FIXTURES = [
     },
     {
         "ambulance_id": "AMB-09",
-        "callsign": "Fortis Depot ALS-9",
+        "callsign": "Apollo Spectra Depot ALS-9",
         "vehicle_type": "ALS (Advanced Life Support)",
-        "lat": 12.894200,
-        "lng": 77.598000,
+        "lat": 12.9340,
+        "lng": 77.6290,
         "status": "AVAILABLE",
         "assignment_state": "UNASSIGNED",
         "assigned_emergency_id": None,
@@ -276,10 +250,10 @@ INITIAL_AMBULANCE_FIXTURES = [
     },
     {
         "ambulance_id": "AMB-10",
-        "callsign": "JP Nagar 5th Phase BLS-10",
+        "callsign": "Koramangala 3rd Block BLS-10",
         "vehicle_type": "BLS (Basic Life Support)",
-        "lat": 12.905000,
-        "lng": 77.585000,
+        "lat": 12.9330,
+        "lng": 77.6185,
         "status": "AVAILABLE",
         "assignment_state": "UNASSIGNED",
         "assigned_emergency_id": None,
@@ -292,10 +266,10 @@ INITIAL_AMBULANCE_FIXTURES = [
     },
     {
         "ambulance_id": "AMB-11",
-        "callsign": "South Reserve ALS-11 (Offline)",
+        "callsign": "Agram Reserve ALS-11 (Offline)",
         "vehicle_type": "ALS (Advanced Life Support)",
-        "lat": 12.865000,
-        "lng": 77.570000,
+        "lat": 12.9420,
+        "lng": 77.6200,
         "status": "OFFLINE",
         "assignment_state": "UNASSIGNED",
         "assigned_emergency_id": None,
@@ -308,10 +282,10 @@ INITIAL_AMBULANCE_FIXTURES = [
     },
     {
         "ambulance_id": "AMB-12",
-        "callsign": "West Grid MICU-12 (Stale GPS)",
+        "callsign": "Hosur Road MICU-12 (Stale GPS)",
         "vehicle_type": "MICU (Mobile ICU)",
-        "lat": 12.882000,
-        "lng": 77.560000,
+        "lat": 12.9290,
+        "lng": 77.6150,
         "status": "AVAILABLE",
         "assignment_state": "UNASSIGNED",
         "assigned_emergency_id": None,
@@ -357,18 +331,18 @@ class DispatchCoordinator:
         
         # Active Emergency
         self.active_emergency: Dict[str, Any] = {
-            "emergency_id": "EMG-JP-101",
+            "emergency_id": "EMG-KORA-101",
             "patient_id": "PT-101",
             "patient_name": "Major Vikram Rathore (Blast Trauma)",
             "priority": "IMMEDIATE_RED",
             "lat": DEFAULT_ANCHOR["lat"],
             "lng": DEFAULT_ANCHOR["lng"],
-            "location_label": "80 Feet Road, Brookes Haven Layout, JP Nagar Phase 8, Bengaluru",
+            "location_label": "80 Feet Road, 4th Block, Koramangala, Bengaluru",
             "created_at": time.time(),
             "status": "OFFERING", # 'UNASSIGNED' | 'OFFERING' | 'ASSIGNED' | 'ESCALATED'
             "assigned_ambulance_id": None,
             "assigned_at": None,
-            "recommended_hospital_id": "HOSP-ASTER-RV"
+            "recommended_hospital_id": "HOSP-STJOHNS"
         }
 
         # Active Offers: Dict of offer_id -> offer dict
@@ -381,7 +355,7 @@ class DispatchCoordinator:
 
         self._record_audit(
             event_type="DISPATCH_COORDINATOR_INITIALIZED",
-            details="Operating Anchor set to 80 Feet Road, Brookes Haven Layout, JP Nagar Phase 8, Bengaluru (12.872678, 77.575814). 12 simulated units loaded."
+            details="Operating Anchor set to 80 Feet Road, 4th Block, Koramangala, Bengaluru (12.9352, 77.6244). 12 simulated units loaded."
         )
 
         self._issue_initial_demo_offers()
@@ -741,23 +715,23 @@ class DispatchCoordinator:
         self.operating_radius_km = 5.0
         self.ambulances = [dict(a) for a in INITIAL_AMBULANCE_FIXTURES]
         self.active_emergency = {
-            "emergency_id": "EMG-JP-101",
+            "emergency_id": "EMG-KORA-101",
             "patient_id": "PT-101",
             "patient_name": "Major Vikram Rathore (Blast Trauma)",
             "priority": "IMMEDIATE_RED",
             "lat": DEFAULT_ANCHOR["lat"],
             "lng": DEFAULT_ANCHOR["lng"],
-            "location_label": "80 Feet Road, Brookes Haven Layout, JP Nagar Phase 8, Bengaluru",
+            "location_label": "80 Feet Road, 4th Block, Koramangala, Bengaluru",
             "created_at": time.time(),
             "status": "OFFERING",
             "assigned_ambulance_id": None,
             "assigned_at": None,
-            "recommended_hospital_id": "HOSP-ASTER-RV"
+            "recommended_hospital_id": "HOSP-STJOHNS"
         }
         self.offer_group_index = 0
         self._record_audit(
             event_type="DEMO_RESET",
-            details="Simulation reset to default anchor: 80 Feet Road, Brookes Haven Layout, JP Nagar Phase 8."
+            details="Simulation reset to default anchor: 80 Feet Road, 4th Block, Koramangala, Bengaluru."
         )
         self._issue_initial_demo_offers()
         return self.get_state()

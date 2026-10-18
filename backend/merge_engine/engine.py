@@ -5,9 +5,11 @@ import httpx
 from typing import List, Dict, Any, Tuple
 from .models import CaseCapsule, TimelineIncident, MedicationEntry
 from .capsule_security import verify_capsule
+from backend.telemetry import capsule_checks, get_current_span, get_tracer
 
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2:3b")
+tracer = get_tracer("resq_mesh.merge")
 
 class SyncAndMergeEngine:
     """
@@ -25,12 +27,27 @@ class SyncAndMergeEngine:
         self.incident_timeline: List[TimelineIncident] = []
 
     def ingest_capsule(self, capsule: CaseCapsule) -> Tuple[CaseCapsule, List[TimelineIncident]]:
+        """Ingest a capsule while recording a privacy-safe merge span."""
+        with tracer.start_as_current_span("capsule.ingest") as span:
+            try:
+                baseline, incidents = self._ingest_capsule(capsule)
+                span.set_attribute("capsule.incident_count", len(incidents))
+                return baseline, incidents
+            except Exception as exc:
+                span.record_exception(exc)
+                raise
+
+    def _ingest_capsule(self, capsule: CaseCapsule) -> Tuple[CaseCapsule, List[TimelineIncident]]:
         pid = capsule.patient_id
         new_incidents: List[TimelineIncident] = []
         now_str = time.strftime("%H:%M:%S", time.localtime(capsule.timestamp))
 
         # 1. HMAC Verification check
-        status, is_valid = verify_capsule(capsule.model_dump())
+        with tracer.start_as_current_span("capsule.verify") as span:
+            status, is_valid = verify_capsule(capsule.model_dump())
+            capsule_checks.add(1, {"status": status})
+            if status == "TAMPERED":
+                span.add_event("capsule.tampered")
         capsule.verification_status = status
 
         if status == "TAMPERED":
@@ -53,6 +70,7 @@ class SyncAndMergeEngine:
 
         sig_token = f"{capsule.sequence_id}-{capsule.timestamp}-{capsule.vitals.heart_rate}-{capsule.vitals.spo2}"
         if sig_token in self.processed_signatures[pid]:
+            get_current_span().add_event("merge.duplicate_capsule")
             incident = TimelineIncident(
                 id=f"INC-{int(time.time()*1000)}",
                 timestamp=now_str,
@@ -80,6 +98,7 @@ class SyncAndMergeEngine:
                 if prev_med.medication.lower() == incoming_med.medication.lower():
                     if prev_med.administered_at == incoming_med.administered_at:
                         conflict_found = True
+                        get_current_span().add_event("merge.medication_conflict")
                         incident = TimelineIncident(
                             id=f"INC-{int(time.time()*1000)}",
                             timestamp=now_str,

@@ -44,12 +44,14 @@ from ml.network_anomaly.inference import AnomalyInferenceWrapper
 from sensors.eog_dsp.pipeline import EOGDSPPipeline
 from sensors.eog_dsp.simulator import EOGSimulator
 from security.capsule.delta import DeltaEncoder, DEFAULT_BASELINE
+from backend.telemetry import setup_telemetry
 
 app = FastAPI(
     title="Kshitij Unified Clinical & Telemetry Command Service",
     description="Python service receiving incoming real-time and queued offline Case Capsules via WebSockets/REST with deduplication, conflict resolution, Ollama incident timeline synthesis, Dual-Port TinyML Failover, and EOG DSP.",
     version="2.0.0"
 )
+setup_telemetry(app)
 
 app.add_middleware(
     CORSMiddleware,
@@ -823,8 +825,8 @@ class SensorPublishRequest(BaseModel):
     pulse_val: Optional[int] = None
     force_n: Optional[int] = None
     hub_online: Optional[bool] = True
-    lat: Optional[str] = "12.871773"
-    lng: Optional[str] = "77.576856"
+    lat: Optional[str] = "12.9352"
+    lng: Optional[str] = "77.6244"
 
 @app.get("/api/sensors/latest")
 def get_latest_sensors_endpoint():

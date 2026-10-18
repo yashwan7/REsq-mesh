@@ -12,8 +12,8 @@
  *   "pulse_val": 78,
  *   "force_n": 1842,
  *   "hub_online": true,
- *   "lat": "12.871773",
- *   "lng": "77.576856"
+ *   "lat": "12.9352",
+ *   "lng": "77.6244"
  * }
  *
  * Hardware Pinout:
@@ -37,9 +37,9 @@ const char* MQTT_BROKER   = "broker.hivemq.com";
 const int   MQTT_PORT     = 1883; 
 const char* MQTT_TOPIC    = "izanagi/sensors/data";
 
-// GPS Operating Anchor (80 Feet Road, Brookes Haven Layout, JP Nagar Phase 8)
-const char* FIXED_LAT     = "12.871773";
-const char* FIXED_LNG     = "77.576856";
+// GPS Operating Anchor (80 Feet Road, 4th Block, Koramangala)
+const char* FIXED_LAT     = "12.9352";
+const char* FIXED_LNG     = "77.6244";
 
 // Hardware Pin Definitions
 #define PIN_PULSE_ADC   34
@@ -214,8 +214,8 @@ void publishSensorPayload() {
   doc["pulse_val"]   = pulseVal;   // Directly binds to Overview Pulse Rate Card
   doc["force_n"]     = forceVal;   // Directly binds to Bed Force / Weight Card (0-4095)
   doc["hub_online"]  = hubOnline;  // Renders NXP MCXN236: ONLINE (Green) or OFFLINE (Red)
-  doc["lat"]         = FIXED_LAT;  // "12.871773" (Brookes Haven Layout)
-  doc["lng"]         = FIXED_LNG;  // "77.576856"
+  doc["lat"]         = FIXED_LAT;  // "12.9352" (80 Feet Rd, Koramangala)
+  doc["lng"]         = FIXED_LNG;  // "77.6244"
 
   char jsonBuffer[256];
   size_t bytes = serializeJson(doc, jsonBuffer);

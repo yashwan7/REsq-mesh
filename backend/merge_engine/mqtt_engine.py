@@ -48,8 +48,8 @@ class MqttTelemetryEngine:
             "pulse_val": 74,
             "force_n": 1840,
             "hub_online": True,
-            "lat": "12.871773",
-            "lng": "77.576856",
+            "lat": "12.9352",
+            "lng": "77.6244",
             "timestamp": time.time(),
             "source": "INITIAL_CALIBRATION"
         }
@@ -144,8 +144,8 @@ class MqttTelemetryEngine:
         else:
             raw_hub = True
 
-        raw_lat = data.get("lat") or data.get("latitude") or "12.871773"
-        raw_lng = data.get("lng") or data.get("longitude") or "77.576856"
+        raw_lat = data.get("lat") or data.get("latitude") or "12.9352"
+        raw_lng = data.get("lng") or data.get("longitude") or "77.6244"
 
         try:
             pulse_val = int(raw_pulse)
