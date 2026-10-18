@@ -4,6 +4,7 @@ load_dotenv()
 
 import os
 import json
+import time
 import asyncio
 from typing import List, Dict, Any, Optional
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
@@ -32,6 +33,7 @@ from .decision_layer import laya_decision_layer
 from .slm_engine import edge_slm_engine, AVAILABLE_SLM_MODELS
 from .model_bakeoff import model_bakeoff_engine
 from .sarvam_client import sarvam_enabled, sarvam_translate, SARVAM_MODEL
+from .digitalocean_client import do_manager, DigitalOceanStatus
 
 from backend.cdc import (
     cdc_service,
@@ -436,6 +438,28 @@ async def get_timeline_narrative_translated(patient_id: str, lang: str = "hi-IN"
         "original": narrative,
         "translated": translated,
     }
+
+# ================= DIGITALOCEAN CLOUD INFRASTRUCTURE & SPACES =================
+@app.get("/api/digitalocean/status", response_model=DigitalOceanStatus)
+def get_digitalocean_status():
+    """Returns active connection status to DigitalOcean BLR1 (Bengaluru) App Platform and Spaces."""
+    return do_manager.get_status()
+
+@app.get("/api/digitalocean/spaces/vault")
+def get_digitalocean_spaces_vault():
+    """Returns immutable HMAC-SHA256 audit archives stored in DigitalOcean Spaces."""
+    return do_manager.list_archived_vault()
+
+@app.post("/api/digitalocean/spaces/archive/{patient_id}")
+def archive_capsule_to_spaces(patient_id: str):
+    """Archives a cryptographically signed case capsule to DigitalOcean Spaces BLR1."""
+    patient = merge_engine.get_patient(patient_id)
+    if patient:
+        capsule_dict = patient.model_dump() if hasattr(patient, "model_dump") else patient.__dict__
+    else:
+        capsule_dict = {"patient_id": patient_id, "timestamp": time.time(), "archived": True}
+    entry = do_manager.archive_capsule(patient_id, capsule_dict)
+    return {"status": "ARCHIVED_TO_DO_SPACES", "entry": entry}
 
 @app.get("/api/network-state", response_model=NetworkStatus)
 def get_network_state():

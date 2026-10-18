@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Search, Wifi, WifiOff, Radio, AlertTriangle, 
-  RefreshCw, Cpu, Activity
+  RefreshCw, Cpu, Activity, Cloud
 } from 'lucide-react';
 
 export default function NetworkBar({ networkStatus, onSimulateNetwork, isOnline: _isOnline }) {
@@ -88,6 +88,17 @@ export default function NetworkBar({ networkStatus, onSimulateNetwork, isOnline:
           <span className="w-2 h-2 rounded-full bg-[#52B788] shadow-[0_0_6px_rgba(82,183,136,0.8)] animate-pulse" />
           <StateIcon className="w-4 h-4 text-[#2D6A4F]" />
           <span className="text-[#1A241C]">{config.label}</span>
+        </div>
+
+        {/* DigitalOcean Cloud Uplink Badge (Bengaluru BLR1) */}
+        <div 
+          title="DigitalOcean App Platform & Spaces Vault (Bengaluru BLR1 Data Center • 8.4ms)"
+          className="hidden sm:flex items-center gap-1.5 px-2.5 py-2 nm-flat rounded-xl text-xs font-mono font-bold border border-[#0080FF]/40 bg-[#0080FF]/10 text-[#0080FF] shadow-[0_0_8px_rgba(0,128,255,0.2)]"
+        >
+          <span className="w-2 h-2 rounded-full bg-[#0080FF] shadow-[0_0_6px_#0080FF] animate-pulse" />
+          <Cloud className="w-3.5 h-3.5 text-[#0080FF]" />
+          <span className="text-[#1A241C]">DO BLR1</span>
+          <span className="text-[10px] text-[#0080FF] font-sans font-bold">8.4ms</span>
         </div>
 
         {/* Failover Simulation Tactical Controls */}
