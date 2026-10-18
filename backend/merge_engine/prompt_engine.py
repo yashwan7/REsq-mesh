@@ -3,6 +3,7 @@ import json
 import httpx
 from typing import Dict, Any, List, Optional
 from .models import CaseCapsule, TriageEvaluationResponse, TimelineIncident
+from .sarvam_client import sarvam_enabled, sarvam_chat, extract_json, SARVAM_MODEL
 
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2:3b")
@@ -238,6 +239,30 @@ def generate_fallback_triage(capsule: CaseCapsule, metrics: Dict[str, float]) ->
 async def evaluate_clinical_triage(capsule: CaseCapsule) -> TriageEvaluationResponse:
     metrics = calculate_clinical_metrics(capsule)
     prompt = construct_triage_prompt(capsule, metrics)
+
+    if sarvam_enabled():
+        try:
+            raw = await sarvam_chat(
+                "You are a clinical triage assistant for austere field medicine. "
+                "Reply with a single JSON object only.",
+                prompt,
+                json_mode=True,
+                timeout=8.0,
+            )
+            parsed = extract_json(raw)
+            return TriageEvaluationResponse(
+                patient_id=capsule.patient_id,
+                priority_score=metrics["priority_score"],
+                triage_level=parsed.get("triage_level", "DELAYED_YELLOW"),
+                protocol_mode=parsed.get("protocol_mode", "TACTICAL_STANDARD"),
+                clinical_summary=parsed.get("clinical_summary", "Evaluation complete."),
+                action_steps=parsed.get("action_steps", ["Continue monitoring patient."]),
+                red_flag_triggers=parsed.get("red_flag_triggers", []),
+                rationing_guidelines=parsed.get("rationing_guidelines", []),
+                evaluation_source=f"sarvam:{SARVAM_MODEL}"
+            )
+        except Exception as e:
+            print(f"[sarvam] triage failed, falling back to Ollama: {e}")
 
     try:
         async with httpx.AsyncClient(timeout=4.0) as client:

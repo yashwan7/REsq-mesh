@@ -1,3 +1,7 @@
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import os
 import json
 import asyncio
@@ -27,6 +31,7 @@ from .mqtt_engine import mqtt_engine
 from .decision_layer import laya_decision_layer
 from .slm_engine import edge_slm_engine, AVAILABLE_SLM_MODELS
 from .model_bakeoff import model_bakeoff_engine
+from .sarvam_client import sarvam_enabled, sarvam_translate, SARVAM_MODEL
 
 from backend.cdc import (
     cdc_service,
@@ -324,7 +329,8 @@ def health_check():
     return {
         "status": "healthy",
         "service": "Kshitij Sync & Merge Engine",
-        "version": "1.1.0"
+        "version": "1.1.0",
+        "llm_tier": f"sarvam:{SARVAM_MODEL}" if sarvam_enabled() else "ollama/heuristic",
     }
 
 @app.post("/api/capsule")
@@ -412,6 +418,22 @@ def get_incident_timeline(limit: int = 40):
 async def get_timeline_narrative(patient_id: str):
     narrative = await merge_engine.generate_llm_timeline_narrative(patient_id)
     return {"patient_id": patient_id, "timeline_summary": narrative}
+
+@app.get("/api/timeline/summary/{patient_id}/translated")
+async def get_timeline_narrative_translated(patient_id: str, lang: str = "hi-IN"):
+    if not sarvam_enabled():
+        raise HTTPException(status_code=503, detail="Sarvam API key not configured")
+    narrative = await merge_engine.generate_llm_timeline_narrative(patient_id)
+    try:
+        translated = await sarvam_translate(narrative, target=lang)
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Translation failed: {e}") from e
+    return {
+        "patient_id": patient_id,
+        "lang": lang,
+        "original": narrative,
+        "translated": translated,
+    }
 
 @app.get("/api/network-state", response_model=NetworkStatus)
 def get_network_state():

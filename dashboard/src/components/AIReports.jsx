@@ -14,6 +14,7 @@ export default function AIReports({
   const [activePid, setActivePid] = useState(selectedPatientId || 'PT-101');
   const [generating, setGenerating] = useState(false);
   const [narrativeSummary, setNarrativeSummary] = useState(null);
+  const [lang, setLang] = useState('en');
   const [activeScenarioId, setActiveScenarioId] = useState('S02_degrading_mixed');
   
   // Open-Weight Edge SLM Selector State
@@ -37,7 +38,7 @@ export default function AIReports({
     setGenerating(true);
     try {
       if (onFetchTimelineNarrative) {
-        const text = await onFetchTimelineNarrative(activePid);
+        const text = await onFetchTimelineNarrative(activePid, lang);
         setNarrativeSummary(text);
       }
     } finally {
@@ -103,6 +104,21 @@ export default function AIReports({
             <Stethoscope className="w-4 h-4 text-[#FF334B]" />
             <span>FULL CHART</span>
           </button>
+
+          <select
+            value={lang}
+            onChange={(e) => setLang(e.target.value)}
+            aria-label="Timeline summary language"
+            className="px-2 py-2 nm-btn text-[#F8FAFC] text-xs font-bold rounded-xl bg-transparent"
+          >
+            <option value="en">English</option>
+            <option value="hi-IN">हिन्दी</option>
+            <option value="kn-IN">ಕನ್ನಡ</option>
+            <option value="ta-IN">தமிழ்</option>
+            <option value="te-IN">తెలుగు</option>
+            <option value="mr-IN">मराठी</option>
+            <option value="bn-IN">বাংলা</option>
+          </select>
 
           <button
             onClick={handleGenerateNarrative}
