@@ -1,7 +1,7 @@
 import pytest
 from backend.merge_engine.models import CaseCapsule, Vitals, EyeGaze, MedicationEntry, GPSLocation
 from backend.merge_engine.prompt_engine import calculate_clinical_metrics, evaluate_clinical_triage
-from backend.merge_engine.security import sign_capsule, verify_capsule
+from backend.merge_engine.capsule_security import sign_capsule, verify_capsule
 from backend.merge_engine.engine import SyncAndMergeEngine
 from backend.merge_engine.network_engine import NetworkFailoverEngine
 

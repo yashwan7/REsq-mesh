@@ -15,8 +15,10 @@ def test_laya_acute_decision_primitives():
 
     out = laya_decision_layer.evaluate(capsule)
 
-    # 1. Verification of latency
-    assert out.latency_ms < 50.0  # Ultra-fast non-autoregressive execution
+    # 1. Verification of latency and model naming
+    assert out.latency_ms < 50.0  # Ultra-fast execution
+    assert "rule-based decision layer" in out.model
+    assert "ModernBERT" not in out.model
 
     # 2. Choice Primitives
     assert out.triage_choice.selected == "IMMEDIATE_RED"
@@ -70,6 +72,7 @@ async def test_edge_slm_qwen_inference():
     assert result.protocol_mode == "ACUTE_STABILIZATION"
     assert len(result.action_steps) > 0
     assert "Qwen2.5-0.5B-Instruct" in result.clinical_narrative
+    assert result.source in ("laya_decision_layer+ollama:qwen2.5-0.5b", "laya_decision_layer+deterministic_template")
 
 @pytest.mark.asyncio
 async def test_edge_slm_smollm2_inference():

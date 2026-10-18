@@ -1,6 +1,6 @@
 import time
 from .models import CaseCapsule, Vitals, EyeGaze, GPSLocation, MedicationEntry
-from .security import sign_capsule
+from .capsule_security import sign_capsule
 from .engine import merge_engine
 
 def seed_initial_mock_data():

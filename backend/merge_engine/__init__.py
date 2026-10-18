@@ -6,7 +6,7 @@ and Ollama Llama 3.2 chronological incident timeline synthesis.
 
 from .models import CaseCapsule, TimelineIncident, MedicationEntry, NetworkStatus, TriageEvaluationResponse
 from .engine import SyncAndMergeEngine, merge_engine
-from .security import sign_capsule, verify_capsule
+from .capsule_security import sign_capsule, verify_capsule
 
 __all__ = [
     "CaseCapsule",

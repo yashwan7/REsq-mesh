@@ -4,7 +4,7 @@ import time
 import httpx
 from typing import List, Dict, Any, Tuple
 from backend.models import CaseCapsule, TimelineIncident, MedicationEntry
-from backend.security import verify_capsule
+from backend.capsule_security import verify_capsule
 
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2:3b")

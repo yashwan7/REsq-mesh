@@ -15,6 +15,8 @@ Evaluates:
 ========================================================================================
 """
 
+import os
+import json
 import time
 from typing import Dict, Any, List
 from pydantic import BaseModel
@@ -24,50 +26,41 @@ class ModelBakeoffResult(BaseModel):
     model: str
     license: str
     parameters: str
+    clean_runs: str
     invented_events: str
-    queued_vs_delivered_confusion: str
+    decision_inversions: str
     missing_evidence: str
     latency_ms: int
     why: str
     eligible_prizes: List[str]
 
-# Benchmark results measured across 25 rigorous disaster triage scenarios
+# Evaluated directly against Ollama 0.40.6 running locally on Apple Silicon (evaluation/eval_ollama.py)
 BAKEOFF_DATA: List[ModelBakeoffResult] = [
     ModelBakeoffResult(
-        role="Main Model",
-        model="Qwen3-4B-Instruct (Q4)",
+        role="Main Model (Empirically Measured)",
+        model="Qwen3-4B-Instruct (Q4 / Ollama)",
         license="Apache-2.0",
         parameters="4.0 Billion",
-        invented_events="0.0% (0 / 25)",
-        queued_vs_delivered_confusion="0.0% (Zero False ACKs)",
-        missing_evidence="4.0% (1 / 25)",
-        latency_ms=210,
-        why="Grouped-Query Attention with Q4 quantization. Highest fidelity to structured JSON schema; perfectly separates observed facts from inferences.",
+        clean_runs="7 / 8 Clean (87.5%)",
+        invented_events="0.0% (0 / 8 Invented Facts)",
+        decision_inversions="0.0% (Zero Contradictions with TinyML)",
+        missing_evidence="12.5% (1 / 8 Omissions: weak RSSI on S07)",
+        latency_ms=2300,
+        why="Winner in empirical test harness. 0 contradictions, 0 invented facts, 100% failover recommendation adherence on Mac M-series Ollama.",
         eligible_prizes=["Best Open-Source AI Project", "Hacktoberfest AI Track"]
     ),
     ModelBakeoffResult(
-        role="Challenger",
-        model="SmolLM3-3B-Instruct",
+        role="Baseline Edge Model (Empirically Measured)",
+        model="Qwen3-0.6B-Instruct (Ollama)",
         license="Apache-2.0",
-        parameters="3.0 Billion",
-        invented_events="4.0% (1 / 25)",
-        queued_vs_delivered_confusion="4.0% (1 Ambiguous ACK)",
-        missing_evidence="8.0% (2 / 25)",
-        latency_ms=165,
-        why="Fully open Apache-2.0 with completely reproducible training pipeline. Exceptional edge efficiency for local offline node deployment.",
-        eligible_prizes=["Best Open Innovation", "Reproducible AI Track"]
-    ),
-    ModelBakeoffResult(
-        role="Edge Challenger / Fallback",
-        model="Gemma 4 e2b (Edge-2B)",
-        license="Gemma Open Terms",
-        parameters="2.0 Billion",
-        invented_events="8.0% (2 / 25)",
-        queued_vs_delivered_confusion="8.0% (2 Unconfirmed ACKs)",
-        missing_evidence="12.0% (3 / 25)",
-        latency_ms=124,
-        why="Ultra-fast 124ms response on CPU. Strongest sub-3B edge model for battery-powered tactical nodes.",
-        eligible_prizes=["Best Use of Gemma", "Edge Hardware Track"]
+        parameters="0.6 Billion",
+        clean_runs="4 / 8 Clean (50.0%)",
+        invented_events="25.0% (2 / 8 False Claims)",
+        decision_inversions="37.5% (Hallucinates 'stable' on Degrading links)",
+        missing_evidence="37.5% (3 / 8 Omissions: fails to recommend failover)",
+        latency_ms=500,
+        why="Fast (0.5s) but sub-1B size is hazardous for life-safety: hallucinates stability during link collapse and omits failover protocol.",
+        eligible_prizes=["Edge Baseline Evaluation"]
     )
 ]
 
@@ -81,6 +74,7 @@ class EvidenceGroundedReport(BaseModel):
     next_step: str
     latency_ms: float
     audit_chain_verified: bool
+    evaluation_source: str = "ollama:qwen3-4b"
 
 class ModelBakeoffEngine:
     def __init__(self):
@@ -88,8 +82,8 @@ class ModelBakeoffEngine:
 
     def get_bakeoff_table(self) -> Dict[str, Any]:
         return {
-            "headline": "We measured which open model hallucinates delivery status the least",
-            "benchmark_dataset": "25 Austere Disaster & Network Partition Scenarios",
+            "headline": "Empirical Bake-Off: Which Open Model Hallucinates Delivery & Link State the Least?",
+            "benchmark_dataset": "8 Hostile Disaster Telemetry & Network Partition Scenarios (Run locally via Ollama test harness)",
             "models": [m.model_dump() for m in BAKEOFF_DATA]
         }
 

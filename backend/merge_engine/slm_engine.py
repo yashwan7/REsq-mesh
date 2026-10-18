@@ -15,7 +15,7 @@ import os
 import json
 import time
 import httpx
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Tuple
 from pydantic import BaseModel
 from .models import CaseCapsule, TriageEvaluationResponse
 from .decision_layer import LayaDecisionLayerOutput, laya_decision_layer
@@ -111,12 +111,18 @@ class EdgeSlmEngine:
         model_id = active_info["id"]
 
         # Check if local Ollama/SLM endpoint has the model running
-        slm_output = await self._query_local_slm_or_synthesize(
+        slm_output, used_ollama = await self._query_local_slm_or_synthesize(
             capsule, laya_out, model_id
         )
 
         gen_latency = round((time.perf_counter() - t_gen_start) * 1000, 2)
         total_latency = round((time.perf_counter() - t_total_start) * 1000, 2)
+
+        source_label = (
+            f"laya_decision_layer+ollama:{self.active_model_key}"
+            if used_ollama
+            else "laya_decision_layer+deterministic_template"
+        )
 
         return SlmInferenceResult(
             model_id=model_id,
@@ -133,7 +139,7 @@ class EdgeSlmEngine:
             rationing_guidelines=slm_output["rationing_guidelines"],
             red_flag_triggers=slm_output["red_flag_triggers"],
             clinical_narrative=slm_output["clinical_narrative"],
-            source=f"laya_decision_layer+{self.active_model_key}"
+            source=source_label
         )
 
     async def _query_local_slm_or_synthesize(
@@ -141,10 +147,11 @@ class EdgeSlmEngine:
         capsule: CaseCapsule, 
         laya_out: LayaDecisionLayerOutput, 
         model_id: str
-    ) -> Dict[str, Any]:
+    ) -> Tuple[Dict[str, Any], bool]:
         """
         Attempts to query active SLM server; if offline, produces deterministic
         evidence-based clinical checklist calibrated to Laya decision primitives.
+        Returns (result_dict, used_ollama: bool)
         """
         # Try local endpoint if running
         try:
@@ -162,12 +169,12 @@ class EdgeSlmEngine:
                     d = resp.json()
                     parsed = json.loads(d.get("response", "{}"))
                     if "action_steps" in parsed:
-                        return parsed
+                        return parsed, True
         except Exception:
             pass
 
         # High-Speed Edge Fallback Synthesizer matching Qwen2.5/SmolLM2 prompt guidelines
-        return self._generate_calibrated_slm_plan(capsule, laya_out)
+        return self._generate_calibrated_slm_plan(capsule, laya_out), False
 
     def _generate_calibrated_slm_plan(
         self, 

@@ -50,7 +50,7 @@ export default function handler(req, res) {
     return res.status(200).json({
       model_id: "Qwen/Qwen2.5-0.5B-Instruct",
       model_name: "Qwen2.5-0.5B-Instruct",
-      decision_layer: "Laya-Decision-Engine (ModernBERT/RLCD non-autoregressive) [System1-Calibrated]",
+      decision_layer: "rule-based decision layer (calibrated softmax primitives)",
       decision_latency_ms: 16.4,
       generation_latency_ms: 184.2,
       total_latency_ms: 200.6,
@@ -99,7 +99,7 @@ export default function handler(req, res) {
         "Acute neurological deterioration or loss of eye-gaze responsiveness"
       ],
       clinical_narrative: `[Qwen2.5-0.5B-Instruct Synthesis] Patient evaluated under Laya Decision Layer with 16.4ms System-1 latency. ${protocol_mode} established based on evacuation window of ${t_help}h.`,
-      source: "laya_decision_layer+qwen2.5-0.5b"
+      source: "laya_decision_layer+deterministic_template"
     });
   }
 

@@ -11,60 +11,35 @@ export default function handler(req, res) {
   // GET /api/bakeoff/results
   if (req.method === 'GET') {
     return res.status(200).json({
-      headline: "We measured which open model hallucinates delivery status the least",
-      benchmark_dataset: "25 Austere Disaster & Network Partition Scenarios",
+      headline: "Empirical Bake-Off: Which Open Model Hallucinates Delivery & Link State the Least?",
+      benchmark_dataset: "8 Hostile Disaster Telemetry & Network Partition Scenarios (Run locally via Ollama test harness)",
+      evaluation_method: "Strict JSON Schema • Temperature=0 • 8 Channel Collapse Scenarios • Automated Rule-Based Audit Harness",
       models: [
         {
-          role: "Main Model (Winner)",
+          role: "Main Tactical Model (Empirically Measured)",
           model: "Qwen3-4B-Instruct (Q4 / Ollama)",
           license: "Apache-2.0",
           parameters: "4.0 Billion",
           clean_rate: "87.5% (7 / 8 Clean)",
-          invented_events: "0.0% (Zero False ACKs)",
-          queued_vs_delivered_confusion: "0.0% (Zero Contradictions)",
-          missing_evidence: "12.5% (1 / 8 scenarios)",
+          invented_events: "0.0% (Zero Invented Facts)",
+          queued_vs_delivered_confusion: "0.0% (Zero Contradictions with Classifier)",
+          missing_evidence: "12.5% (1 / 8 Omissions: weak RSSI on S07)",
           latency_ms: 2300,
-          why: "Winner. 0 contradictions, 0 invented facts, 100% failover recommendation adherence on Mac M-series Ollama.",
+          why: "Winner in empirical test harness. 0 contradictions, 0 invented facts, 100% failover recommendation adherence on Mac M-series Ollama.",
           eligible_prizes: ["Best Open-Source AI Project", "Hacktoberfest AI Track"]
         },
         {
-          role: "Small Open Model (Baseline)",
+          role: "Baseline Edge Model (Empirically Measured)",
           model: "Qwen3-0.6B-Instruct (Ollama)",
           license: "Apache-2.0",
           parameters: "0.6 Billion",
           clean_rate: "50.0% (4 / 8 Clean)",
-          invented_events: "25.0% (2 / 8 claims)",
-          queued_vs_delivered_confusion: "37.5% (Hallucinates 'stable' on Degrading)",
-          missing_evidence: "37.5% (Omits jitter & failover)",
+          invented_events: "25.0% (2 / 8 False Claims)",
+          queued_vs_delivered_confusion: "37.5% (Hallucinates 'stable' on Degrading links)",
+          missing_evidence: "37.5% (3 / 8 Omissions: fails to recommend failover)",
           latency_ms: 500,
-          why: "Ultra-fast (500ms) but too small for strict network ops. Confuses degrading links with 'stable/low severity'.",
-          eligible_prizes: ["Edge Open-Source Baseline"]
-        },
-        {
-          role: "Challenger",
-          model: "SmolLM3-3B-Instruct",
-          license: "Apache-2.0",
-          parameters: "3.0 Billion",
-          clean_rate: "75.0% (6 / 8 Clean)",
-          invented_events: "4.0% (1 / 25)",
-          queued_vs_delivered_confusion: "4.0% (1 Ambiguous ACK)",
-          missing_evidence: "8.0% (2 / 25)",
-          latency_ms: 165,
-          why: "Fully open Apache-2.0 with completely reproducible training pipeline. Exceptional edge efficiency for local offline node deployment.",
-          eligible_prizes: ["Best Open Innovation", "Reproducible AI Track"]
-        },
-        {
-          role: "Edge Variant / Fallback",
-          model: "Gemma 4 e2b (Edge-2B)",
-          license: "Gemma Open Terms",
-          parameters: "2.0 Billion",
-          clean_rate: "62.5% (5 / 8 Clean)",
-          invented_events: "8.0% (2 / 25)",
-          queued_vs_delivered_confusion: "8.0% (2 Unconfirmed ACKs)",
-          missing_evidence: "12.0% (3 / 25)",
-          latency_ms: 124,
-          why: "Ultra-fast 124ms response on CPU. Strongest sub-3B edge model for battery-powered tactical nodes.",
-          eligible_prizes: ["Best Use of Gemma", "Edge Hardware Track"]
+          why: "Fast (0.5s) but sub-1B size is hazardous for life-safety: hallucinates stability during link collapse and omits failover protocol.",
+          eligible_prizes: ["Edge Baseline Evaluation"]
         }
       ],
       empirical_ollama_run: {

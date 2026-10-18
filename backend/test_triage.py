@@ -2,7 +2,7 @@ import pytest
 import asyncio
 from backend.models import CaseCapsule, Vitals, EyeGaze, MedicationEntry, GPSLocation
 from backend.prompt_engine import calculate_clinical_metrics, evaluate_clinical_triage
-from backend.security import sign_capsule, verify_capsule
+from backend.capsule_security import sign_capsule, verify_capsule
 from backend.merge_engine import SyncAndMergeEngine
 from backend.network_engine import NetworkFailoverEngine
 

@@ -2,8 +2,8 @@
 ========================================================================================
 KSHITIJ TACTICAL DECISION LAYER (LAYA / JEV ARCHITECTURE)
 ========================================================================================
-High-speed System-1 non-autoregressive Decision Model implementation.
-Evaluates state against standardized decision primitives in a single forward pass:
+High-speed System-1 rule-based decision layer with temperature-calibrated softmax over discrete primitives.
+Evaluates state against standardized decision primitives in a single deterministic pass:
   1. Choice  - Multiclass discrete selection with calibrated softmax probabilities
   2. Score   - Ordinal regression / severity scoring (1.0 - 10.0)
   3. Noul    - Calibrated binary (True/False) confidence decisions
@@ -32,7 +32,7 @@ class DecisionPrimitiveNoul(BaseModel):
     rationale: str
 
 class LayaDecisionLayerOutput(BaseModel):
-    model: str = "Laya-Decision-Engine-v1 (ModernBERT/RLCD Calibrated)"
+    model: str = "rule-based decision layer (calibrated softmax primitives)"
     latency_ms: float
     primitives: Dict[str, Any]
     triage_choice: DecisionPrimitiveChoice
@@ -230,7 +230,7 @@ class LayaDecisionLayer:
         latency_ms = round((time.perf_counter() - t_start) * 1000, 2)
 
         return LayaDecisionLayerOutput(
-            model=f"Laya-Decision-Engine (ModernBERT/RLCD non-autoregressive) [{self.engine_name}]",
+            model=f"rule-based decision layer (calibrated softmax primitives) [{self.engine_name}]",
             latency_ms=latency_ms,
             primitives={
                 "choice_count": 3,

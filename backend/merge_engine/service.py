@@ -21,7 +21,7 @@ from .prompt_engine import evaluate_clinical_triage, calculate_clinical_metrics
 from .engine import merge_engine
 from .network_engine import network_engine
 from .mock_generator import seed_initial_mock_data
-from .security import sign_capsule, verify_capsule
+from .capsule_security import sign_capsule, verify_capsule
 from .blood_bank_engine import get_blood_bank_state, process_blood_bank_action
 from .mqtt_engine import mqtt_engine
 from .decision_layer import laya_decision_layer

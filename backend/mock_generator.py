@@ -1,6 +1,6 @@
 import time
 from backend.models import CaseCapsule, Vitals, EyeGaze, GPSLocation, MedicationEntry
-from backend.security import sign_capsule
+from backend.capsule_security import sign_capsule
 from backend.merge_engine import merge_engine
 
 def seed_initial_mock_data():
