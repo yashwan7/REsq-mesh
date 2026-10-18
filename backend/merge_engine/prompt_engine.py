@@ -10,6 +10,7 @@ from backend.telemetry import (
     triage_latency,
     triage_requests,
 )
+from .sarvam_client import sarvam_enabled, sarvam_chat, extract_json, SARVAM_MODEL
 
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2:3b")
@@ -251,33 +252,19 @@ async def evaluate_clinical_triage(capsule: CaseCapsule) -> TriageEvaluationResp
     with tracer.start_as_current_span("triage.evaluate") as span:
         result: Optional[TriageEvaluationResponse] = None
         fallback_reason: Optional[str] = None
-
-        try:
-            with tracer.start_as_current_span("llm.generate") as llm_span:
-                llm_span.set_attribute("gen_ai.system", "ollama")
-                llm_span.set_attribute("gen_ai.request.model", OLLAMA_MODEL)
-                llm_span.set_attribute("gen_ai.request.temperature", 0.2)
-                llm_span.set_attribute("gen_ai.request.max_tokens", 450)
-
-                async with httpx.AsyncClient(timeout=4.0) as client:
-                    response = await client.post(
-                        f"{OLLAMA_HOST}/api/generate",
-                        json={
-                            "model": OLLAMA_MODEL,
-                            "prompt": prompt,
-                            "format": "json",
-                            "stream": False,
-                            "options": {
-                                "temperature": 0.2,
-                                "num_predict": 450
-                            }
-                        }
+        if sarvam_enabled():
+            try:
+                with tracer.start_as_current_span("llm.generate") as llm_span:
+                    llm_span.set_attribute("gen_ai.system", "sarvam")
+                    llm_span.set_attribute("gen_ai.request.model", SARVAM_MODEL)
+                    raw = await sarvam_chat(
+                        "You are a clinical triage assistant for austere field medicine. "
+                        "Reply with a single JSON object only.",
+                        prompt,
+                        json_mode=True,
+                        timeout=8.0,
                     )
-                if response.status_code != 200:
-                    fallback_reason = f"http_{response.status_code}"
-                else:
-                    data = response.json()
-                    parsed = json.loads(data.get("response", "{}"))
+                    parsed = extract_json(raw)
                     result = TriageEvaluationResponse(
                         patient_id=capsule.patient_id,
                         priority_score=parsed.get("priority_score", metrics["priority_score"]),
@@ -287,11 +274,53 @@ async def evaluate_clinical_triage(capsule: CaseCapsule) -> TriageEvaluationResp
                         action_steps=parsed.get("action_steps", ["Continue monitoring patient."]),
                         red_flag_triggers=parsed.get("red_flag_triggers", []),
                         rationing_guidelines=parsed.get("rationing_guidelines", []),
-                        evaluation_source=f"nirantara:{OLLAMA_MODEL}"
+                        evaluation_source=f"sarvam:{SARVAM_MODEL}"
                     )
-        except Exception as exc:
-            fallback_reason = type(exc).__name__
-            span.record_exception(exc)
+            except Exception as exc:
+                fallback_reason = type(exc).__name__
+                span.record_exception(exc)
+
+        if result is None:
+            try:
+                with tracer.start_as_current_span("llm.generate") as llm_span:
+                    llm_span.set_attribute("gen_ai.system", "ollama")
+                    llm_span.set_attribute("gen_ai.request.model", OLLAMA_MODEL)
+                    llm_span.set_attribute("gen_ai.request.temperature", 0.2)
+                    llm_span.set_attribute("gen_ai.request.max_tokens", 450)
+
+                    async with httpx.AsyncClient(timeout=4.0) as client:
+                        response = await client.post(
+                            f"{OLLAMA_HOST}/api/generate",
+                            json={
+                                "model": OLLAMA_MODEL,
+                                "prompt": prompt,
+                                "format": "json",
+                                "stream": False,
+                                "options": {
+                                    "temperature": 0.2,
+                                    "num_predict": 450
+                                }
+                            }
+                        )
+                    if response.status_code != 200:
+                        fallback_reason = f"http_{response.status_code}"
+                    else:
+                        data = response.json()
+                        parsed = json.loads(data.get("response", "{}"))
+                        result = TriageEvaluationResponse(
+                            patient_id=capsule.patient_id,
+                            priority_score=parsed.get("priority_score", metrics["priority_score"]),
+                            triage_level=parsed.get("triage_level", "DELAYED_YELLOW"),
+                            protocol_mode=parsed.get("protocol_mode", "TACTICAL_STANDARD"),
+                            clinical_summary=parsed.get("clinical_summary", "Evaluation complete."),
+                            action_steps=parsed.get("action_steps", ["Continue monitoring patient."]),
+                            red_flag_triggers=parsed.get("red_flag_triggers", []),
+                            rationing_guidelines=parsed.get("rationing_guidelines", []),
+                            evaluation_source=f"nirantara:{OLLAMA_MODEL}"
+                        )
+            except Exception as exc:
+                fallback_reason = type(exc).__name__
+                span.record_exception(exc)
 
         if result is None:
             result = generate_fallback_triage(capsule, metrics)

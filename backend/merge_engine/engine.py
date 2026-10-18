@@ -6,6 +6,7 @@ from typing import List, Dict, Any, Tuple
 from .models import CaseCapsule, TimelineIncident, MedicationEntry
 from .capsule_security import verify_capsule
 from backend.telemetry import capsule_checks, get_current_span, get_tracer
+from .sarvam_client import sarvam_enabled, sarvam_chat
 
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2:3b")
@@ -214,6 +215,19 @@ Provide a concise, 3-point clinical timeline summary highlighting:
 2. Any deduplication or conflict resolution (e.g. duplicate medication dosages)
 3. Current operational status
 """
+        if sarvam_enabled():
+            try:
+                text = await sarvam_chat(
+                    "You are the Kshitij Incident Merge Analyst.",
+                    prompt,
+                    max_tokens=400,
+                    timeout=10.0,
+                )
+                if text:
+                    return text
+            except Exception as e:
+                print(f"[sarvam] timeline summary failed, falling back: {e}")
+
         try:
             async with httpx.AsyncClient(timeout=4.0) as client:
                 res = await client.post(

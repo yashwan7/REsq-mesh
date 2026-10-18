@@ -175,11 +175,14 @@ export default function App() {
     fetchAllData();
   };
 
-  const handleFetchTimelineNarrative = async (patientId) => {
-    const res = await fetch(`${API_BASE}/timeline/summary/${patientId}`);
+  const handleFetchTimelineNarrative = async (patientId, lang = 'en') => {
+    const url = lang === 'en'
+      ? `${API_BASE}/timeline/summary/${patientId}`
+      : `${API_BASE}/timeline/summary/${patientId}/translated?lang=${lang}`;
+    const res = await fetch(url);
     if (res.ok) {
       const data = await res.json();
-      return data.timeline_summary;
+      return lang === 'en' ? data.timeline_summary : data.translated;
     }
     return 'Summary unavailable.';
   };
