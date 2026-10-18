@@ -43,6 +43,9 @@ build/
 bin/
 out/
 .next/
+*.keras
+hardware/resqmesh_wireless_channel_100k.csv
+hardware/resqmesh_artifacts/
 
 # SQLite Databases & CDC Logs
 backend/data/*.db*

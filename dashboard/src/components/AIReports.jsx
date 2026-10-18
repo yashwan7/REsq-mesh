@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { 
   FileText, Sparkles, BrainCircuit, CheckSquare, 
-  Stethoscope, Zap, Cpu, ShieldCheck, AlertCircle, Layers
+  Stethoscope, Zap, Cpu, ShieldCheck, AlertCircle, Layers, CheckCircle2, AlertTriangle, Terminal
 } from 'lucide-react';
+import { OLLAMA_BENCHMARK_SUMMARY, OLLAMA_SCENARIOS } from '../data/ollamaBenchmarkData';
 
 export default function AIReports({ 
   patients = [], 
@@ -13,6 +14,7 @@ export default function AIReports({
   const [activePid, setActivePid] = useState(selectedPatientId || 'PT-101');
   const [generating, setGenerating] = useState(false);
   const [narrativeSummary, setNarrativeSummary] = useState(null);
+  const [activeScenarioId, setActiveScenarioId] = useState('S02_degrading_mixed');
   
   // Open-Weight Edge SLM Selector State
   const [activeSlm, setActiveSlm] = useState('qwen2.5-0.5b'); // 'qwen2.5-0.5b' | 'smollm2-360m'
@@ -456,8 +458,217 @@ export default function AIReports({
                 <td className="py-3 px-3 text-center font-mono text-[#556455]">12.0% (3/25)</td>
                 <td className="py-3 px-3 text-right font-mono font-bold text-[#1A241C]">124 ms</td>
               </tr>
+
+              {/* Qwen3-0.6B (Baseline Tested via Ollama) */}
+              <tr className="hover:bg-white/40 transition-colors bg-red-50/30">
+                <td className="py-3 px-3 font-bold text-[#1A241C] font-mono">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#C84B31]" />
+                    <span>BASELINE: Qwen3-0.6B (Ollama)</span>
+                  </div>
+                  <span className="text-[10px] text-[#C84B31] block font-sans font-normal mt-0.5">
+                    Sub-1B model &bull; Hallucinates &apos;stable&apos; on failing links &bull; Omits failover
+                  </span>
+                </td>
+                <td className="py-3 px-3 font-mono text-[10px] text-[#2D6A4F] font-bold">Apache-2.0</td>
+                <td className="py-3 px-3 text-center font-mono text-[#C84B31] font-bold">25.0% (2/8)</td>
+                <td className="py-3 px-3 text-center font-mono text-[#C84B31] font-bold">37.5% (Hallucinates &apos;Stable&apos;)</td>
+                <td className="py-3 px-3 text-center font-mono text-[#C84B31] font-bold">37.5% (3/8 Omissions)</td>
+                <td className="py-3 px-3 text-right font-mono font-bold text-[#1A241C]">500 ms</td>
+              </tr>
             </tbody>
           </table>
+        </div>
+
+        {/* ================= LIVE EMPIRICAL OLLAMA BENCHMARK (M-SERIES TEST SUITE) ================= */}
+        <div className="nm-inset p-4 md:p-5 rounded-2xl bg-[#E8EFE9]/90 border border-[#2D6A4F]/30 space-y-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-[#2D6A4F]/20 pb-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <Terminal className="w-4 h-4 text-[#2D6A4F]" />
+                <h4 className="text-xs font-black text-[#1A241C] uppercase tracking-wider m-0 font-mono">
+                  LIVE EMPIRICAL OLLAMA BENCHMARK (MACBOOK AIR M-SERIES LOCAL TEST SUITE)
+                </h4>
+              </div>
+              <p className="text-[11px] text-[#556455] mt-1 m-0 font-sans font-medium">
+                Real local execution &bull; Ollama 0.40.6 &bull; Zero cloud API reliance &bull; 8 hostile disaster &amp; network partition scenarios
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="px-2.5 py-1 rounded-lg text-[10px] font-bold font-mono bg-[#2D6A4F]/15 text-[#2D6A4F] border border-[#2D6A4F]/30">
+                Qwen3-4B: 7/8 Clean (87.5%) &bull; 2.3s avg
+              </span>
+              <span className="px-2.5 py-1 rounded-lg text-[10px] font-bold font-mono bg-[#C84B31]/15 text-[#C84B31] border border-[#C84B31]/30">
+                Qwen3-0.6B: 4/8 Clean (50.0%) &bull; 5 Flags
+              </span>
+            </div>
+          </div>
+
+          {/* Scenario Tabs (8 Scenarios) */}
+          <div className="space-y-1.5">
+            <span className="text-[10px] uppercase font-bold text-[#758475] font-mono block">
+              Select Test Scenario:
+            </span>
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-1.5">
+              {OLLAMA_SCENARIOS.map(sc => {
+                const isSelected = sc.id === activeScenarioId;
+                const has06bFail = !sc.qwen3_0_6b.clean;
+                return (
+                  <button
+                    key={sc.id}
+                    onClick={() => setActiveScenarioId(sc.id)}
+                    className={`p-2 rounded-xl text-left transition-all text-xs font-mono border ${
+                      isSelected
+                        ? 'nm-inset bg-[#E8EFE9] border-[#2D6A4F] text-[#1A241C] shadow-[0_0_8px_rgba(45,106,79,0.3)]'
+                        : 'nm-btn bg-white/40 border-[#2D6A4F]/20 text-[#556455] hover:text-[#1A241C]'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-[11px]">{sc.code}</span>
+                      <span className={`w-2 h-2 rounded-full ${has06bFail ? 'bg-[#C84B31]' : 'bg-[#2D6A4F]'}`} />
+                    </div>
+                    <span className="text-[9px] block truncate mt-0.5 font-sans font-medium text-[#758475]">
+                      {sc.title}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Telemetry Strip for Selected Scenario */}
+          {(() => {
+            const sc = OLLAMA_SCENARIOS.find(s => s.id === activeScenarioId) || OLLAMA_SCENARIOS[1];
+            return (
+              <div className="space-y-3">
+                <div className="p-3 rounded-xl bg-white/80 border border-[#2D6A4F]/20 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span className="text-[11px] font-bold text-[#1A241C]">{sc.title}:</span>
+                    <span className="px-2 py-0.5 rounded bg-[#2D6A4F]/10 text-[#2D6A4F] text-[10px]">RSSI: {sc.telemetry.rssi}</span>
+                    <span className="px-2 py-0.5 rounded bg-[#2D6A4F]/10 text-[#2D6A4F] text-[10px]">SNR: {sc.telemetry.snr}</span>
+                    <span className="px-2 py-0.5 rounded bg-[#2D6A4F]/10 text-[#2D6A4F] text-[10px]">PER: {sc.telemetry.per}</span>
+                    <span className="px-2 py-0.5 rounded bg-[#2D6A4F]/10 text-[#2D6A4F] text-[10px]">Retries: {sc.telemetry.retries}</span>
+                    <span className="px-2 py-0.5 rounded bg-[#2D6A4F]/10 text-[#2D6A4F] text-[10px]">Busy: {sc.telemetry.busy}</span>
+                    <span className="px-2 py-0.5 rounded bg-[#2D6A4F]/10 text-[#2D6A4F] text-[10px]">Jitter: {sc.telemetry.jitter}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-[#758475] uppercase">NXP TinyML Fixed Decision:</span>
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-black ${
+                      sc.cls === 'CRITICAL' ? 'bg-[#C84B31] text-white' :
+                      sc.cls === 'DEGRADING' ? 'bg-[#F59E0B] text-black' :
+                      'bg-[#2D6A4F] text-white'
+                    }`}>
+                      {sc.decision}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Side-by-Side Model Outputs */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                  {/* Qwen3-4B Output (Main Winner) */}
+                  <div className="p-3.5 rounded-xl bg-white border-2 border-[#2D6A4F]/50 shadow-sm space-y-2">
+                    <div className="flex items-center justify-between border-b border-[#2D6A4F]/20 pb-2">
+                      <div className="flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-[#2D6A4F]" />
+                        <span className="text-xs font-bold text-[#1A241C] font-mono">QWEN3-4B (MAIN MODEL)</span>
+                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-[#2D6A4F]/10 text-[#2D6A4F] font-mono">
+                          {sc.qwen3_4b.secs}s
+                        </span>
+                      </div>
+                      <span className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded ${
+                        sc.qwen3_4b.clean
+                          ? 'bg-[#2D6A4F]/15 text-[#2D6A4F]'
+                          : 'bg-[#F59E0B]/20 text-[#B45309]'
+                      }`}>
+                        {sc.qwen3_4b.clean ? 'CLEAN (0 FLAGS)' : '1 MINOR FLAG'}
+                      </span>
+                    </div>
+
+                    <div className="space-y-1.5 text-xs font-sans">
+                      <div>
+                        <span className="text-[10px] font-mono font-bold text-[#2D6A4F] uppercase block">Reasoning Output:</span>
+                        <p className="text-[11px] text-[#1A241C] m-0 leading-relaxed font-sans">
+                          &quot;{sc.qwen3_4b.reason}&quot;
+                        </p>
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-mono font-bold text-[#2D6A4F] uppercase block">Recommendation:</span>
+                        <p className="text-[11px] text-[#1A241C] m-0 font-medium font-sans">
+                          &quot;{sc.qwen3_4b.recommendation}&quot;
+                        </p>
+                      </div>
+                      {sc.qwen3_4b.flags.length > 0 && (
+                        <div className="p-2 rounded bg-amber-50 border border-amber-200 text-[10px] font-mono text-amber-800 space-y-0.5">
+                          {sc.qwen3_4b.flags.map((f, i) => (
+                            <div key={i}>⚠️ {f}</div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Qwen3-0.6B Output (Baseline) */}
+                  <div className={`p-3.5 rounded-xl bg-white border-2 space-y-2 ${
+                    sc.qwen3_0_6b.clean ? 'border-gray-300' : 'border-[#C84B31]/60 bg-red-50/30'
+                  }`}>
+                    <div className="flex items-center justify-between border-b border-[#C84B31]/20 pb-2">
+                      <div className="flex items-center gap-1.5">
+                        {sc.qwen3_0_6b.clean ? (
+                          <CheckCircle2 className="w-4 h-4 text-gray-500" />
+                        ) : (
+                          <AlertTriangle className="w-4 h-4 text-[#C84B31]" />
+                        )}
+                        <span className="text-xs font-bold text-[#1A241C] font-mono">QWEN3-0.6B (BASELINE)</span>
+                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-gray-100 text-[#556455] font-mono">
+                          {sc.qwen3_0_6b.secs}s
+                        </span>
+                      </div>
+                      <span className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded ${
+                        sc.qwen3_0_6b.clean
+                          ? 'bg-gray-100 text-gray-700'
+                          : 'bg-[#C84B31]/15 text-[#C84B31]'
+                      }`}>
+                        {sc.qwen3_0_6b.clean ? 'CLEAN (0 FLAGS)' : `${sc.qwen3_0_6b.flags.length} FLAGS DETECTED`}
+                      </span>
+                    </div>
+
+                    <div className="space-y-1.5 text-xs font-sans">
+                      <div>
+                        <span className="text-[10px] font-mono font-bold text-[#758475] uppercase block">Reasoning Output:</span>
+                        <p className="text-[11px] text-[#1A241C] m-0 leading-relaxed font-sans">
+                          &quot;{sc.qwen3_0_6b.reason}&quot;
+                        </p>
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-mono font-bold text-[#758475] uppercase block">Recommendation:</span>
+                        <p className="text-[11px] text-[#1A241C] m-0 font-medium font-sans">
+                          &quot;{sc.qwen3_0_6b.recommendation}&quot;
+                        </p>
+                      </div>
+                      {sc.qwen3_0_6b.flags.length > 0 && (
+                        <div className="p-2 rounded bg-red-50 border border-red-200 text-[10px] font-mono text-red-800 space-y-0.5">
+                          {sc.qwen3_0_6b.flags.map((f, i) => (
+                            <div key={i}>🚨 Flag: {f}</div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Judges Architectural Key Takeaway */}
+                <div className="p-3 rounded-xl bg-[#2D6A4F]/10 border border-[#2D6A4F]/30 text-[11px] text-[#1A241C] font-sans flex items-start gap-2.5">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-black font-mono bg-[#2D6A4F] text-white shrink-0">
+                    JUDGE TAKEAWAY
+                  </span>
+                  <p className="m-0 leading-relaxed">
+                    <strong>Why hybrid TinyML + Local SLM?</strong> The TinyML classifier running on the NXP FRDM-MCXN236 board (90.2% accuracy, 4.46 KB INT8) provides deterministic, non-hallucinable ground truth for network state and failover routing. The local LLM is strictly constrained via JSON Schema to explain the event without changing the decision. Our empirical test suite proves that sub-1B models hallucinate that degrading channels are &quot;stable&quot;; <strong>Qwen3-4B delivers 87.5% clean compliance with zero hallucinations</strong>.
+                  </p>
+                </div>
+              </div>
+            );
+          })()}
         </div>
 
         {/* Evidence-Grounded Audit Output for Active Event */}
