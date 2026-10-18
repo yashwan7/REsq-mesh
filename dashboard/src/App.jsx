@@ -20,6 +20,7 @@ import {
   Sparkles, Stethoscope, Activity, FileText, Zap, Eye 
 } from 'lucide-react';
 import { DEFAULT_PATIENTS_FIXTURE, DEFAULT_TIMELINE_FIXTURE } from './data/clinicalFixtures';
+import { getSarvamDispatch } from './data/sarvamIndicData';
 
 const API_BASE = '/api';
 
@@ -176,15 +177,21 @@ export default function App() {
   };
 
   const handleFetchTimelineNarrative = async (patientId, lang = 'en') => {
-    const url = lang === 'en'
-      ? `${API_BASE}/timeline/summary/${patientId}`
-      : `${API_BASE}/timeline/summary/${patientId}/translated?lang=${lang}`;
-    const res = await fetch(url);
-    if (res.ok) {
-      const data = await res.json();
-      return lang === 'en' ? data.timeline_summary : data.translated;
+    try {
+      const url = lang === 'en'
+        ? `${API_BASE}/timeline/summary/${patientId}`
+        : `${API_BASE}/timeline/summary/${patientId}/translated?lang=${lang}`;
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        return lang === 'en' ? data.timeline_summary : data.translated;
+      }
+    } catch (e) {
+      // Backend unreachable or offline
     }
-    return 'Summary unavailable.';
+    // Sovereign Sarvam fallback for Vercel / offline demo
+    const fallback = getSarvamDispatch(patientId, lang);
+    return `${fallback.title}\n\n${fallback.summary}\n\n${fallback.action_steps.map((s, i) => `${i + 1}. ${s}`).join('\n')}`;
   };
 
   const handleTriggerOfflineSync = async () => {

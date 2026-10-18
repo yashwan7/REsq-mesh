@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { 
   FileText, Sparkles, BrainCircuit, CheckSquare, 
-  Stethoscope, Zap, Cpu, ShieldCheck, AlertCircle, Layers, CheckCircle2, AlertTriangle, Terminal, X, Code, Copy
+  Stethoscope, Zap, Cpu, ShieldCheck, AlertCircle, Layers, CheckCircle2, AlertTriangle, Terminal, X, Code, Copy,
+  Volume2, VolumeX, Radio, Globe, Check
 } from 'lucide-react';
 import { OLLAMA_BENCHMARK_SUMMARY, OLLAMA_SCENARIOS } from '../data/ollamaBenchmarkData';
+import { getSarvamDispatch, SARVAM_MODEL_INFO } from '../data/sarvamIndicData';
 
 export default function AIReports({ 
   patients = [], 
@@ -23,6 +25,42 @@ export default function AIReports({
   const [activeSlm, setActiveSlm] = useState('qwen2.5-0.5b'); // 'qwen2.5-0.5b' | 'smollm2-360m'
   const [decisionLatency, setDecisionLatency] = useState(16.4);
   const [genLatency, setGenLatency] = useState(184.2);
+
+  // Sarvam AI Sovereign Indic Showcase State
+  const [sarvamLang, setSarvamLang] = useState('hi-IN');
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [copiedSarvam, setCopiedSarvam] = useState(false);
+
+  const sarvamDispatch = getSarvamDispatch(activePid, sarvamLang);
+  const sarvamEnDispatch = getSarvamDispatch(activePid, 'en');
+
+  const handlePlaySarvamAudio = (textToSpeak, langCode) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      alert('Speech synthesis is not supported on this browser.');
+      return;
+    }
+    if (isPlayingAudio) {
+      window.speechSynthesis.cancel();
+      setIsPlayingAudio(false);
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.lang = langCode || sarvamLang;
+    utterance.rate = 0.95;
+    utterance.onend = () => setIsPlayingAudio(false);
+    utterance.onerror = () => setIsPlayingAudio(false);
+    setIsPlayingAudio(true);
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const handleCopySarvam = (textToCopy) => {
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(textToCopy);
+      setCopiedSarvam(true);
+      setTimeout(() => setCopiedSarvam(false), 2000);
+    }
+  };
 
   const activePatientItem = patients.find(p => p.capsule.patient_id === activePid) || patients[0];
   const p = activePatientItem?.capsule || {};
@@ -454,6 +492,328 @@ export default function AIReports({
             </div>
           </div>
 
+        </div>
+
+      </div>
+
+      {/* ================= SARVAM AI INDIC INTELLIGENCE SHOWCASE ================= */}
+      <div className="nm-flat rounded-2xl p-5 border-2 border-[#FF9933]/60 bg-gradient-to-b from-[#FF9933]/10 via-[#138808]/5 to-transparent space-y-5 shadow-[0_0_24px_rgba(255,153,51,0.18)]">
+        
+        {/* Header Strip with Sarvam Sovereign Badge */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-[#FF9933]/20 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 nm-convex rounded-xl border-2 border-[#FF9933] flex items-center justify-center text-lg bg-[#14171D] shadow-[0_0_12px_rgba(255,153,51,0.4)] shrink-0">
+              🇮🇳
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="text-sm font-black text-[#1A241C] uppercase tracking-wider m-0">
+                  SARVAM AI INDIC DISASTER INTELLIGENCE &amp; VERNACULAR BROADCAST
+                </h3>
+                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black bg-[#FF9933] text-white shadow-[0_0_8px_rgba(255,153,51,0.6)]">
+                  SOVEREIGN INDIC LLM (sarvam-105b)
+                </span>
+                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-[#138808]/20 text-[#138808] border border-[#138808]/40">
+                  ~142ms TRANSLATE LATENCY
+                </span>
+              </div>
+              <p className="text-[11px] text-[#556455] mt-1 m-0 font-sans font-medium">
+                Sovereign Indian Foundation Model &bull; Last-mile multi-lingual audio &amp; text dispatch for NDRF, SDRF, and frontline first responders
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap self-start lg:self-auto text-xs">
+            <span className="px-3 py-1.5 rounded-xl font-mono text-[10px] font-bold nm-inset bg-[#E8EFE9] text-[#1A241C] border border-[#2D6A4F]/30 flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#138808] animate-pulse" />
+              <span>DATA RESIDENCY: BENGALURU SOVEREIGN POD</span>
+            </span>
+          </div>
+        </div>
+
+        {/* Indic Language Selector Bar */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <span className="text-[10px] uppercase font-bold text-[#758475] font-mono flex items-center gap-1.5">
+              <Globe className="w-3.5 h-3.5 text-[#FF9933]" />
+              SELECT GROUND-LEVEL INDIC DIALECT (6 OFFICIAL LANGUAGES):
+            </span>
+            <span className="text-[10px] text-[#556455] font-mono">
+              ACTIVE PATIENT: <strong className="text-[#1A241C]">{activePid} ({sarvamEnDispatch.patient_name})</strong>
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
+            {[
+              { code: 'hi-IN', label: 'हिन्दी', region: 'National NDRF', flag: '🇮🇳' },
+              { code: 'kn-IN', label: 'ಕನ್ನಡ', region: 'Bengaluru HQ', flag: '🟡' },
+              { code: 'ta-IN', label: 'தமிழ்', region: 'Tamil Nadu', flag: '🔵' },
+              { code: 'te-IN', label: 'తెలుగు', region: 'Telangana / AP', flag: '🟢' },
+              { code: 'mr-IN', label: 'मराठी', region: 'Maharashtra', flag: '🟣' },
+              { code: 'bn-IN', label: 'বাংলা', region: 'West Bengal', flag: '🔴' },
+              { code: 'en', label: 'English', region: 'Sovereign Audit', flag: '🇬🇧' }
+            ].map(item => {
+              const isSelected = sarvamLang === item.code;
+              return (
+                <button
+                  key={item.code}
+                  onClick={() => {
+                    setSarvamLang(item.code);
+                    if (isPlayingAudio) {
+                      window.speechSynthesis?.cancel();
+                      setIsPlayingAudio(false);
+                    }
+                  }}
+                  className={`p-2.5 rounded-xl text-left transition-all font-mono border ${
+                    isSelected
+                      ? 'nm-inset bg-[#FFF7ED] border-[#FF9933] text-[#1A241C] shadow-[0_0_12px_rgba(255,153,51,0.35)]'
+                      : 'nm-btn bg-white/50 border-white/60 text-[#556455] hover:text-[#1A241C]'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">{item.flag}</span>
+                    {isSelected && <span className="w-2 h-2 rounded-full bg-[#FF9933] animate-ping" />}
+                  </div>
+                  <strong className="block text-xs font-bold text-[#1A241C] mt-1">
+                    {item.label}
+                  </strong>
+                  <span className="text-[9px] text-[#758475] block truncate mt-0.5 font-sans">
+                    {item.region}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Audio Dispatch & Voice Beacon Action Strip */}
+        <div className="p-3.5 rounded-xl bg-gradient-to-r from-[#FF9933]/15 via-white/80 to-[#138808]/15 border border-[#FF9933]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-3">
+            <div className={`w-8 h-8 rounded-lg nm-inset flex items-center justify-center ${isPlayingAudio ? 'bg-[#FF9933] text-white animate-pulse' : 'text-[#FF9933]'}`}>
+              <Radio className="w-4 h-4" />
+            </div>
+            <div>
+              <span className="text-[10px] uppercase font-bold text-[#1A241C] block font-mono">
+                GROUND RADIO AUDIO BEACON (INDIC TTS BROADCAST)
+              </span>
+              <p className="text-[11px] text-[#556455] m-0 font-sans">
+                {isPlayingAudio 
+                  ? 'Transmitting localized emergency audio dispatch over browser audio channel...' 
+                  : 'Automated speech synthesis generated by Sarvam Voice Pipeline for frontline responders'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              onClick={() => handlePlaySarvamAudio(sarvamDispatch.audio_dispatch, sarvamLang)}
+              className={`px-3.5 py-2 rounded-xl font-bold flex items-center gap-2 text-xs transition-all shadow-sm ${
+                isPlayingAudio
+                  ? 'bg-[#C84B31] text-white hover:bg-[#a73b23]'
+                  : 'nm-btn-accent bg-[#FF9933] text-white hover:bg-[#e08324]'
+              }`}
+            >
+              {isPlayingAudio ? (
+                <>
+                  <VolumeX className="w-4 h-4" />
+                  <span>STOP BROADCAST</span>
+                </>
+              ) : (
+                <>
+                  <Volume2 className="w-4 h-4 animate-bounce" />
+                  <span>PLAY INDIC VOICE BROADCAST</span>
+                </>
+              )}
+            </button>
+
+            <button
+              onClick={() => handleCopySarvam(
+                `[RESQMESH x SARVAM AI DISPATCH]\nPATIENT: ${activePid} (${sarvamDispatch.patient_name})\nURGENCY: ${sarvamDispatch.urgency}\nDIAGNOSIS: ${sarvamDispatch.title}\n\nACTIONS:\n${sarvamDispatch.action_steps.map((s, i) => `${i + 1}. ${s}`).join('\n')}\n\nAUDIO SCRIPT:\n${sarvamDispatch.audio_dispatch}`
+              )}
+              className="px-3 py-2 rounded-xl font-bold nm-btn text-[#1A241C] border border-[#FF9933]/30 hover:border-[#FF9933] flex items-center gap-1.5 transition-all text-xs"
+            >
+              {copiedSarvam ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-[#138808]" />
+                  <span>COPIED!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5 text-[#FF9933]" />
+                  <span>COPY DISPATCH</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Dual-Pane Side-by-Side: Left (Sovereign 105B Reasoning) vs Right (Ground-Level Indic Dispatch) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          
+          {/* Left Pane: English Sovereign Clinical Reasoning (5 Cols) */}
+          <div className="lg:col-span-5 nm-inset p-4 rounded-xl bg-white/70 border border-black/[0.08] space-y-3">
+            <div className="flex items-center justify-between border-b border-black/[0.06] pb-2">
+              <div className="flex items-center gap-2">
+                <Cpu className="w-4 h-4 text-[#2D6A4F]" />
+                <span className="text-[10px] uppercase font-bold text-[#1A241C] font-mono">
+                  SARVAM-105B SOVEREIGN CLINICAL AUDIT
+                </span>
+              </div>
+              <span className="text-[9px] font-mono text-[#556455] bg-white px-2 py-0.5 rounded border border-black/10">
+                CORE REASONING (EN)
+              </span>
+            </div>
+
+            <div>
+              <span className="text-[10px] text-[#758475] uppercase font-bold block font-mono">Primary Diagnosis</span>
+              <strong className="text-xs text-[#1A241C] block mt-0.5 font-sans">
+                {sarvamEnDispatch.title}
+              </strong>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] text-[#758475] uppercase font-bold font-mono">Triage Urgency:</span>
+              <span className={`px-2 py-0.5 rounded text-[10px] font-black font-mono ${
+                sarvamEnDispatch.urgency.includes('P1') 
+                  ? 'bg-[#C84B31]/15 text-[#C84B31] border border-[#C84B31]/30' 
+                  : 'bg-[#F59E0B]/15 text-[#B45309] border border-[#F59E0B]/30'
+              }`}>
+                {sarvamEnDispatch.urgency} (Score: {sarvamEnDispatch.priority_score})
+              </span>
+            </div>
+
+            <div>
+              <span className="text-[10px] text-[#758475] uppercase font-bold block font-mono mb-1">
+                Clinical Pathology Rationale:
+              </span>
+              <p className="text-[11px] text-[#334155] leading-relaxed m-0 font-sans bg-white/60 p-2.5 rounded-lg border border-black/[0.04]">
+                {sarvamEnDispatch.summary}
+              </p>
+            </div>
+
+            <div>
+              <span className="text-[10px] text-[#758475] uppercase font-bold block font-mono mb-1.5">
+                Prescribed Clinical Action Steps:
+              </span>
+              <div className="space-y-1.5">
+                {sarvamEnDispatch.action_steps.map((step, idx) => (
+                  <div key={idx} className="flex items-start gap-2 p-2 rounded-lg bg-white/60 border border-black/[0.04] text-[11px] text-[#1A241C] font-sans">
+                    <span className="w-4 h-4 rounded-full bg-[#2D6A4F] text-white flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5 font-mono">
+                      {idx + 1}
+                    </span>
+                    <span>{step}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Pane: Localized Indic Emergency Broadcast (7 Cols) */}
+          <div className="lg:col-span-7 nm-convex p-4 rounded-xl bg-gradient-to-br from-[#FFF7ED] via-white to-[#F0FDF4] border-2 border-[#FF9933]/50 space-y-3.5 shadow-md">
+            <div className="flex items-center justify-between border-b border-[#FF9933]/20 pb-2.5">
+              <div className="flex items-center gap-2">
+                <span className="text-base">🇮🇳</span>
+                <div>
+                  <h4 className="text-xs font-black text-[#1A241C] uppercase tracking-wider m-0 font-mono">
+                    GROUND RESPONDER DISPATCH &bull; {sarvamLang.toUpperCase()}
+                  </h4>
+                  <span className="text-[10px] text-[#FF9933] font-bold font-sans">
+                    Real-Time Translation via Sarvam Indic Gateway
+                  </span>
+                </div>
+              </div>
+
+              <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-[#138808] text-white shadow-sm font-mono">
+                {sarvamDispatch.urgency}
+              </span>
+            </div>
+
+            {/* Localized Incident Headline Card */}
+            <div className="p-3 rounded-xl bg-white/90 border border-[#FF9933]/30 shadow-sm">
+              <span className="text-[10px] uppercase font-bold text-[#FF9933] block font-mono">
+                स्थानीय आपातकालीन विवरण (LOCALIZED INCIDENT TITLE):
+              </span>
+              <h5 className="text-sm font-black text-[#1A241C] mt-1 m-0 font-sans leading-snug">
+                {sarvamDispatch.title}
+              </h5>
+              <p className="text-xs text-[#334155] mt-2 leading-relaxed m-0 font-sans">
+                {sarvamDispatch.summary}
+              </p>
+            </div>
+
+            {/* Localized Action Instructions Checklist */}
+            <div>
+              <span className="text-[10px] uppercase font-bold text-[#1A241C] block font-mono mb-2 flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#138808]" />
+                ग्राउंड रिस्पॉन्डर कार्य सूची (RESPONDER ACTION PROTOCOL):
+              </span>
+              <div className="space-y-2">
+                {sarvamDispatch.action_steps.map((action, idx) => (
+                  <div key={idx} className="flex items-start gap-2.5 p-2.5 rounded-xl bg-white/95 border border-[#138808]/20 shadow-xs text-xs text-[#1A241C] font-sans">
+                    <span className="w-5 h-5 rounded-lg bg-[#138808] text-white flex items-center justify-center text-[10px] font-black shrink-0 font-mono">
+                      {idx + 1}
+                    </span>
+                    <span className="font-medium leading-relaxed">{action}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Ready-to-Broadcast Audio Megaphone Script */}
+            <div className="p-3 rounded-xl bg-[#14171D] text-[#F8FAFC] border border-white/10 space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] uppercase font-mono font-bold text-[#FF9933] flex items-center gap-1">
+                  <Radio className="w-3 h-3 text-[#FF9933]" />
+                  <span>VOICE MEGAPHONE / TACTICAL RADIO SCRIPT:</span>
+                </span>
+                <span className="text-[9px] font-mono text-[#94A3B8]">TTS BUFFER READY</span>
+              </div>
+              <p className="text-[11px] text-[#E2E8F0] font-sans italic leading-relaxed m-0">
+                &ldquo;{sarvamDispatch.audio_dispatch}&rdquo;
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        {/* 3 Pillars Explainer Strip: Why Sarvam AI in ResQMesh */}
+        <div className="pt-3 border-t border-[#FF9933]/20">
+          <span className="text-[10px] uppercase font-bold text-[#758475] font-mono block mb-2.5">
+            ARCHITECTURAL ADVANTAGES OF SARVAM AI IN RESQMESH:
+          </span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            
+            <div className="p-3 rounded-xl bg-white/70 border border-black/[0.06]">
+              <div className="flex items-center gap-1.5 mb-1">
+                <ShieldCheck className="w-4 h-4 text-[#138808]" />
+                <strong className="text-[11px] font-bold text-[#1A241C]">100% Indian Data Sovereignty</strong>
+              </div>
+              <p className="text-[10px] text-[#556455] leading-relaxed m-0 font-sans">
+                Complies with National Digital Health Mission (NDHM) &amp; DPDP Act. Patient trauma records and casualty metrics are never exported to foreign clouds.
+              </p>
+            </div>
+
+            <div className="p-3 rounded-xl bg-white/70 border border-black/[0.06]">
+              <div className="flex items-center gap-1.5 mb-1">
+                <Globe className="w-4 h-4 text-[#FF9933]" />
+                <strong className="text-[11px] font-bold text-[#1A241C]">Frontline Vernacular Inclusivity</strong>
+              </div>
+              <p className="text-[10px] text-[#556455] leading-relaxed m-0 font-sans">
+                Instant translation to Kannada (Bengaluru), Hindi, Tamil, Telugu, Marathi &amp; Bengali bridges the gap for local police, SDRF, and ASHA workers.
+              </p>
+            </div>
+
+            <div className="p-3 rounded-xl bg-white/70 border border-black/[0.06]">
+              <div className="flex items-center gap-1.5 mb-1">
+                <Zap className="w-4 h-4 text-[#2D6A4F]" />
+                <strong className="text-[11px] font-bold text-[#1A241C]">Hybrid Edge + Cloud Resiliency</strong>
+              </div>
+              <p className="text-[10px] text-[#556455] leading-relaxed m-0 font-sans">
+                Offline triage runs on-device on NXP MCXN236 (10.3ms); upon uplink, Sarvam-105B provides macroscopic multi-patient disaster synthesis.
+              </p>
+            </div>
+
+          </div>
         </div>
 
       </div>
