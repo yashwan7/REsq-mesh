@@ -464,7 +464,7 @@ Team collaboration rules are in `.agents/rules/git_collaboration.md`.
 
 ## License
 
-Copyright (c) 2026 Team Izanagi (Yashwanth Gowda S.N., M. Tejas Navada, R.J. Harshavardhan)
+Copyright (c) 2026 Yashwanth Gowda S.N.
 
 REsq Mesh is released under the MIT License. You may use, copy, modify, merge, publish, distribute, sublicense, and sell copies of the software, as long as you keep the copyright notice and the licence text in all copies or substantial portions. The software is provided "as is", without warranty of any kind. The full text is in the LICENSE file.
 
